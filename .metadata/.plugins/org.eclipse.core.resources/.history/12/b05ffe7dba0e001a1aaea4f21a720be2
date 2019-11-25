@@ -1,0 +1,314 @@
+package Repositories;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import Main.Author;
+import Main.Book;
+import Main.Language;
+
+public class BookRepo {
+	Connection connection;
+
+	public BookRepo() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library?useSSL=false", "root",
+					"rootroot");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public Author getAuthorById(int id) {
+		String query = "SELECT * FROM authors WHERE authorId = ?";
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String name = rs.getString(2);
+				String surname = rs.getString(3);
+				Language language = Language.create(rs.getString(4));
+				Author author = new Author(name, surname, language);
+				return author;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<Book> showAllAuthorBooks(int authorId) {
+		ArrayList<Book> allAuthorBooks = null;
+		String sql = "SELECT  a.name, a.surname, a.language, b.title, b.year, b.genre FROM authors a JOIN books b\n"
+				+ "ON b.authorid = a.authorid where b.authorid = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, authorId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String authorName = rs.getString(1);
+				String authorSurname = rs.getString(2);
+				String language = rs.getString(3);
+				Language authorLanguage = Language.create(language);
+				String title = rs.getString(4);
+				String year = rs.getString(5);
+				String genre = rs.getString(6);
+				Author author = new Author(authorName, authorSurname, authorLanguage);
+				Book book = new Book(author, title, year, genre);
+				allAuthorBooks.add(book);
+				return allAuthorBooks;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public ArrayList<Book> showAllBooksUsingJoin() {
+		ArrayList<Book> allBooks = new ArrayList<>();
+		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
+				+ "JOIN authors a ON b.authorid = a.authorid";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int bookId = rs.getInt(1);
+				String authorName = rs.getString(2);
+				String authorSurname = rs.getString(3);
+				String language = rs.getString(4);
+				Language authorLanguage = Language.create(language);
+				String title = rs.getString(5);
+				String year = rs.getString(6);
+				String genre = rs.getString(7);
+
+				Author author = new Author(authorName, authorSurname, authorLanguage);
+				Book book = new Book(bookId, author, title, year, genre);
+				allBooks.add(book);
+			}
+
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+		return allBooks;
+	}
+
+	public boolean userHasBook(int idUser, int idBook) {
+		PreparedStatement statement;
+		String query = "SELECT * FROM users_books where iduser = ? and idbook = ?";
+		try {
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, idUser);
+			statement.setInt(2, idBook);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	public void addUserBook(int bookId, int userId) {
+		Boolean userHasBook = userHasBook(userId, bookId);
+		if (userHasBook) {
+			String sql = "INSERT into users_books values(null, ?, ?)";
+			try {
+				PreparedStatement ps = connection.prepareStatement(sql);
+				ps.setInt(1, userId);
+				ps.setInt(2, bookId);
+				ps.executeUpdate();
+			} catch (SQLException ex) {
+				System.out.println(ex);
+			}
+		}
+	}
+
+	public void addBook(Book book) {
+		String query = "INSERT into books values(null, ?, ?, ?, ?)";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, book.getAuthor().getAuthorId());
+			ps.setString(2, book.getTitle());
+			ps.setString(3, book.getYear());
+			ps.setString(4, book.getGenre());
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+
+	}
+
+	public ArrayList<Book> searchBook(String text) {
+		ArrayList<Book> foundBooks = new ArrayList<>();
+		PreparedStatement statement;
+		String sql = "SELECT * from books where title LIKE ? or genre LIKE ?";
+
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "%" + text + "%");
+			statement.setString(2, "%" + text + "%");
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int authorId = rs.getInt(2);
+				Author author = getAuthorById(authorId);
+				String title = rs.getString(3);
+				String year = rs.getString(4);
+				String genre = rs.getString(5);
+				Book book = new Book(author, title, year, genre);
+				foundBooks.add(book);
+			}
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return foundBooks;
+	}
+
+	public ArrayList<Book> showBooks(String userId) {
+		ArrayList<Book> books = new ArrayList<>();
+		PreparedStatement statement;
+		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub " + "JOIN books b "
+				+ "ON b.id = ub.idbook where ub.iduser = ?";
+		try {
+			statement = connection.prepareStatement(query);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int bookId = rs.getInt(1);
+				int authorId = rs.getInt(2);
+				Author author = getAuthorById(authorId);
+
+				String title = rs.getString(3);
+				String year = rs.getString(4);
+				String genre = rs.getString(5);
+				Book book = new Book(bookId, author, title, year, genre);
+				books.add(book);
+			}
+
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+		return books;
+	}
+
+	public ArrayList<Book> searchUsBooks(int idUser, String text) {
+		ArrayList<Book> foundBooks = new ArrayList<>();
+		String idUserString = String.valueOf(idUser);
+		PreparedStatement statement;
+		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub JOIN books b\n"
+				+ "ON b.id = ub.idbook where ub.iduser = ? and (title LIKE ? or genre LIKE ?)";
+
+		try {
+			statement = connection.prepareStatement(query);
+			statement.setString(1, idUserString);
+			statement.setString(2, "%" + text + "%");
+			statement.setString(3, "%" + text + "%");
+			statement.setString(4, "%" + text + "%");
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int bookId = rs.getInt(1);
+				int authorId = rs.getInt(2);
+				Author author = getAuthorById(authorId);
+				String title = rs.getString(3);
+				String year = rs.getString(4);
+				String genre = rs.getString(5);
+				Book book = new Book(bookId, author, title, year, genre);
+				foundBooks.add(book);
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return foundBooks;
+	}
+
+	public void deleteUserBook(int userId, int bookId) {
+		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, bookId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public void deleteBook(int bookId) {
+		String query = "DELETE FROM books where id = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, bookId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public void deleteBooksData(int bookId) {
+		String sql = "DELETE FROM users_books WHERE idbook = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, bookId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public void addAuthor(Author author) {
+		String query = "INSERT into authors values(null, ?, ?, ?)";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, author.getName());
+			ps.setString(2, author.getSurname());
+			ps.setString(3, String.valueOf(author.getLanguage()));
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+
+	}
+
+	public void deleteAuthor(int authorId) {
+		String query = "DELETE FROM authors where authorid = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, authorId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public ArrayList<Author> getAllAuthorsList() {
+		ArrayList<Author> allAuthorsList = null;
+		Statement statement;
+		String query = "SELECT * FROM authors";
+		try {
+		statement = connection.createStatement();
+		ResultSet rs = statement.executeQuery(query);
+		while (rs.next()) {
+			int authorId = rs.getInt(1);
+			String name = rs.getString(2);
+			String surname = rs.getString(3);
+			String lang = rs.getString(4);
+			Language language = Language.create(lang);
+			Author author = new Author(authorId, name, surname, language);
+			allAuthorsList.add(author);
+		}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return allAuthorsList;
+	}
+}

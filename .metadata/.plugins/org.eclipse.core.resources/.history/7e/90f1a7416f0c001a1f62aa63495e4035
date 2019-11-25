@@ -1,0 +1,14 @@
+package Main;
+
+public enum UserRole {
+		USER,
+	    ADMIN;
+	
+	static UserRole create(String role) {
+		
+		if(role.equals("ADMIN")) {
+			return ADMIN;
+		} else return USER;
+	}
+}
+

@@ -1,0 +1,20 @@
+package Main;
+
+public enum Language {
+
+	ENG("Eng"),
+	RUS("Rus"),
+	FRENCH("French"),
+	DEF("DEF");
+	
+	
+	private String message;
+
+	Language(String message){
+		this.message = message;
+	}
+	
+	public String toString() {
+		return message;
+	}
+}

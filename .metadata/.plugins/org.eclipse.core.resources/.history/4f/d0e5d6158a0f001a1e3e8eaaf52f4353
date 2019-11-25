@@ -1,0 +1,14 @@
+package Main;
+
+import java.util.ArrayList;
+import com.google.gson.*;
+
+public class MainTestClass {
+
+	public static void main(String[] args) {
+		TestClass testObject = TestClass(1, "test");
+		
+	}
+
+
+}

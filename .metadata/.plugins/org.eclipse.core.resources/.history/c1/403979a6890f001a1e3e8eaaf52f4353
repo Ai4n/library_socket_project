@@ -1,0 +1,26 @@
+package Main;
+
+import java.util.ArrayList;
+
+public class MainTestClass {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int [] arrayInteger = { 123, 2345, 345};
+        // arrayString = { 123, 2345, 345};
+		String [] arrayString = convertArrayToString(arrayInteger);
+		for(String index : arrayString) {
+		System.out.println(index);}
+		
+	}
+
+	public static String [] convertArrayToString(int[] arrayInt) {
+		ArrayList <String> arrayStr = new ArrayList<>();
+		for(int i = 0; i < arrayInt.length; i++) {
+			arrayStr.add(String.valueOf(arrayInt[i]));
+			} 
+		String[] array = arrayStr.toArray(new String[arrayStr.size()]);
+		return array;
+	} 
+}

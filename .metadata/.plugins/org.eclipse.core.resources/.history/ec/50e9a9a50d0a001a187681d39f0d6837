@@ -1,0 +1,202 @@
+package Main;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import Repositories.BookRepo;
+import Repositories.UserRepo;
+
+public class ServerController {
+
+	private SocketController socketController;
+
+	public static Scanner scan = new Scanner(System.in);
+
+	BookRepo bookRepo = new BookRepo();
+	UserRepo userRepo = new UserRepo();
+
+	public ServerController(Socket socket) throws IOException {
+		socketController = new SocketController(socket);
+		try {
+			handleMessages();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleMessages() throws IOException, ClassNotFoundException {
+
+		while (true) {
+			try {
+				String messageString = socketController.readUtf();
+				ServerMessage message = ServerMessage.create(messageString);
+				System.out.println("message: " + message);
+				switch (message) {
+				case ADD_BOOK:
+					addBook();
+					break;
+				case GET_ALL_BOOKS:
+					showAllBooks();
+					break;
+				case SEARCH_BOOK:
+					searchBook();
+					break;
+				case USER_CHECK:
+					checkUser();
+					break;
+				case LOGIN_CHECK:
+					checkLogin();
+					break;
+				case ADD_USER:
+					addUser();
+					break;
+				case ADD_USER_BOOK:
+					addUserBook();
+					break;
+				case SHOW_BOOKS:
+					showBooks();
+					break;
+				case SEARCH_BOOKS:
+					searchUsBooks();
+					break;
+				case DELETE_USER_BOOK:
+					deleteUserBook();
+					break;
+				case DELETE_BOOK:
+					deleteBook();
+					break;
+				case UPDATE_BOOK:
+					updateBook();
+					break;
+				default:
+					return;
+				}
+			} catch (IllegalArgumentException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void updateBook() throws ClassNotFoundException {
+		Book book = (Book) socketController.read();
+		bookRepo.deleteBook(book.getBookId());
+		bookRepo.addBook(book);
+
+	}
+
+	private void deleteBook() {
+		int bookId = socketController.readInt();
+		bookRepo.deleteBook(bookId);
+		bookRepo.deleteBooksData(bookId);
+
+	}
+
+	private void deleteUserBook() {
+		try {
+			int bookId = socketController.readInt();
+			int userId = socketController.readInt();
+			bookRepo.deleteUserBook(userId, bookId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void showBooks() throws IOException {
+		ArrayList<Book> foundBooks = new ArrayList<>();
+		try {
+			String userId = socketController.readUtf();
+			foundBooks = bookRepo.showBooks(userId);
+			socketController.write(foundBooks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addUserBook() throws IOException {
+		try {
+			String userId = socketController.readUtf();
+			String bookId = socketController.readUtf();
+			bookRepo.addUserBook(Integer.valueOf(userId), Integer.valueOf(bookId));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void searchBook() throws IOException {
+		ArrayList<Book> foundBooks;
+		String text;
+		try {
+			text = socketController.readUtf();
+			foundBooks = bookRepo.searchBooks(text);
+			socketController.write(foundBooks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void searchUsBooks() throws IOException {
+		ArrayList<Book> foundBooks;
+		int idUser;
+		String text;
+		try {
+			idUser = socketController.readInt();
+			text = socketController.readUtf();
+			foundBooks = bookRepo.searchUsBooks(idUser, text);
+			socketController.write(foundBooks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addBook() throws IOException {
+		Book book;
+		book = (Book) socketController.read();
+		bookRepo.addBook(book);
+	}
+
+	private void showAllBooks() throws IOException {
+		ArrayList<Book> allBooks;
+		try {
+			allBooks = bookRepo.showAllBooks();
+			socketController.write(allBooks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void checkUser() {
+		String login, password;
+		login = socketController.readUtf();
+		password = socketController.readUtf();
+		User foundUser = userRepo.checkUser(login, password);
+
+		if (foundUser.equals(null)) {
+			socketController.write(ServerMessage.USER_NOT_EXIST);
+		} else {
+			socketController.write(ServerMessage.USER_EXIST, foundUser);
+		}
+
+	}
+
+	private void checkLogin() {
+		String login;
+		boolean result;
+		login = socketController.readUtf();
+		result = userRepo.checkLogin(login);
+		socketController.write(result ? ServerMessage.USER_NOT_EXIST : ServerMessage.USER_EXIST);
+
+	}
+
+	private void addUser() {
+		String login, password;
+		login = socketController.readUtf();
+		password = socketController.readUtf();
+		User user = new User(login, password, "USER");
+		userRepo.addUser(user);
+	}
+}

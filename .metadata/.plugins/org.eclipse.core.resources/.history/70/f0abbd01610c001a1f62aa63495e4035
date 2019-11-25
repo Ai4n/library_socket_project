@@ -1,0 +1,24 @@
+package Main;
+
+import java.util.ArrayList;
+
+public class MainTestClass {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int [] arrayInteger = { 123, 2345, 345};
+        // arrayString = { "123", "2345", "345"};
+		System.out.println(convertArrayToString(arrayInteger));
+		
+	}
+
+	public static ArrayList <String> convertArrayToString(int[] arrayInt) {
+		ArrayList <String> arrayStr = null;
+		for(int i = 0; i < arrayInt.length; i++) {
+			String element = "";
+			element = arrayInt.toString();
+			arrayStr.add(element);
+			} return arrayStr;
+	}
+}

@@ -1,0 +1,159 @@
+package Main;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class AdminController {
+	private Scanner scan = new Scanner(System.in);
+	SocketController socketController;
+
+	public AdminController(SocketController socketController) {
+		this.socketController = socketController;
+	}
+	//TODO remove throws
+
+	public void adminMenu() {
+		loop: while (true) {
+			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
+					+ "4.Delete book\n" + "5.Update book\n" + "6.Quit\n");
+			int number = scan.nextInt();
+			switch (number) {
+			case 1:
+				addToAllBooks();
+				break;
+			case 2:
+				showAllBooks();
+				break;
+			case 3:
+				searchInAllBooks();
+				break;
+			case 4:
+				deleteBook();
+				break;
+			case 5:
+				updateBook();
+				break;
+			case 6:
+				return;
+			default:
+				System.out.println("enter 1-4");
+				break loop;
+			}
+		}
+
+	}
+
+	private void updateBook() throws ClassNotFoundException {
+		ArrayList<Book> listBooks = getAllBooks();
+		printBooksList(listBooks);
+		System.out.println("Please enter number of book: ");
+		//TODO inline
+		int number;
+		number = scan.nextInt();
+		Book book;
+		book = listBooks.get(number - 1);
+		System.out.println("Choose field to update: \n" + "1. Author\n" + "2. Title\n" + "3. Year\n" + "4. Genre\n");
+		int field = scan.nextInt();
+		String author, title, year, genre;
+		//TODO separate methods
+		switch (field) {
+		case 1:
+			System.out.println("Enter Author's name and surname: ");
+			scan.nextLine();
+			author = scan.nextLine();
+			book.setAuthor(author);
+			break;
+		case 2:
+			System.out.println("Enter title of the book: ");
+			title = scan.next();
+			book.setTitle(title);
+			break;
+		case 3:
+			System.out.println("Enter 4 digits of year: ");
+			year = scan.next();
+			book.setYear(year);
+			break;
+		case 4:
+			System.out.println("Enter genre: ");
+			genre = scan.next();
+			book.setGenre(genre);
+			break;
+		default:
+			System.out.println("enter 1-4");
+			break;
+		}
+		socketController.writeObject(ServerMessage.UPDATE_BOOK, book);
+	}
+
+	private void deleteBook() throws ClassNotFoundException {
+		ArrayList<Book> listBooks = getAllBooks();
+		printBooksList(listBooks);
+		System.out.println("Choose number of book: \n");
+		int number = scan.nextInt();
+		Integer bookId = listBooks.get(number - 1).getBookId();
+		socketController.writeInt(ServerMessage.DELETE_BOOK, bookId);
+	}
+
+	//TODO remove throws
+	private void printBooksList(ArrayList<Book> listBooks) throws ClassNotFoundException {
+		//TODO remove init
+		Book book = null;
+		if (listBooks != null) {
+			for (int i = 0; i < listBooks.size(); i++) {
+				book = listBooks.get(i);
+				System.out.println((i + 1) + ". " + book);
+			}
+		}
+	}
+	
+	//TODO remove throws
+	private ArrayList<Book> getAllBooks() throws ClassNotFoundException {
+		//TODO remove init
+		ArrayList<Book> allBooks = null;
+		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
+		allBooks = socketController.read();
+		return allBooks;
+	}
+	//TODO remove throws
+
+	private void addToAllBooks() throws ClassNotFoundException {
+		System.out.println("Please enter Author:");
+		scan.nextLine();
+		String author = scan.nextLine();
+		System.out.println("Please enter Title:");
+		String title = scan.nextLine();
+		System.out.println("Please enter Year:");
+		String year = scan.nextLine();
+		System.out.println("Please enter Genre:");
+		String genre = scan.nextLine();
+		Book book = new Book(author, title, year, genre);
+		socketController.writeObject(ServerMessage.ADD_BOOK, book);
+	}
+	//TODO remove throws
+
+	public void showAllBooks() throws ClassNotFoundException {
+		ArrayList<Book> allBooks;
+		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
+		allBooks = socketController.read();
+		int count = 1;
+		for (Book book : (allBooks)) {
+			System.out.println(count + ". " + book);
+			count++;
+		}
+	}
+	//TODO remove throws
+
+	public void searchInAllBooks() {
+		ArrayList<Book> foundBooks;
+		System.out.println("Please enter search text: ");
+		String text = scan.next();
+		socketController.write(ServerMessage.SEARCH_BOOK, text);
+		foundBooks = socketController.read();
+		if(foundBooks.equals(null)) return;
+		int count = 1;
+		for (Book book : foundBooks) {
+			System.out.println(count + ". " + book);
+			count++;
+		}
+	}
+}

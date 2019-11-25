@@ -1,0 +1,13 @@
+package Main;
+
+public class TestClass {
+	
+	int id;
+	String title;
+	
+	public TestClass(int id, String title) {
+		this.id = id;
+		this.title = title;
+	}
+	
+}

@@ -1,0 +1,87 @@
+package Main;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ClientController {
+	public Scanner scan = new Scanner(System.in);
+    private SocketController socketController;
+    
+	public ClientController(Socket socket) throws IOException {
+		socketController = new SocketController(socket);
+	}
+
+	public void startMenu() throws ClassNotFoundException, IOException {
+
+		loop: while (true) {
+			int number;
+			System.out.println("Choose options:\n" + "1. Singup\n" + "2. Login\n");
+			number = scan.nextInt();
+			switch (number) {
+			case 1:
+				signUp();
+				break;
+			case 2:
+				User user = login();
+				String role = user.getRole();
+				if (role.equals("USER")) {
+					UserController userController = new UserController(user, socketController);
+					userController.userMenu();
+				} else if (role.equals("ADMIN")) {
+					AdminController adminController = new AdminController(socketController);
+					adminController.adminMenu();
+				}
+				break;
+			default:
+				break loop;
+			}
+		}
+	}
+
+	public void signUp() throws ClassNotFoundException, IOException {
+		String newLogin = "";
+		String password1 = "";
+		String password2 = "";
+		String cryptPassword = "";
+		String loginStatus = "";
+		do {
+			System.out.println("Enter new login: \n");
+			newLogin = scan.next();
+			socketController.write(ServerMessage.LOGIN_CHECK, newLogin);
+			loginStatus = socketController.readUTF();
+		} while (loginStatus.equals(ServerMessage.USER_EXIST.getMessage()));
+
+		do {
+			System.out.println("Enter password (at least four digits): ");
+			password1 = scan.next();
+			System.out.println("Repeat password (at least four digits): ");
+			password2 = scan.next();
+		} while (!(password1.equals(password2)));
+
+		cryptPassword = PasswordUtils.encodePassword(password1);
+		socketController.write(ServerMessage.ADD_USER, newLogin, cryptPassword);
+
+	}
+
+	public User login() throws ClassNotFoundException {
+		String result = "";
+		do {
+			System.out.println("Enter your login:");
+			String login = scan.next();
+			System.out.println("Enter your password:");
+			String password1 = scan.next();
+			String password = PasswordUtils.encodePassword(password1);
+			socketController.write(ServerMessage.USER_CHECK, login, password);
+			result = socketController.readUTF();
+
+		} while (result.equals(ServerMessage.USER_NOT_EXIST));
+
+		User user = (User) socketController.read();
+		return user;
+	}
+}

@@ -1,0 +1,251 @@
+package Main;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class AdminController {
+	private Scanner scan = new Scanner(System.in);
+	SocketController socketController;
+
+	public AdminController(SocketController socketController) {
+		this.socketController = socketController;
+	}
+
+	public void adminMenu() {
+		loop: while (true) {
+			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
+					+ "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n" + "7.Delete Author\n"
+					+ "8.Show all Authors\n" + "9.Show all Authors books\n" + "10.Quit\n");
+			int number = scan.nextInt();
+			switch (number) {
+			case 1:
+				addToAllBooks();
+				break;
+			case 2:
+				showAllBooks();
+				break;
+			case 3:
+				searchInAllBooks();
+				break;
+			case 4:
+				deleteBook();
+				break;
+			case 5:
+				updateBook();
+				break;
+			case 6:
+				addAuthor();
+				break;
+			case 7:
+				deleteAuthor();
+				break;
+			case 8:
+				showAllAuthors();
+				break;
+			case 9:
+				getAllAuthorBooks();
+				break;
+			case 10:
+				return;
+			default:
+				System.out.println("enter key from 1 to 10");
+				break loop;
+			}
+		}
+	}
+
+	private void getAllAuthorBooks() {
+		getAllAuthorsList();
+		System.out.println("Select Author number: ");
+		int authorId = scan.nextInt();
+		String authorIdStr = String.valueOf(authorId);
+		socketController.write(ServerMessage.SHOW_AUTHORS_BOOKS, authorIdStr);
+		ArrayList<Book> allAuthorBooks = socketController.read();
+		if(allAuthorBooks.equals(null)) {
+			return;
+		}
+		printList(allAuthorBooks);
+	}
+	
+	private void showAllAuthors() {
+		ArrayList<Author> allAuthorsList = getAllAuthorsList();
+		printList(allAuthorsList);
+	}
+	
+	private ArrayList<Author> getAllAuthorsList() {
+		socketController.writeMessage(ServerMessage.GET_ALL_AUTHORS);
+		ArrayList<Author> allAuthorsList = socketController.read();
+		return allAuthorsList;
+	}
+
+	private void deleteAuthor() {
+		ArrayList<Author> allAuthorsList = getAllAuthorsList();
+		printList(allAuthorsList);
+		System.out.println("Select Author number: ");
+		int number = scan.nextInt();
+		int authorId = allAuthorsList.get(number).getAuthorId();
+		socketController.writeInt(ServerMessage.DELETE_AUTHOR, authorId);
+	}
+
+	private void updateBook() {
+		ArrayList<Book> listBooks = getAllBooks();
+		if (listBooks.equals(null)) {
+			return;
+		}
+		printList(listBooks);
+		System.out.println("Please enter number of book: ");
+		int number = scan.nextInt();
+		Book book = listBooks.get(number - 1);
+		if (book.equals(null)) {
+			return;
+		}
+		System.out.println("Choose field to update: \n" + "1. Author\n" + "2. Title\n" + "3. Year\n" + "4. Genre\n");
+		int digit = scan.nextInt();
+		switch (digit) {
+		case 1:
+			enterAuthor(book);
+			break;
+		case 2:
+			enterTitle(book);
+			break;
+		case 3:
+			enterYear(book);
+			break;
+		case 4:
+			enterGenre(book);
+			break;
+		default:
+			System.out.println("enter 1-4");
+			break;
+		}
+		socketController.writeObject(ServerMessage.UPDATE_BOOK, book);
+	}
+
+	private void enterAuthor(Book book) {
+		if (book.equals(null)) {
+			return;
+		}
+		System.out.println("Enter Author's name: ");
+		scan.nextLine();
+		String name = scan.next();
+		System.out.println("Enter Author's surname: ");
+		String surname = scan.next();
+		Language lang = Language.create(scan.next());
+		Author author = new Author(name, surname, lang);
+		book.setAuthor(author);
+	}
+
+	private void addAuthor() {
+		System.out.println("Enter Author's name: ");
+		scan.nextLine();
+		String name = scan.next();
+		System.out.println("Enter Author's surname: ");
+		String surname = scan.next();
+		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
+		Language lang = Language.create(scan.next());
+		Author author = new Author(name, surname, lang);
+		socketController.writeObject(ServerMessage.ADD_AUTHOR, author);
+	}
+
+	private void enterTitle(Book book) {
+		if (book.equals(null)) {
+			return;
+		}
+		System.out.println("Enter title of the book: ");
+		String title = scan.next();
+		book.setTitle(title);
+	}
+
+	private void enterYear(Book book) {
+		if (book.equals(null)) {
+			return;
+		}
+		System.out.println("Enter 4 digits of year: ");
+		String year = scan.next();
+		book.setYear(year);
+	}
+
+	private void enterGenre(Book book) {
+		if (book.equals(null)) {
+			return;
+		}
+		System.out.println("Enter genre: ");
+		String genre = scan.next();
+		book.setGenre(genre);
+	}
+
+	private void deleteBook() {
+		ArrayList<Book> listBooks = getAllBooks();
+		if (listBooks.equals(null)) {
+			return;
+		}
+		printList(listBooks);
+		System.out.println("Choose number of book: \n");
+		int number = scan.nextInt();
+		Integer bookId = listBooks.get(number - 1).getBookId();
+		socketController.writeInt(ServerMessage.DELETE_BOOK, bookId);
+	}
+
+	private <T> void printList(ArrayList<T> anyList) {
+		if (anyList != null) {
+			for (int i = 0; i < anyList.size(); i++) {
+				T element = (T) anyList.get(i);
+				System.out.println((i + 1) + ". " + element);
+			}
+		}
+	}
+
+	private ArrayList<Book> getAllBooks() {
+		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
+		ArrayList<Book> allBooks = socketController.read();
+		if (allBooks.equals(null)) {
+			return null;
+		}
+		return allBooks;
+	}
+
+	private void addToAllBooks() {
+		System.out.println("Please enter Author:");
+		scan.nextLine();
+		String author = scan.nextLine();
+		System.out.println("Please enter Title:");
+		String title = scan.nextLine();
+		System.out.println("Please enter Year:");
+		String year = scan.nextLine();
+		System.out.println("Please enter Genre:");
+		String genre = scan.nextLine();
+		Book book = new Book(null, title, year, genre);
+		if (book.equals(null)) {
+			return;
+		}
+		socketController.writeObject(ServerMessage.ADD_BOOK, book);
+	}
+
+	public void showAllBooks() {
+		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
+		ArrayList<Book> allBooks = socketController.read();
+		int count = 1;
+		if (allBooks.equals(null)) {
+			return;
+		}
+		for (Book book : (allBooks)) {
+			System.out.println(count + ". " + book);
+			count++;
+		}
+	}
+
+	public void searchInAllBooks() {
+		System.out.println("Please enter search text: ");
+		String text = scan.next();
+		socketController.write(ServerMessage.SEARCH_BOOK, text);
+		ArrayList<Book> foundBooks = socketController.read();
+		if (foundBooks.equals(null)) {
+			return;
+		}
+		int count = 1;
+		for (Book book : foundBooks) {
+			System.out.println(count + ". " + book);
+			count++;
+		}
+	}
+}
