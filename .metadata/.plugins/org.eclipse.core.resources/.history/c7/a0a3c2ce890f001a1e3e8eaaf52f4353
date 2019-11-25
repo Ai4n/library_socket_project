@@ -1,8 +1,0 @@
-package Main;
-
-public class TestClass {
-	
-	int id;
-	String title;
-	
-}
