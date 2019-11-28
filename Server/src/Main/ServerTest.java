@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
+import SocketRequests.AddAuthorRequest;
+import SocketRequests.SocketRequest;
+
 public class ServerTest {
 	private static ServerController serverController;
 
 	public static void main(String args[]) {
-		
 		ServerSocket serverSocket;
 		Socket socket;
 		try {

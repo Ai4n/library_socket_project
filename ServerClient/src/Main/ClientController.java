@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+
+import SocketRequests.AddAuthorRequest;
+import SocketRequests.UserCheckRequest;
+
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);
     private SocketController socketController;
+    private Gson gson = new Gson();
     
 	public ClientController(Socket socket) throws IOException {
 		socketController = new SocketController(socket);
@@ -71,7 +77,8 @@ public class ClientController {
 			System.out.println("Enter your password:");
 			String password1 = scan.next();
 			String password = PasswordUtils.encodePassword(password1);
-			socketController.write(ServerMessage.USER_CHECK, login, password);
+			UserCheckRequest request = new UserCheckRequest(login, password);
+			socketController.write(request.json());
 			result = socketController.readUtf();
 		} while (result.equals(ServerMessage.USER_NOT_EXIST.getMessage()));
 		

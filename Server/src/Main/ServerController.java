@@ -10,6 +10,9 @@ import com.google.gson.*;
 
 import Repositories.BookRepo;
 import Repositories.UserRepo;
+import SocketRequests.AddAuthorRequest;
+import SocketRequests.SocketRequest;
+import SocketRequests.UserCheckRequest;
 
 public class ServerController {
 
@@ -19,6 +22,7 @@ public class ServerController {
 
 	BookRepo bookRepo = new BookRepo();
 	UserRepo userRepo = new UserRepo();
+	Gson gson = new Gson();
 
 	public ServerController(Socket socket) throws IOException {
 		socketController = new SocketController(socket);
@@ -28,16 +32,18 @@ public class ServerController {
 	public void handleMessages() {
 
 		while (true) {
-
-			String messageString = socketController.readUtf();
-			ServerMessage message = ServerMessage.create(messageString);
-			System.out.println("message: " + message);
-			if (message == null)
+			String jsonMessage = socketController.readUtf();
+			
+			SocketRequest request = gson.fromJson(jsonMessage, SocketRequest.class);
+			
+			System.out.println("message: " + request.message);
+			if (request.message == null)
 				continue;
 			
-			switch (message) {
+			switch (request.message) {
 			case ADD_AUTHOR:
-				addAuthor();
+				AddAuthorRequest req = gson.fromJson(jsonMessage, AddAuthorRequest.class);
+				addAuthor(req.getAuthor());
 				break;
 			case ADD_BOOK:
 				addBook();
@@ -52,7 +58,8 @@ public class ServerController {
 				searchBook();
 				break;
 			case USER_CHECK:
-				checkUser();
+				UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
+				checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
 				break;
 			case LOGIN_CHECK:
 				checkLogin();
@@ -179,10 +186,7 @@ public class ServerController {
 		}
 	}
 
-	private void checkUser() {
-		String login, password;
-		login = socketController.readUtf();
-		password = socketController.readUtf();
+	private void checkUser(String login, String password) {
 		User foundUser = userRepo.checkUser(login, password);
 		if (foundUser.equals(null)) {
 			socketController.writeMessage(ServerMessage.USER_NOT_EXIST);
@@ -206,8 +210,7 @@ public class ServerController {
 		userRepo.addUser(user);
 	}
 	
-	private void addAuthor(){
-		Author author = socketController.read();
+	private void addAuthor(Author author){
 		bookRepo.addAuthor(author);
 	}
 	

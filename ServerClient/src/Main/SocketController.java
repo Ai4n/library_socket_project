@@ -29,6 +29,15 @@ public class SocketController {
 		String[] array = arrayStr.toArray(new String[arrayStr.size()]);
 		return array;
 	} 
+	
+	public void write(String json) {
+		try {
+			dataOut.writeUTF(json);
+			dataOut.flush();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	public void write(ServerMessage serverMessage, String... values) {
 		try {
