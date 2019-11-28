@@ -7,6 +7,7 @@ public class Author implements Serializable {
 	private String name;
 	private String surname;
 	private Language language;
+	int x;
 	
 	private static final long serialVersionUID = 7L;
 	
