@@ -89,7 +89,6 @@ public class BookRepo {
 				String title = rs.getString(5);
 				String year = rs.getString(6);
 				String genre = rs.getString(7);
-
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(bookId, author, title, year, genre);
 				allBooks.add(book);

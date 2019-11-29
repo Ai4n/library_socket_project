@@ -11,6 +11,7 @@ import com.google.gson.*;
 import Repositories.BookRepo;
 import Repositories.UserRepo;
 import SocketRequests.AddAuthorRequest;
+import SocketRequests.AddBookRequest;
 import SocketRequests.SocketRequest;
 import SocketRequests.UserCheckRequest;
 
@@ -42,13 +43,15 @@ public class ServerController {
 			
 			switch (request.message) {
 			case ADD_AUTHOR:
-				AddAuthorRequest req = gson.fromJson(jsonMessage, AddAuthorRequest.class);
-				addAuthor(req.getAuthor());
+				AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
+				addAuthor(addAuthorRequest.getAuthor());
 				break;
 			case ADD_BOOK:
-				addBook();
+				AddBookRequest addBookRequest = gson.fromJson(jsonMessage, AddBookRequest.class);
+				addBook(addBookRequest.getBook());
 				break;
 			case GET_ALL_BOOKS:
+				GetAllBooksRequest getAllBooksRequest = gson.fromJson(jsonMessage, GetAllBooksRequest.class)
 				showAllBooks();
 				break;
 			case GET_ALL_AUTHORS:
@@ -98,9 +101,21 @@ public class ServerController {
 		}
 	}
 
+	private void addAuthor(Author author) {
+		bookRepo.addAuthor(author);
+	}
+
+	private void addBook(Book book) {
+		bookRepo.addBook(book);
+	}
+
+	private void showAllBooks() {
+		bookRepo.showAllBooksUsingJoin();
+	}
+
 	private void getAllAuthorsList() {
-			ArrayList<Author> allAuthorsList = bookRepo.getAllAuthorsList();
-			socketController.writeObject(allAuthorsList);	
+		ArrayList<Author> allAuthorsList = bookRepo.getAllAuthorsList();
+		socketController.writeObject(allAuthorsList);
 	}
 
 	private void updateBook() {
@@ -168,24 +183,6 @@ public class ServerController {
 		}
 	}
 
-	private void addBook() {
-		Book book;
-		book = socketController.read();
-		if (book.equals(null))
-			return;
-		bookRepo.addBook(book);
-	}
-
-	private void showAllBooks() {
-		ArrayList<Book> allBooks;
-		try {
-			allBooks = bookRepo.showAllBooksUsingJoin();
-			socketController.writeObject(allBooks);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void checkUser(String login, String password) {
 		User foundUser = userRepo.checkUser(login, password);
 		if (foundUser.equals(null)) {
@@ -209,20 +206,17 @@ public class ServerController {
 		User user = new User(login, password, UserRole.USER);
 		userRepo.addUser(user);
 	}
-	
-	private void addAuthor(Author author){
-		bookRepo.addAuthor(author);
-	}
-	
+
 	private void deleteAuthor() {
 		String authorIdStr = socketController.readUtf();
 		int authorId = Integer.valueOf(authorIdStr);
 		bookRepo.deleteAuthor(authorId);
 	}
-	
+
 	private void showAllAuthorsBooks() {
 		String authorIdStr = socketController.readUtf();
-		if(authorIdStr.equals(null)) return;
+		if (authorIdStr.equals(null))
+			return;
 		int authorId = Integer.valueOf(authorIdStr);
 		ArrayList<Book> allAuthorBooks = bookRepo.showAllAuthorBooks(authorId);
 		socketController.writeObject(allAuthorBooks);
