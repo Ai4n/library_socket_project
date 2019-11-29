@@ -1,5 +1,7 @@
 package SocketRequests;
 
+import com.google.gson.Gson;
+
 import Main.*;
 
 public class AddAuthorRequest extends SocketRequest {
@@ -15,8 +17,8 @@ public class AddAuthorRequest extends SocketRequest {
 		return author;
 	}
 
-	public void setAuthor(Author author) {
-		this.author = author;
+	public String json() {
+		return new Gson().toJson(this);
 	}
 	
 }

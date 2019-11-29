@@ -12,6 +12,9 @@ import Repositories.BookRepo;
 import Repositories.UserRepo;
 import SocketRequests.AddAuthorRequest;
 import SocketRequests.AddBookRequest;
+import SocketRequests.GetAllAuthorsRequest;
+import SocketRequests.GetAllBooksRequest;
+import SocketRequests.SearchBookRequest;
 import SocketRequests.SocketRequest;
 import SocketRequests.UserCheckRequest;
 
@@ -34,13 +37,10 @@ public class ServerController {
 
 		while (true) {
 			String jsonMessage = socketController.readUtf();
-			
-			SocketRequest request = gson.fromJson(jsonMessage, SocketRequest.class);
-			
+			SocketRequest request = gson.fromJson(jsonMessage, SocketRequest.class);	
 			System.out.println("message: " + request.message);
-			if (request.message == null)
+			if (request == null)
 				continue;
-			
 			switch (request.message) {
 			case ADD_AUTHOR:
 				AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
@@ -51,13 +51,15 @@ public class ServerController {
 				addBook(addBookRequest.getBook());
 				break;
 			case GET_ALL_BOOKS:
-				GetAllBooksRequest getAllBooksRequest = gson.fromJson(jsonMessage, GetAllBooksRequest.class)
+				GetAllBooksRequest getAllBooksRequest = gson.fromJson(jsonMessage, GetAllBooksRequest.class);
 				showAllBooks();
 				break;
 			case GET_ALL_AUTHORS:
+				GetAllAuthorsRequest getAllAuthorsRequest = gson.fromJson(jsonMessage, GetAllAuthorsRequest.class);
 				getAllAuthorsList();
 				break;
 			case SEARCH_BOOK:
+				SearchBookRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBookRequest.class);
 				searchBook();
 				break;
 			case USER_CHECK:
@@ -114,8 +116,7 @@ public class ServerController {
 	}
 
 	private void getAllAuthorsList() {
-		ArrayList<Author> allAuthorsList = bookRepo.getAllAuthorsList();
-		socketController.writeObject(allAuthorsList);
+		socketController.writeObject(bookRepo.getAllAuthorsList());
 	}
 
 	private void updateBook() {

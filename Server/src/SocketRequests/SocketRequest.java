@@ -1,6 +1,4 @@
 package SocketRequests;
-
-import Main.Author;
 import Main.ServerMessage;
 
 public class SocketRequest {
