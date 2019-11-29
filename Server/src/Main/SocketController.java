@@ -16,9 +16,9 @@ public class SocketController {
 		dataIn = new ObjectInputStream(socket.getInputStream());
 	}
 
-	public void writeInt(ServerMessage serverMessage, int... values) {
-		write(serverMessage, convertArrayIntegerToArrayString(values));
-	}
+//	public void writeInt(ServerMessage serverMessage, int... values) {
+//		write(serverMessage, convertArrayIntegerToArrayString(values));
+//	}
 
 	private String [] convertArrayIntegerToArrayString(int[] arrayInt) {
 		ArrayList <String> arrayStr = new ArrayList<>();
