@@ -6,8 +6,7 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
-import SocketRequests.AddAuthorRequest;
-import SocketRequests.UserCheckRequest;
+import SocketExchange.*;
 
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);

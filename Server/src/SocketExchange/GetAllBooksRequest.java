@@ -1,10 +1,10 @@
-package SocketRequests;
+package SocketExchange;
 
 import java.util.ArrayList;
 import Main.Book;
 import Main.ServerMessage;
 
-public class GetAllBooksRequest extends SocketRequest {
+public class GetAllBooksRequest extends SocketExchange {
 
 	private ArrayList<Book> allBooks;
 

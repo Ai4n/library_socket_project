@@ -1,10 +1,10 @@
-package SocketRequests;
+package SocketExchange;
 
 import com.google.gson.Gson;
 
 import Main.*;
 
-public class AddAuthorRequest extends SocketRequest {
+public class AddAuthorRequest extends SocketExchange {
 
 	private Author author;
 	

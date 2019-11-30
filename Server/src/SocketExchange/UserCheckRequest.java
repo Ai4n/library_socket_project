@@ -1,10 +1,10 @@
-package SocketRequests;
+package SocketExchange;
 
 import com.google.gson.Gson;
 
 import Main.ServerMessage;
 
-public class UserCheckRequest extends SocketRequest{
+public class UserCheckRequest extends SocketExchange{
 
 	private String login;
 	private String password;

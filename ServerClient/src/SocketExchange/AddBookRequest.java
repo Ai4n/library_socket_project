@@ -1,11 +1,11 @@
-package SocketRequests;
+package SocketExchange;
 
 import com.google.gson.Gson;
 
 import Main.Book;
 import Main.ServerMessage;
 
-public class AddBookRequest extends SocketRequest{
+public class AddBookRequest extends SocketExchange{
 	
 	private Book book;
 	

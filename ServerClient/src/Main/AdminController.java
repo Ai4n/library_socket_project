@@ -3,10 +3,17 @@ package Main;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+
+import SocketExchange.*;
+
+
+
 public class AdminController {
 	private Scanner scan = new Scanner(System.in);
 	SocketController socketController;
-
+	Gson gson = new Gson();
+	
 	public AdminController(SocketController socketController) {
 		this.socketController = socketController;
 	}
@@ -40,7 +47,7 @@ public class AdminController {
 				deleteAuthor();
 				break;
 			case 8:
-				getAllAuthorBooks();
+				printList(getAllAuthorsList());
 				break;
 			case 9:
 				getAllAuthorBooks();
@@ -55,20 +62,25 @@ public class AdminController {
 	}
 
 	private void addToAllBooks() {
-		System.out.println("Please enter Author:");
+		ArrayList<Author> authorsList = getAllAuthorsList();
+		printList(authorsList);
+		System.out.println("Please select Author:");
 		scan.nextLine();
-		String author = scan.nextLine();
+		int authorInt = scan.nextInt();
+		scan.nextLine();
+		Author author = authorsList.get(authorInt - 1);
 		System.out.println("Please enter Title:");
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
 		String year = scan.nextLine();
 		System.out.println("Please enter Genre:");
 		String genre = scan.nextLine();
-		Book book = new Book(null, title, year, genre);
+		Book book = new Book(author, title, year, genre);
 		if (book.equals(null)) {
 			return;
 		}
-		socketController.writeObject(ServerMessage.ADD_BOOK, book);
+		AddBookRequest addBookRequest = new AddBookRequest(book);
+		socketController.write(addBookRequest.json());
 	}
 
 	public void showAllBooks() {
@@ -154,7 +166,8 @@ public class AdminController {
 		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
 		Language lang = Language.create(scan.next());
 		Author author = new Author(name, surname, lang);
-		socketController.writeObject(ServerMessage.ADD_AUTHOR, author);
+		AddAuthorRequest addAuthorRequest = new AddAuthorRequest(author);
+		socketController.write(addAuthorRequest.json());
 	}
 	
 	private void deleteAuthor() {
@@ -180,9 +193,11 @@ public class AdminController {
 	}
 
 	private ArrayList<Author> getAllAuthorsList() {
-		socketController.writeMessage(ServerMessage.GET_ALL_AUTHORS);
-		ArrayList<Author> allAuthorsList = socketController.read();
-		return allAuthorsList;
+		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
+		socketController.write(getAllAuthorsRequest.json());
+		String jsonMessage = socketController.readUtf();
+		GetAllAuthorsResponse getAuthorsResponse = gson.fromJson(jsonMessage, GetAllAuthorsResponse.class);
+		return getAuthorsResponse.getAuthorsList();
 	}
 
 	private void enterAuthor(Book book) {

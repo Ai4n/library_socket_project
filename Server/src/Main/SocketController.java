@@ -68,6 +68,15 @@ public class SocketController {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void write(String json) {
+		try {
+			dataOut.writeUTF(json);
+			dataOut.flush();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	public String readUtf() {
 		try {

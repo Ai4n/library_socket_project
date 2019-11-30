@@ -6,8 +6,8 @@ import java.net.Socket;
 
 import com.google.gson.Gson;
 
-import SocketRequests.AddAuthorRequest;
-import SocketRequests.SocketRequest;
+import SocketExchange.AddAuthorRequest;
+import SocketExchange.SocketExchange;
 
 public class ServerTest {
 	private static ServerController serverController;

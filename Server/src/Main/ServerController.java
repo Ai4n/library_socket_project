@@ -10,13 +10,7 @@ import com.google.gson.*;
 
 import Repositories.BookRepo;
 import Repositories.UserRepo;
-import SocketRequests.AddAuthorRequest;
-import SocketRequests.AddBookRequest;
-import SocketRequests.GetAllAuthorsRequest;
-import SocketRequests.GetAllBooksRequest;
-import SocketRequests.SearchBookRequest;
-import SocketRequests.SocketRequest;
-import SocketRequests.UserCheckRequest;
+import SocketExchange.*;
 
 public class ServerController {
 
@@ -37,7 +31,7 @@ public class ServerController {
 
 		while (true) {
 			String jsonMessage = socketController.readUtf();
-			SocketRequest request = gson.fromJson(jsonMessage, SocketRequest.class);	
+			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);	
 			System.out.println("message: " + request.message);
 			if (request == null)
 				continue;
@@ -55,7 +49,6 @@ public class ServerController {
 				showAllBooks();
 				break;
 			case GET_ALL_AUTHORS:
-				GetAllAuthorsRequest getAllAuthorsRequest = gson.fromJson(jsonMessage, GetAllAuthorsRequest.class);
 				getAllAuthorsList();
 				break;
 			case SEARCH_BOOK:
@@ -116,7 +109,8 @@ public class ServerController {
 	}
 
 	private void getAllAuthorsList() {
-		socketController.writeObject(bookRepo.getAllAuthorsList());
+		GetAllAuthorsResponse getAllAuthorsResponse = new GetAllAuthorsResponse(bookRepo.getAllAuthorsList());
+		socketController.write(getAllAuthorsResponse.json());
 	}
 
 	private void updateBook() {
