@@ -84,6 +84,9 @@ public class AdminController {
 	}
 
 	public void showAllBooks() {
+		
+		
+		
 		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
 		ArrayList<Book> allBooks = socketController.read();
 		int count = 1;
