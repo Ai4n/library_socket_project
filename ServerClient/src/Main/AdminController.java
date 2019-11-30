@@ -7,13 +7,11 @@ import com.google.gson.Gson;
 
 import SocketExchange.*;
 
-
-
 public class AdminController {
 	private Scanner scan = new Scanner(System.in);
 	SocketController socketController;
 	Gson gson = new Gson();
-	
+
 	public AdminController(SocketController socketController) {
 		this.socketController = socketController;
 	}
@@ -29,7 +27,7 @@ public class AdminController {
 				addToAllBooks();
 				break;
 			case 2:
-				showAllBooks();
+				printList(getAllBooksList());
 				break;
 			case 3:
 				searchInAllBooks();
@@ -66,9 +64,9 @@ public class AdminController {
 		printList(authorsList);
 		System.out.println("Please select Author:");
 		scan.nextLine();
-		int authorInt = scan.nextInt();
+		int authorInt = (scan.nextInt() - 1); // -1 Create array index from number
 		scan.nextLine();
-		Author author = authorsList.get(authorInt - 1);
+		Author author = authorsList.get(authorInt);
 		System.out.println("Please enter Title:");
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
@@ -82,21 +80,21 @@ public class AdminController {
 		AddBookRequest addBookRequest = new AddBookRequest(book);
 		socketController.write(addBookRequest.json());
 	}
+	
+	private ArrayList<Author> getAllAuthorsList() {
+		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
+		socketController.write(getAllAuthorsRequest.json());
+		String jsonMessage = socketController.readUtf();
+		GetAllAuthorsResponse getAuthorsResponse = gson.fromJson(jsonMessage, GetAllAuthorsResponse.class);
+		return getAuthorsResponse.getAuthorsList();
+	}
 
-	public void showAllBooks() {
-		
-		
-		
-		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
-		ArrayList<Book> allBooks = socketController.read();
-		int count = 1;
-		if (allBooks.equals(null)) {
-			return;
-		}
-		for (Book book : (allBooks)) {
-			System.out.println(count + ". " + book);
-			count++;
-		}
+	public ArrayList<Book> getAllBooksList() {
+		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
+		socketController.write(getAllBooksRequest.json());
+		String jsonMessage = socketController.readUtf();
+		GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
+		return getAllBooksResponse.getAllBooksList();
 	}
 
 	public void searchInAllBooks() {
@@ -115,7 +113,7 @@ public class AdminController {
 	}
 
 	private void deleteBook() {
-		ArrayList<Book> listBooks = getAllBooks();
+		ArrayList<Book> listBooks = getAllBooksList();
 		if (listBooks.equals(null)) {
 			return;
 		}
@@ -127,7 +125,7 @@ public class AdminController {
 	}
 
 	private void updateBook() {
-		ArrayList<Book> listBooks = getAllBooks();
+		ArrayList<Book> listBooks = getAllBooksList();
 		if (listBooks.equals(null)) {
 			return;
 		}
@@ -172,7 +170,7 @@ public class AdminController {
 		AddAuthorRequest addAuthorRequest = new AddAuthorRequest(author);
 		socketController.write(addAuthorRequest.json());
 	}
-	
+
 	private void deleteAuthor() {
 		ArrayList<Author> allAuthorsList = getAllAuthorsList();
 		printList(allAuthorsList);
@@ -181,7 +179,7 @@ public class AdminController {
 		int authorId = allAuthorsList.get(number - 1).getAuthorId();
 		socketController.writeInt(ServerMessage.DELETE_AUTHOR, authorId);
 	}
-	
+
 	private void getAllAuthorBooks() {
 		getAllAuthorsList();
 		System.out.println("Select Author number: ");
@@ -193,14 +191,6 @@ public class AdminController {
 			return;
 		}
 		printList(allAuthorBooks);
-	}
-
-	private ArrayList<Author> getAllAuthorsList() {
-		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
-		socketController.write(getAllAuthorsRequest.json());
-		String jsonMessage = socketController.readUtf();
-		GetAllAuthorsResponse getAuthorsResponse = gson.fromJson(jsonMessage, GetAllAuthorsResponse.class);
-		return getAuthorsResponse.getAuthorsList();
 	}
 
 	private void enterAuthor(Book book) {
@@ -253,12 +243,4 @@ public class AdminController {
 		}
 	}
 
-	private ArrayList<Book> getAllBooks() {
-		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
-		ArrayList<Book> allBooks = socketController.read();
-		if (allBooks.equals(null)) {
-			return null;
-		}
-		return allBooks;
-	}
 }

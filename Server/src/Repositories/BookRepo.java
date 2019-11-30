@@ -46,6 +46,27 @@ public class BookRepo {
 		return null;
 	}
 
+	public ArrayList<Author> getAllAuthorsList() {
+		ArrayList<Author> allAuthorsList = new ArrayList<>();
+		String query = "SELECT * FROM authors";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int authorId = rs.getInt(1);
+				String name = rs.getString(2);
+				String surname = rs.getString(3);
+				String lang = rs.getString(4);
+				Language language = Language.valueOf(lang);
+				Author author = new Author(authorId, name, surname, language);
+				allAuthorsList.add(author);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allAuthorsList;
+	}
+
 	public ArrayList<Book> showAllAuthorBooks(int authorId) {
 		ArrayList<Book> allAuthorBooks = new ArrayList<>();
 		String sql = "SELECT  a.name, a.surname, a.language, b.title, b.year, b.genre FROM authors a JOIN books b\n"
@@ -65,15 +86,16 @@ public class BookRepo {
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(author, title, year, genre);
 				allAuthorBooks.add(book);
-				
-			} return allAuthorBooks;
+
+			}
+			return allAuthorBooks;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public ArrayList<Book> showAllBooksUsingJoin() {
+	public ArrayList<Book> getAllBooksListUsingJoin() {
 		ArrayList<Book> allBooks = new ArrayList<>();
 		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
 				+ "JOIN authors a ON b.authorid = a.authorid";
@@ -287,26 +309,5 @@ public class BookRepo {
 		} catch (SQLException ex) {
 			System.out.println(ex);
 		}
-	}
-
-	public ArrayList<Author> getAllAuthorsList() {
-		ArrayList<Author> allAuthorsList = new ArrayList<>();
-		String query = "SELECT * FROM authors";
-		try {
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery(query);
-		while (rs.next()) {
-			int authorId = rs.getInt(1);
-			String name = rs.getString(2);
-			String surname = rs.getString(3);
-			String lang = rs.getString(4);
-			Language language = Language.valueOf(lang);
-			Author author = new Author(authorId, name, surname, language);
-			allAuthorsList.add(author);
-		}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return allAuthorsList;
 	}
 }

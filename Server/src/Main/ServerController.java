@@ -45,8 +45,7 @@ public class ServerController {
 				addBook(addBookRequest.getBook());
 				break;
 			case GET_ALL_BOOKS:
-				GetAllBooksRequest getAllBooksRequest = gson.fromJson(jsonMessage, GetAllBooksRequest.class);
-				showAllBooks();
+				getAllBooksList();
 				break;
 			case GET_ALL_AUTHORS:
 				getAllAuthorsList();
@@ -104,8 +103,10 @@ public class ServerController {
 		bookRepo.addBook(book);
 	}
 
-	private void showAllBooks() {
-		bookRepo.showAllBooksUsingJoin();
+	private void getAllBooksList() {
+		GetAllBooksResponse getAllAuthorsResponse = new GetAllBooksResponse(bookRepo.getAllBooksListUsingJoin());
+		socketController.write(getAllAuthorsResponse.json());
+		;
 	}
 
 	private void getAllAuthorsList() {
