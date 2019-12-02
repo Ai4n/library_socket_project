@@ -31,7 +31,7 @@ public class ServerController {
 
 		while (true) {
 			String jsonMessage = socketController.readUtf();
-			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);	
+			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
 			System.out.println("message: " + request.message);
 			if (request == null)
 				continue;
@@ -51,8 +51,8 @@ public class ServerController {
 				getAllAuthorsList();
 				break;
 			case SEARCH_BOOK:
-				SearchBookRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBookRequest.class);
-				searchBook();
+				SearchBooksRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBooksRequest.class);
+				searchBookInLibrary(searchBookRequest.getTextForSearch());
 				break;
 			case USER_CHECK:
 				UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
@@ -83,8 +83,8 @@ public class ServerController {
 				deleteBook();
 				break;
 			case DELETE_AUTHOR:
-			    deleteAuthor();
-			    break;
+				deleteAuthor();
+				break;
 			case UPDATE_BOOK:
 				updateBook();
 				break;
@@ -112,6 +112,12 @@ public class ServerController {
 	private void getAllAuthorsList() {
 		GetAllAuthorsResponse getAllAuthorsResponse = new GetAllAuthorsResponse(bookRepo.getAllAuthorsList());
 		socketController.write(getAllAuthorsResponse.json());
+	}
+
+	private void searchBookInLibrary(String string) {
+		ArrayList<Book> foundedBooksList = bookRepo.searchBook(string);
+		SearchBooksResponse searchBooksResponse = new SearchBooksResponse(foundedBooksList);
+		socketController.write(searchBooksResponse.json());
 	}
 
 	private void updateBook() {
@@ -150,18 +156,6 @@ public class ServerController {
 		String userId = socketController.readUtf();
 		String bookId = socketController.readUtf();
 		bookRepo.addUserBook(Integer.valueOf(userId), Integer.valueOf(bookId));
-	}
-
-	private void searchBook() {
-		ArrayList<Book> foundBooks;
-		String text;
-		try {
-			text = socketController.readUtf();
-			foundBooks = bookRepo.searchBook(text);
-			socketController.writeObject(foundBooks);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void searchUsBooks() {

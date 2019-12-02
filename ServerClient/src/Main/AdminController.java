@@ -18,19 +18,20 @@ public class AdminController {
 
 	public void adminMenu() {
 		loop: while (true) {
-			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
-					+ "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n" + "7.Delete Author\n"
-					+ "8.Show all Authors\n" + "9.Show all Authors books\n" + "10.Quit\n");
+			System.out.println(
+					"\nEnter options:\n" + "1.Add book to Library\n" + "2.Show books in Library\n" + "3.Search book\n"
+							+ "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n" + "7.Delete some Author\n"
+							+ "8.Show list of Authors\n" + "9.Show list of Author's books\n" + "10.Quit\n");
 			int number = scan.nextInt();
 			switch (number) {
 			case 1:
-				addToAllBooks();
+				addBookToLibrary();
 				break;
 			case 2:
 				printList(getAllBooksList());
 				break;
 			case 3:
-				searchInAllBooks();
+				printList(searchBooksInLibrary());
 				break;
 			case 4:
 				deleteBook();
@@ -59,7 +60,7 @@ public class AdminController {
 		}
 	}
 
-	private void addToAllBooks() {
+	private void addBookToLibrary() {
 		ArrayList<Author> authorsList = getAllAuthorsList();
 		printList(authorsList);
 		System.out.println("Please select Author:");
@@ -80,7 +81,7 @@ public class AdminController {
 		AddBookRequest addBookRequest = new AddBookRequest(book);
 		socketController.write(addBookRequest.json());
 	}
-	
+
 	private ArrayList<Author> getAllAuthorsList() {
 		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
 		socketController.write(getAllAuthorsRequest.json());
@@ -97,19 +98,14 @@ public class AdminController {
 		return getAllBooksResponse.getAllBooksList();
 	}
 
-	public void searchInAllBooks() {
+	public ArrayList<Book> searchBooksInLibrary() {
 		System.out.println("Please enter search text: ");
-		String text = scan.next();
-		socketController.write(ServerMessage.SEARCH_BOOK, text);
-		ArrayList<Book> foundBooks = socketController.read();
-		if (foundBooks.equals(null)) {
-			return;
-		}
-		int count = 1;
-		for (Book book : foundBooks) {
-			System.out.println(count + ". " + book);
-			count++;
-		}
+		String textForSearch = scan.next();
+		SearchBooksRequest searchBooksRequest = new SearchBooksRequest(textForSearch);
+		socketController.write(searchBooksRequest.json());
+		String jsonMessage = socketController.readUtf();
+		SearchBooksResponse searchBooksResponse = gson.fromJson(jsonMessage, SearchBooksResponse.class);
+		return searchBooksResponse.getFoundedBooksList();
 	}
 
 	private void deleteBook() {
