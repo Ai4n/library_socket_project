@@ -117,7 +117,8 @@ public class AdminController {
 		System.out.println("Choose number of book: \n");
 		int number = scan.nextInt();
 		Integer bookId = listBooks.get(number - 1).getBookId();
-		socketController.writeInt(ServerMessage.DELETE_BOOK, bookId);
+		DeleteBookRequest deleteBookRequest = new DeleteBookRequest(bookId);
+		socketController.write(deleteBookRequest.json());
 	}
 
 	private void updateBook() {
