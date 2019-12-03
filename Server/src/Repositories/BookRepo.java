@@ -155,13 +155,14 @@ public class BookRepo {
 	}
 
 	public void updateBook(Book book) {
-		String query = "INSERT into books values(null, ?, ?, ?, ?)";
+		String query = "UPDATE books set authorid = '?', title = '?', year = '?', genre = '?' where id = '?'";
 		try {
-			PreparedStatement ps = connection.prepareStatement(query);
+			PreparedStatement ps = connection.prepareStatement(query);	
 			ps.setInt(1, book.getAuthor().getAuthorId());
 			ps.setString(2, book.getTitle());
 			ps.setInt(3, book.getYear());
 			ps.setString(4, book.getGenre());
+			ps.setInt(5, book.getBookId());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			System.out.println(ex);

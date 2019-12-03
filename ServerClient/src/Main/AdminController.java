@@ -26,6 +26,7 @@ public class AdminController {
 			switch (number) {
 			case 1:
 				addBookToLibrary();
+				printList(getAllBooksList());
 				break;
 			case 2:
 				printList(getAllBooksList());

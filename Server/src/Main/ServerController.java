@@ -71,7 +71,8 @@ public class ServerController {
 				showBooks();
 				break;
 			case SHOW_AUTHORS_BOOKS:
-				GetAuthorsBooksListRequest getAuthorsBooksListRequest = gson.fromJson(jsonMessage, GetAuthorsBooksListRequest.class);
+				GetAuthorsBooksListRequest getAuthorsBooksListRequest = gson.fromJson(jsonMessage,
+						GetAuthorsBooksListRequest.class);
 				showAllAuthorsBooks(getAuthorsBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
@@ -125,11 +126,9 @@ public class ServerController {
 	}
 
 	private void updateBook(Book book) {
-		if (book.equals(null))
-			return;
 		int bookId = book.getBookId();
+		bookRepo.updateBook(book);
 		bookRepo.deleteBook(bookId);
-		bookRepo.updateBook(book);		
 	}
 
 	private void deleteBook(int bookId) {
