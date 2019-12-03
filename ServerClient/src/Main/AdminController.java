@@ -49,7 +49,7 @@ public class AdminController {
 				printList(getAllAuthorsList());
 				break;
 			case 9:
-				getAllAuthorBooks();
+				getAuthorBooksList();
 				break;
 			case 10:
 				return;
@@ -71,9 +71,9 @@ public class AdminController {
 		System.out.println("Please enter Title:");
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
-		String year = scan.nextLine();
+		int year = scan.nextInt();
 		System.out.println("Please enter Genre:");
-		String genre = scan.nextLine();
+		String genre = scan.next();
 		Book book = new Book(author, title, year, genre);
 		if (book.equals(null)) {
 			return;
@@ -122,6 +122,7 @@ public class AdminController {
 	}
 
 	private void updateBook() {
+		Book updatedBook = null;
 		ArrayList<Book> listBooks = getAllBooksList();
 		if (listBooks.equals(null)) {
 			return;
@@ -130,29 +131,27 @@ public class AdminController {
 		System.out.println("Please enter number of book: ");
 		int number = scan.nextInt();
 		Book book = listBooks.get(number - 1);
-		if (book.equals(null)) {
-			return;
-		}
 		System.out.println("Choose field to update: \n" + "1. Author\n" + "2. Title\n" + "3. Year\n" + "4. Genre\n");
 		int digit = scan.nextInt();
 		switch (digit) {
 		case 1:
-			enterAuthor(book);
+			updatedBook = enterAuthor(book);
 			break;
 		case 2:
-			enterTitle(book);
+			updatedBook = enterTitle(book);
 			break;
 		case 3:
-			enterYear(book);
+			updatedBook = enterYear(book);
 			break;
 		case 4:
-			enterGenre(book);
+			updatedBook = enterGenre(book);
 			break;
 		default:
 			System.out.println("enter 1-4");
 			break;
 		}
-		socketController.writeObject(ServerMessage.UPDATE_BOOK, book);
+		UpdateBookRequest updateBookRequest = new UpdateBookRequest(updatedBook);
+		socketController.write(updateBookRequest.json());
 	}
 
 	private void addAuthor() {
@@ -174,61 +173,66 @@ public class AdminController {
 		System.out.println("Select Author number: ");
 		int number = scan.nextInt();
 		int authorId = allAuthorsList.get(number - 1).getAuthorId();
-		socketController.writeInt(ServerMessage.DELETE_AUTHOR, authorId);
+		DeleteAuthorRequest deleteAuthorRequest = new DeleteAuthorRequest(authorId);
+		socketController.write(deleteAuthorRequest.json());
 	}
 
-	private void getAllAuthorBooks() {
-		getAllAuthorsList();
+	private void getAuthorBooksList() {
+		printList(getAllAuthorsList());
 		System.out.println("Select Author number: ");
 		int authorId = scan.nextInt();
-		String authorIdStr = String.valueOf(authorId);
-		socketController.write(ServerMessage.SHOW_AUTHORS_BOOKS, authorIdStr);
-		ArrayList<Book> allAuthorBooks = socketController.read();
-		if (allAuthorBooks.equals(null)) {
-			return;
-		}
-		printList(allAuthorBooks);
+		GetAuthorsBooksListRequest getAuthorsBooksListRequest = new GetAuthorsBooksListRequest(authorId);
+		socketController.write(getAuthorsBooksListRequest.json());
+		String jsonMessage = socketController.readUtf();
+		GetAuthorsBooksListResponse getAuthorsBooksListResponse = gson.fromJson(jsonMessage, GetAuthorsBooksListResponse.class);
+		printList(getAuthorsBooksListResponse.getAuthorsBooksList());
 	}
 
-	private void enterAuthor(Book book) {
-		if (book.equals(null)) {
-			return;
-		}
+	private Book enterAuthor(Book book) {
 		System.out.println("Enter Author's name: ");
 		scan.nextLine();
 		String name = scan.next();
 		System.out.println("Enter Author's surname: ");
 		String surname = scan.next();
+		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
 		Language lang = Language.create(scan.next());
 		Author author = new Author(name, surname, lang);
-		book.setAuthor(author);
+	    book.setAuthor(author);
+	    Book updatedBook = book;
+		return updatedBook;
 	}
 
-	private void enterTitle(Book book) {
+	private Book enterTitle(Book book) {
 		if (book.equals(null)) {
-			return;
+			return null;
 		}
 		System.out.println("Enter title of the book: ");
 		String title = scan.next();
 		book.setTitle(title);
+		Book updatedBook = book;
+		return updatedBook;
 	}
 
-	private void enterYear(Book book) {
+	private Book enterYear(Book book) {
 		if (book.equals(null)) {
-			return;
+			return null;
 		}
 		System.out.println("Enter 4 digits of year: ");
-		String year = scan.next();
+		int year = scan.nextInt();
 		book.setYear(year);
+		Book updatedBook = book;
+		return updatedBook;
 	}
 
-	private void enterGenre(Book book) {
+	private Book enterGenre(Book book) {
 		if (book.equals(null)) {
-			return;
+			return null;
 		}
 		System.out.println("Enter genre: ");
 		String genre = scan.next();
 		book.setGenre(genre);
+		Book updatedBook = book;
+		return updatedBook;
 	}
 
 	private <T> void printList(ArrayList<T> anyList) {

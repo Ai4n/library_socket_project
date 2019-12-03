@@ -71,7 +71,8 @@ public class ServerController {
 				showBooks();
 				break;
 			case SHOW_AUTHORS_BOOKS:
-				showAllAuthorsBooks();
+				GetAuthorsBooksListRequest getAuthorsBooksListRequest = gson.fromJson(jsonMessage, GetAuthorsBooksListRequest.class);
+				showAllAuthorsBooks(getAuthorsBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
 				searchUsBooks();
@@ -84,10 +85,12 @@ public class ServerController {
 				deleteBook(deleteBookRequest.getBookId());
 				break;
 			case DELETE_AUTHOR:
-				deleteAuthor();
+				DeleteAuthorRequest deleteAuthorRequest = gson.fromJson(jsonMessage, DeleteAuthorRequest.class);
+				deleteAuthor(deleteAuthorRequest.getAuthorId());
 				break;
 			case UPDATE_BOOK:
-				updateBook();
+				UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
+				updateBook(updateBookRequest.getBook());
 				break;
 			default:
 				return;
@@ -121,13 +124,12 @@ public class ServerController {
 		socketController.write(searchBooksResponse.json());
 	}
 
-	private void updateBook() {
-		Book book = socketController.read();
+	private void updateBook(Book book) {
 		if (book.equals(null))
 			return;
-		bookRepo.deleteBook(book.getBookId());
-		bookRepo.addBook(book);
-
+		int bookId = book.getBookId();
+		bookRepo.deleteBook(bookId);
+		bookRepo.updateBook(book);		
 	}
 
 	private void deleteBook(int bookId) {
@@ -196,18 +198,14 @@ public class ServerController {
 		userRepo.addUser(user);
 	}
 
-	private void deleteAuthor() {
-		String authorIdStr = socketController.readUtf();
-		int authorId = Integer.valueOf(authorIdStr);
+	private void deleteAuthor(int authorId) {
 		bookRepo.deleteAuthor(authorId);
 	}
 
-	private void showAllAuthorsBooks() {
-		String authorIdStr = socketController.readUtf();
-		if (authorIdStr.equals(null))
-			return;
-		int authorId = Integer.valueOf(authorIdStr);
-		ArrayList<Book> allAuthorBooks = bookRepo.showAllAuthorBooks(authorId);
-		socketController.writeObject(allAuthorBooks);
+	private void showAllAuthorsBooks(int authorId) {
+		ArrayList<Book> authorsBooksList;
+		authorsBooksList = bookRepo.showAllAuthorBooks(authorId);
+		GetAuthorsBooksListResponse getAuthorsBooksListResponse = new GetAuthorsBooksListResponse(authorsBooksList);
+		socketController.write(getAuthorsBooksListResponse.json());
 	}
 }

@@ -81,7 +81,7 @@ public class BookRepo {
 				String language = rs.getString(3);
 				Language authorLanguage = Language.create(language);
 				String title = rs.getString(4);
-				String year = rs.getString(5);
+				int year = rs.getInt(5);
 				String genre = rs.getString(6);
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(author, title, year, genre);
@@ -109,7 +109,7 @@ public class BookRepo {
 				String language = rs.getString(4);
 				Language authorLanguage = Language.create(language);
 				String title = rs.getString(5);
-				String year = rs.getString(6);
+				int year = rs.getInt(6);
 				String genre = rs.getString(7);
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(bookId, author, title, year, genre);
@@ -154,13 +154,29 @@ public class BookRepo {
 		}
 	}
 
+	public void updateBook(Book book) {
+		String query = "INSERT into books values(null, ?, ?, ?, ?)";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, book.getAuthor().getAuthorId());
+			ps.setString(2, book.getTitle());
+			ps.setInt(3, book.getYear());
+			ps.setString(4, book.getGenre());
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+
+	}
+
+	
 	public void addBook(Book book) {
 		String query = "INSERT into books values(null, ?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setInt(1, book.getAuthor().getAuthorId());
 			ps.setString(2, book.getTitle());
-			ps.setString(3, book.getYear());
+			ps.setInt(3, book.getYear());
 			ps.setString(4, book.getGenre());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
@@ -183,7 +199,7 @@ public class BookRepo {
 				int authorId = rs.getInt(2);
 				Author author = getAuthorById(authorId);
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(author, title, year, genre);
 				foundBooks.add(book);
@@ -210,7 +226,7 @@ public class BookRepo {
 				Author author = getAuthorById(authorId);
 
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(bookId, author, title, year, genre);
 				books.add(book);
@@ -241,7 +257,7 @@ public class BookRepo {
 				int authorId = rs.getInt(2);
 				Author author = getAuthorById(authorId);
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(bookId, author, title, year, genre);
 				foundBooks.add(book);
