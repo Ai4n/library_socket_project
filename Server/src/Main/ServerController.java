@@ -31,7 +31,7 @@ public class ServerController {
 
 		while (true) {
 			String jsonMessage = socketController.readUtf();
-			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);	
+			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
 			System.out.println("message: " + request.message);
 			if (request == null)
 				continue;
@@ -45,15 +45,14 @@ public class ServerController {
 				addBook(addBookRequest.getBook());
 				break;
 			case GET_ALL_BOOKS:
-				GetAllBooksRequest getAllBooksRequest = gson.fromJson(jsonMessage, GetAllBooksRequest.class);
-				showAllBooks();
+				getAllBooksList();
 				break;
 			case GET_ALL_AUTHORS:
 				getAllAuthorsList();
 				break;
 			case SEARCH_BOOK:
-				SearchBookRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBookRequest.class);
-				searchBook();
+				SearchBooksRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBooksRequest.class);
+				searchBookInLibrary(searchBookRequest.getTextForSearch());
 				break;
 			case USER_CHECK:
 				UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
@@ -72,7 +71,9 @@ public class ServerController {
 				showBooks();
 				break;
 			case SHOW_AUTHORS_BOOKS:
-				showAllAuthorsBooks();
+				GetAuthorsBooksListRequest getAuthorsBooksListRequest = gson.fromJson(jsonMessage,
+						GetAuthorsBooksListRequest.class);
+				showAllAuthorsBooks(getAuthorsBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
 				searchUsBooks();
@@ -81,13 +82,16 @@ public class ServerController {
 				deleteUserBook();
 				break;
 			case DELETE_BOOK:
-				deleteBook();
+				DeleteBookRequest deleteBookRequest = gson.fromJson(jsonMessage, DeleteBookRequest.class);
+				deleteBook(deleteBookRequest.getBookId());
 				break;
 			case DELETE_AUTHOR:
-			    deleteAuthor();
-			    break;
+				DeleteAuthorRequest deleteAuthorRequest = gson.fromJson(jsonMessage, DeleteAuthorRequest.class);
+				deleteAuthor(deleteAuthorRequest.getAuthorId());
+				break;
 			case UPDATE_BOOK:
-				updateBook();
+				UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
+				updateBook(updateBookRequest.getBook());
 				break;
 			default:
 				return;
@@ -104,8 +108,10 @@ public class ServerController {
 		bookRepo.addBook(book);
 	}
 
-	private void showAllBooks() {
-		bookRepo.showAllBooksUsingJoin();
+	private void getAllBooksList() {
+		GetAllBooksResponse getAllAuthorsResponse = new GetAllBooksResponse(bookRepo.getAllBooksListUsingJoin());
+		socketController.write(getAllAuthorsResponse.json());
+		;
 	}
 
 	private void getAllAuthorsList() {
@@ -113,18 +119,19 @@ public class ServerController {
 		socketController.write(getAllAuthorsResponse.json());
 	}
 
-	private void updateBook() {
-		Book book = socketController.read();
-		if (book.equals(null))
-			return;
-		bookRepo.deleteBook(book.getBookId());
-		bookRepo.addBook(book);
-
+	private void searchBookInLibrary(String string) {
+		ArrayList<Book> foundedBooksList = bookRepo.searchBook(string);
+		SearchBooksResponse searchBooksResponse = new SearchBooksResponse(foundedBooksList);
+		socketController.write(searchBooksResponse.json());
 	}
 
-	private void deleteBook() {
-		String bookIdStr = socketController.readUtf();
-		int bookId = Integer.valueOf(bookIdStr);
+	private void updateBook(Book book) {
+		int bookId = book.getBookId();
+		bookRepo.updateBook(book);
+		bookRepo.deleteBook(bookId);
+	}
+
+	private void deleteBook(int bookId) {
 		bookRepo.deleteBook(bookId);
 		bookRepo.deleteBooksData(bookId);
 
@@ -149,18 +156,6 @@ public class ServerController {
 		String userId = socketController.readUtf();
 		String bookId = socketController.readUtf();
 		bookRepo.addUserBook(Integer.valueOf(userId), Integer.valueOf(bookId));
-	}
-
-	private void searchBook() {
-		ArrayList<Book> foundBooks;
-		String text;
-		try {
-			text = socketController.readUtf();
-			foundBooks = bookRepo.searchBook(text);
-			socketController.writeObject(foundBooks);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void searchUsBooks() {
@@ -202,18 +197,14 @@ public class ServerController {
 		userRepo.addUser(user);
 	}
 
-	private void deleteAuthor() {
-		String authorIdStr = socketController.readUtf();
-		int authorId = Integer.valueOf(authorIdStr);
+	private void deleteAuthor(int authorId) {
 		bookRepo.deleteAuthor(authorId);
 	}
 
-	private void showAllAuthorsBooks() {
-		String authorIdStr = socketController.readUtf();
-		if (authorIdStr.equals(null))
-			return;
-		int authorId = Integer.valueOf(authorIdStr);
-		ArrayList<Book> allAuthorBooks = bookRepo.showAllAuthorBooks(authorId);
-		socketController.writeObject(allAuthorBooks);
+	private void showAllAuthorsBooks(int authorId) {
+		ArrayList<Book> authorsBooksList;
+		authorsBooksList = bookRepo.showAllAuthorBooks(authorId);
+		GetAuthorsBooksListResponse getAuthorsBooksListResponse = new GetAuthorsBooksListResponse(authorsBooksList);
+		socketController.write(getAuthorsBooksListResponse.json());
 	}
 }

@@ -22,15 +22,9 @@ public class ServerTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	public static ServerController getServerController() {
-		return serverController;
 	}
 
 	public static void setServerController(ServerController serverController) {
 		ServerTest.serverController = serverController;
 	}
-
 }

@@ -46,6 +46,27 @@ public class BookRepo {
 		return null;
 	}
 
+	public ArrayList<Author> getAllAuthorsList() {
+		ArrayList<Author> allAuthorsList = new ArrayList<>();
+		String query = "SELECT * FROM authors";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				int authorId = rs.getInt(1);
+				String name = rs.getString(2);
+				String surname = rs.getString(3);
+				String lang = rs.getString(4);
+				Language language = Language.valueOf(lang);
+				Author author = new Author(authorId, name, surname, language);
+				allAuthorsList.add(author);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allAuthorsList;
+	}
+
 	public ArrayList<Book> showAllAuthorBooks(int authorId) {
 		ArrayList<Book> allAuthorBooks = new ArrayList<>();
 		String sql = "SELECT  a.name, a.surname, a.language, b.title, b.year, b.genre FROM authors a JOIN books b\n"
@@ -60,20 +81,21 @@ public class BookRepo {
 				String language = rs.getString(3);
 				Language authorLanguage = Language.create(language);
 				String title = rs.getString(4);
-				String year = rs.getString(5);
+				int year = rs.getInt(5);
 				String genre = rs.getString(6);
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(author, title, year, genre);
 				allAuthorBooks.add(book);
-				
-			} return allAuthorBooks;
+
+			}
+			return allAuthorBooks;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public ArrayList<Book> showAllBooksUsingJoin() {
+	public ArrayList<Book> getAllBooksListUsingJoin() {
 		ArrayList<Book> allBooks = new ArrayList<>();
 		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
 				+ "JOIN authors a ON b.authorid = a.authorid";
@@ -87,7 +109,7 @@ public class BookRepo {
 				String language = rs.getString(4);
 				Language authorLanguage = Language.create(language);
 				String title = rs.getString(5);
-				String year = rs.getString(6);
+				int year = rs.getInt(6);
 				String genre = rs.getString(7);
 				Author author = new Author(authorName, authorSurname, authorLanguage);
 				Book book = new Book(bookId, author, title, year, genre);
@@ -132,13 +154,30 @@ public class BookRepo {
 		}
 	}
 
+	public void updateBook(Book book) {
+		String query = "UPDATE books set authorid = '?', title = '?', year = '?', genre = '?' where id = '?'";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);	
+			ps.setInt(1, book.getAuthor().getAuthorId());
+			ps.setString(2, book.getTitle());
+			ps.setInt(3, book.getYear());
+			ps.setString(4, book.getGenre());
+			ps.setInt(5, book.getBookId());
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+
+	}
+
+	
 	public void addBook(Book book) {
 		String query = "INSERT into books values(null, ?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setInt(1, book.getAuthor().getAuthorId());
 			ps.setString(2, book.getTitle());
-			ps.setString(3, book.getYear());
+			ps.setInt(3, book.getYear());
 			ps.setString(4, book.getGenre());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
@@ -161,7 +200,7 @@ public class BookRepo {
 				int authorId = rs.getInt(2);
 				Author author = getAuthorById(authorId);
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(author, title, year, genre);
 				foundBooks.add(book);
@@ -188,7 +227,7 @@ public class BookRepo {
 				Author author = getAuthorById(authorId);
 
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(bookId, author, title, year, genre);
 				books.add(book);
@@ -219,7 +258,7 @@ public class BookRepo {
 				int authorId = rs.getInt(2);
 				Author author = getAuthorById(authorId);
 				String title = rs.getString(3);
-				String year = rs.getString(4);
+				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(bookId, author, title, year, genre);
 				foundBooks.add(book);
@@ -287,26 +326,5 @@ public class BookRepo {
 		} catch (SQLException ex) {
 			System.out.println(ex);
 		}
-	}
-
-	public ArrayList<Author> getAllAuthorsList() {
-		ArrayList<Author> allAuthorsList = new ArrayList<>();
-		String query = "SELECT * FROM authors";
-		try {
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery(query);
-		while (rs.next()) {
-			int authorId = rs.getInt(1);
-			String name = rs.getString(2);
-			String surname = rs.getString(3);
-			String lang = rs.getString(4);
-			Language language = Language.valueOf(lang);
-			Author author = new Author(authorId, name, surname, language);
-			allAuthorsList.add(author);
-		}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return allAuthorsList;
 	}
 }

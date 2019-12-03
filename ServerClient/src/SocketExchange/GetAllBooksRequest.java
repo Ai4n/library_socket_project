@@ -1,19 +1,15 @@
 package SocketExchange;
 
-import java.util.ArrayList;
-import Main.Book;
+import com.google.gson.Gson;
 import Main.ServerMessage;
 
 public class GetAllBooksRequest extends SocketExchange {
 
-	private ArrayList<Book> allBooks;
-
-	public GetAllBooksRequest(ArrayList<Book> allBooks) {
+	public GetAllBooksRequest() {
 		super(ServerMessage.GET_ALL_BOOKS);
-		this.allBooks = allBooks;
 	}
 
-	public ArrayList<Book> getAllBooks() {
-		return allBooks;
+	public String json() {
+		return new Gson().toJson(this);
 	}
 }

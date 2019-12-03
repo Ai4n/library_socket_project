@@ -4,14 +4,11 @@ import java.io.Serializable;
 
 public class Book implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int bookId;
 	private Author author;
 	private String title;
-	private String year;
+	private int year;
 	private String genre;
 
 	public int getBookId() {
@@ -38,11 +35,11 @@ public class Book implements Serializable {
 		this.title = title;
 	}
 
-	public String getYear() {
+	public int getYear() {
 		return year;
 	}
 
-	public void setYear(String year) {
+	public void setYear(int year) {
 		this.year = year;
 	}
 
@@ -54,7 +51,7 @@ public class Book implements Serializable {
 		this.genre = genre;
 	}
 
-	public Book(int bookId, Author author, String title, String year, String genre) {
+	public Book(int bookId, Author author, String title, int year, String genre) {
 		this.bookId = bookId;
 		this.author = author;
 		this.title = title;
@@ -62,7 +59,7 @@ public class Book implements Serializable {
 		this.genre = genre;
 	}
 
-	public Book(Author author, String title, String year, String genre) {
+	public Book(Author author, String title, int year, String genre) {
 		this.author = author;
 		this.title = title;
 		this.year = year;

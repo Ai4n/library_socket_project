@@ -78,6 +78,7 @@ public class UserController {
 	}
 
 	private ArrayList<Book> getAllBooks() {
+		//fix this
 		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
 		ArrayList<Book> allBooks = socketController.read();
 		
