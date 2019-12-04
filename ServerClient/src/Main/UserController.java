@@ -2,15 +2,8 @@ package Main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import com.google.gson.Gson;
-
-import SocketExchange.DeleteBookFromUsersList;
-import SocketExchange.DeleteBookRequest;
-import SocketExchange.GetAllBooksRequest;
-import SocketExchange.GetAllBooksResponse;
-import SocketExchange.GetAllUsersBooksRequest;
-import SocketExchange.GetAllUsersBooksResponse;
+import SocketExchange.*;
 
 public class UserController {
 
@@ -26,8 +19,8 @@ public class UserController {
 
 	public void userMenu() {
 		loop: while (true) {
-			System.out.println("\nEnter options:\n" + "1.Add book to Library\n" + "2.Show all books in Library\n" + "3.Search book in Library\n"
-					+ "4.Delete book from Library\n" + "5.Quit\n");
+			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
+					+ "4.Delete book\n" + "5.Quit\n");
 			int number = scan.nextInt();
 			switch (number) {
 			case 1:
@@ -52,13 +45,9 @@ public class UserController {
 	}
 
 	private void showAllUsersBooks() {
-		ArrayList<Book> listBooks = getAllUserBooks();
-		if (listBooks.equals(null)) {
-			return;
-		}
-		printList(listBooks);
+		printList(getAllUsersBooks());
 	}
-// to do
+
 	private void addBookToUsersList() {
 		ArrayList<Book> listBooks = getAllLibraryBooks();
 		if (listBooks.equals(null)) {
@@ -69,7 +58,8 @@ public class UserController {
 			int number = scan.nextInt();
 			int bookId = listBooks.get(number - 1).getBookId();
 			int userId = user.getIduser();
-			socketController.writeInt(ServerMessage.ADD_USER_BOOK, bookId, userId);
+			AddBookToUsersListRequest addBookToUsersListRequest = new AddBookToUsersListRequest(bookId, userId);
+			socketController.write(addBookToUsersListRequest.json());
 		} else
 			return;
 	}
@@ -77,42 +67,33 @@ public class UserController {
 	private ArrayList<Book> getAllLibraryBooks() {
 		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
 		socketController.write(getAllBooksRequest.json());
-		String jsonMessage = socketController.read();
+		String jsonMessage = socketController.readUtf();
 		GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
 		return getAllBooksResponse.getAllBooksList();
 	}
 
-	private ArrayList<Book> getAllUserBooks() {
+	private ArrayList<Book> getAllUsersBooks() {
 		int userId = user.getIduser();
 		GetAllUsersBooksRequest getAllUsersBooksRequest = new GetAllUsersBooksRequest(userId);
 		socketController.write(getAllUsersBooksRequest.json());
-		String jsonMessage = socketController.read();
+		String jsonMessage = socketController.readUtf();
 		GetAllUsersBooksResponse getAllUsersBooksResponse = gson.fromJson(jsonMessage, GetAllUsersBooksResponse.class);
 		return getAllUsersBooksResponse.getAllBooksList();
 	}
-// to do
+
 	private void searchBookInUsersList() {
-		int idUser = user.getIduser();
-		String userId = String.valueOf(idUser);
+		int userId = user.getIduser();
 		System.out.println("Please enter search text: \n");
 		String text = scan.next();
-		socketController.write(ServerMessage.SEARCH_BOOKS, userId, text);
-		ArrayList<Book> foundBooks = socketController.read();
-		if (foundBooks.equals(null)) {
-			return;
-		}
-		int count = 1;
-		for (Book book : foundBooks) {
-			System.out.println(count + ". " + book);
-			count++;
-		}
+		SearchUsersBookRequest searchUsersBookRequest = new SearchUsersBookRequest(userId, text);
+		socketController.write(searchUsersBookRequest.json());
+		String jsonMessage = socketController.readUtf();
+		SearchUsersBookResponse searchUsersBookResponse = gson.fromJson(jsonMessage, SearchUsersBookResponse.class);
+		printList(searchUsersBookResponse.getBooksList());
 	}
 
 	private void deleteBookFromUsersList() {
-		ArrayList<Book> listBooks = getAllUserBooks();
-		if (listBooks.equals(null)) {
-			return;
-		}
+		ArrayList<Book> listBooks = getAllUsersBooks();
 		printList(listBooks);
 		System.out.println("Choose number of book: \n");
 		int number = scan.nextInt();

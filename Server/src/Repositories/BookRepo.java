@@ -139,7 +139,7 @@ public class BookRepo {
 		return true;
 	}
 
-	public void addUserBook(int bookId, int userId) {
+	public void addBookToUsersList(int bookId, int userId) {
 		Boolean userHasBook = userHasBook(userId, bookId);
 		if (userHasBook) {
 			String sql = "INSERT into users_books values(null, ?, ?)";
@@ -212,46 +212,43 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public ArrayList<Book> showBooks(String userId) {
-		ArrayList<Book> books = new ArrayList<>();
+	public ArrayList<Book> showAllUsersBooks(int userId) {
+		ArrayList<Book> booksList = new ArrayList<>();
 		PreparedStatement statement;
 		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub " + "JOIN books b "
 				+ "ON b.id = ub.idbook where ub.iduser = ?";
 		try {
 			statement = connection.prepareStatement(query);
-			statement.setString(1, userId);
+			statement.setInt(1, userId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int bookId = rs.getInt(1);
 				int authorId = rs.getInt(2);
 				Author author = getAuthorById(authorId);
-
 				String title = rs.getString(3);
 				int year = rs.getInt(4);
 				String genre = rs.getString(5);
 				Book book = new Book(bookId, author, title, year, genre);
-				books.add(book);
+				booksList.add(book);
 			}
 
 		} catch (SQLException ex) {
 			System.out.println(ex);
 		}
-		return books;
+		return booksList;
 	}
 
-	public ArrayList<Book> searchUsBooks(int idUser, String text) {
+	public ArrayList<Book> searchBookInUsersList(int userId, String text) {
 		ArrayList<Book> foundBooks = new ArrayList<>();
-		String idUserString = String.valueOf(idUser);
 		PreparedStatement statement;
 		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub JOIN books b\n"
 				+ "ON b.id = ub.idbook where ub.iduser = ? and (title LIKE ? or genre LIKE ?)";
 
 		try {
 			statement = connection.prepareStatement(query);
-			statement.setString(1, idUserString);
+			statement.setInt(1, userId);
 			statement.setString(2, "%" + text + "%");
 			statement.setString(3, "%" + text + "%");
-			statement.setString(4, "%" + text + "%");
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int bookId = rs.getInt(1);
@@ -269,7 +266,7 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public void deleteUserBook(int userId, int bookId) {
+	public void deleteUsersBook(int userId, int bookId) {
 		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
