@@ -3,11 +3,21 @@ package Main;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+
+import SocketExchange.DeleteBookFromUsersList;
+import SocketExchange.DeleteBookRequest;
+import SocketExchange.GetAllBooksRequest;
+import SocketExchange.GetAllBooksResponse;
+import SocketExchange.GetAllUsersBooksRequest;
+import SocketExchange.GetAllUsersBooksResponse;
+
 public class UserController {
 
 	private Scanner scan = new Scanner(System.in);
 	private User user;
 	private SocketController socketController;
+	Gson gson = new Gson();
 
 	public UserController(User user, SocketController socketController) {
 		this.user = user;
@@ -16,21 +26,21 @@ public class UserController {
 
 	public void userMenu() {
 		loop: while (true) {
-			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
-					+ "4.Delete book\n" + "5.Quit\n");
+			System.out.println("\nEnter options:\n" + "1.Add book to Library\n" + "2.Show all books in Library\n" + "3.Search book in Library\n"
+					+ "4.Delete book from Library\n" + "5.Quit\n");
 			int number = scan.nextInt();
 			switch (number) {
 			case 1:
-				addToUserBooks();
+				addBookToUsersList();
 				break;
 			case 2:
-				showMyBooks();
+				showAllUsersBooks();
 				break;
 			case 3:
-				searchInUserBooks();
+				searchBookInUsersList();
 				break;
 			case 4:
-				deleteUserBook();
+				deleteBookFromUsersList();
 				break;
 			case 5:
 				return;
@@ -41,20 +51,20 @@ public class UserController {
 		}
 	}
 
-	private void showMyBooks() {
-		ArrayList<Book> listBooks = getUserBooks();
+	private void showAllUsersBooks() {
+		ArrayList<Book> listBooks = getAllUserBooks();
 		if (listBooks.equals(null)) {
 			return;
 		}
-		printBooksList(listBooks);
+		printList(listBooks);
 	}
-
-	private void addToUserBooks() {
-		ArrayList<Book> listBooks = getAllBooks();
+// to do
+	private void addBookToUsersList() {
+		ArrayList<Book> listBooks = getAllLibraryBooks();
 		if (listBooks.equals(null)) {
 			return;
 		} else if (!(user.equals(null))) {
-			printBooksList(listBooks);
+			printList(listBooks);
 			System.out.println("Choose number of book: \n");
 			int number = scan.nextInt();
 			int bookId = listBooks.get(number - 1).getBookId();
@@ -64,36 +74,24 @@ public class UserController {
 			return;
 	}
 
-	private void printBooksList(ArrayList<Book> listBooks) {
-
-		if (listBooks != null) {
-			for (int i = 0; i < listBooks.size(); i++) {
-				Book book = listBooks.get(i);
-				if (book.equals(null)) {
-					return;
-				} else
-					System.out.println((i + 1) + ". " + book);
-			}
-		}
+	private ArrayList<Book> getAllLibraryBooks() {
+		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
+		socketController.write(getAllBooksRequest.json());
+		String jsonMessage = socketController.read();
+		GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
+		return getAllBooksResponse.getAllBooksList();
 	}
 
-	private ArrayList<Book> getAllBooks() {
-		//fix this
-		socketController.writeMessage(ServerMessage.GET_ALL_BOOKS);
-		ArrayList<Book> allBooks = socketController.read();
-		
-		return allBooks;
-	}
-
-	private ArrayList<Book> getUserBooks() {
+	private ArrayList<Book> getAllUserBooks() {
 		int userId = user.getIduser();
-		String userStr = String.valueOf(userId);
-		socketController.write(ServerMessage.SHOW_BOOKS, userStr);
-		ArrayList<Book> listBooks = socketController.read();
-		return listBooks;
+		GetAllUsersBooksRequest getAllUsersBooksRequest = new GetAllUsersBooksRequest(userId);
+		socketController.write(getAllUsersBooksRequest.json());
+		String jsonMessage = socketController.read();
+		GetAllUsersBooksResponse getAllUsersBooksResponse = gson.fromJson(jsonMessage, GetAllUsersBooksResponse.class);
+		return getAllUsersBooksResponse.getAllBooksList();
 	}
-
-	private void searchInUserBooks() {
+// to do
+	private void searchBookInUsersList() {
 		int idUser = user.getIduser();
 		String userId = String.valueOf(idUser);
 		System.out.println("Please enter search text: \n");
@@ -110,16 +108,28 @@ public class UserController {
 		}
 	}
 
-	private void deleteUserBook() {
-		ArrayList<Book> listBooks = getUserBooks();
+	private void deleteBookFromUsersList() {
+		ArrayList<Book> listBooks = getAllUserBooks();
 		if (listBooks.equals(null)) {
 			return;
 		}
-		printBooksList(listBooks);
+		printList(listBooks);
 		System.out.println("Choose number of book: \n");
 		int number = scan.nextInt();
 		int bookId = listBooks.get(number - 1).getBookId();
 		int userId = user.getIduser();
-		socketController.writeInt(ServerMessage.DELETE_USER_BOOK, bookId, userId);
+		DeleteBookFromUsersList deleteBookFromUsersList = new DeleteBookFromUsersList(bookId, userId);
+		socketController.write(deleteBookFromUsersList.json());
 	}
+	
+
+	private <T> void printList(ArrayList<T> anyList) {
+		if (anyList != null) {
+			for (int i = 0; i < anyList.size(); i++) {
+				T element = (T) anyList.get(i);
+				System.out.println((i + 1) + ". " + element);
+			}
+		}
+	}
+
 }

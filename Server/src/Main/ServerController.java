@@ -79,7 +79,11 @@ public class ServerController {
 				searchUsBooks();
 				break;
 			case DELETE_USER_BOOK:
-				deleteUserBook();
+				DeleteBookFromUsersList deleteBookFromUsersList = gson.fromJson(jsonMessage,
+						DeleteBookFromUsersList.class);
+				int bookId = deleteBookFromUsersList.getBookId();
+				int userId = deleteBookFromUsersList.getUserId();
+				deleteUsersBookInList(bookId, userId);
 				break;
 			case DELETE_BOOK:
 				DeleteBookRequest deleteBookRequest = gson.fromJson(jsonMessage, DeleteBookRequest.class);
@@ -137,12 +141,10 @@ public class ServerController {
 
 	}
 
-	private void deleteUserBook() {
-		String bookIdStr = socketController.readUtf();
-		String userIdStr = socketController.readUtf();
-		int bookIdInt = Integer.valueOf(bookIdStr);
-		int userIdInt = Integer.valueOf(userIdStr);
-		bookRepo.deleteUserBook(userIdInt, bookIdInt);
+//to do
+	private void deleteUsersBookInList(int bookId, int userId) {
+
+		bookRepo.deleteUserBook(userId, bookId);
 	}
 
 	private void showBooks() {
