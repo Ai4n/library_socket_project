@@ -123,7 +123,6 @@ public class AdminController {
 	}
 
 	private void updateBook() {
-		Book updatedBook = null;
 		ArrayList<Book> listBooks = getAllBooksList();
 		if (listBooks.equals(null)) {
 			return;
@@ -132,6 +131,7 @@ public class AdminController {
 		System.out.println("Please enter number of book: ");
 		int number = scan.nextInt();
 		Book book = listBooks.get(number - 1);
+		Book updatedBook = null;
 		System.out.println("Choose field to update: \n" + "1. Author\n" + "2. Title\n" + "3. Year\n" + "4. Genre\n");
 		int digit = scan.nextInt();
 		switch (digit) {
@@ -150,6 +150,9 @@ public class AdminController {
 		default:
 			System.out.println("enter 1-4");
 			break;
+		}
+		if(updatedBook.equals(null)) {
+			return;
 		}
 		UpdateBookRequest updateBookRequest = new UpdateBookRequest(updatedBook);
 		socketController.write(updateBookRequest.json());

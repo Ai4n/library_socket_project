@@ -133,9 +133,7 @@ public class ServerController {
 	}
 
 	private void updateBook(Book book) {
-		int bookId = book.getBookId();
 		bookRepo.updateBook(book);
-		bookRepo.deleteBook(bookId);
 	}
 
 	private void deleteBook(int bookId) {

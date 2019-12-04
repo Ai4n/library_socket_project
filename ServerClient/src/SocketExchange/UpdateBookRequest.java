@@ -10,7 +10,6 @@ import Main.ServerMessage;
 public class UpdateBookRequest extends SocketExchange {
 
 	private Book book;
-
 	public UpdateBookRequest(Book book) {
 		super(ServerMessage.UPDATE_BOOK);
 		this.book = book;
