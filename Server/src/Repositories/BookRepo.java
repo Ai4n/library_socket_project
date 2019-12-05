@@ -36,7 +36,7 @@ public class BookRepo {
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				Language language = Language.create(rs.getString(4));
-				Author author = new Author(name, surname, language);
+				Author author = new Author(id, name, surname, language);
 				return author;
 			}
 		} catch (Exception e) {
@@ -83,7 +83,7 @@ public class BookRepo {
 				String title = rs.getString(4);
 				int year = rs.getInt(5);
 				String genre = rs.getString(6);
-				Author author = new Author(authorName, authorSurname, authorLanguage);
+				Author author = new Author(authorId,authorName, authorSurname, authorLanguage);
 				Book book = new Book(author, title, year, genre);
 				allAuthorBooks.add(book);
 
@@ -155,14 +155,14 @@ public class BookRepo {
 	}
 
 	public void updateBook(Book book) {
-		String query = "UPDATE books id = '?' set , authorid = '?', title = '?', year = '?', genre = '?'";
+		String query = "UPDATE  books SET authorid = ?, title = ?, year = ?, genre = ? WHERE id = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setInt(1, book.getBookId());	
-			ps.setInt(2, book.getAuthor().getAuthorId());
-			ps.setString(3, book.getTitle());
-			ps.setInt(4, book.getYear());
-			ps.setString(5, book.getGenre());
+			ps.setInt(5, book.getBookId());	
+			ps.setInt(1, book.getAuthor().getAuthorId());
+			ps.setString(2, book.getTitle());
+			ps.setInt(3, book.getYear());
+			ps.setString(4, book.getGenre());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			System.out.println(ex);

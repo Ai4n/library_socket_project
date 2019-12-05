@@ -10,9 +10,10 @@ import SocketExchange.*;
 
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);
-    private SocketController socketController;
-    private Gson gson = new Gson();
-    
+	private SocketController socketController;
+	private String jsonMessage;
+	private Gson gson = new Gson();
+
 	public ClientController(Socket socket) throws IOException {
 		socketController = new SocketController(socket);
 	}
@@ -43,19 +44,19 @@ public class ClientController {
 			}
 		}
 	}
-	
+
 	public void signUp() {
 		String newLogin;
 		String password1;
 		String password2;
 		String cryptPassword;
-		String loginStatus;
 		do {
 			System.out.println("Enter new login: \n");
 			newLogin = scan.next();
-			socketController.write(ServerMessage.LOGIN_CHECK, newLogin);
-			loginStatus = socketController.readUtf();
-		} while (loginStatus.equals(ServerMessage.USER_EXIST.getMessage()));
+			LoginCheckRequest loginCheckRequest = new LoginCheckRequest(newLogin);
+			socketController.write(loginCheckRequest.json());
+			jsonMessage = socketController.readUtf();
+		} while (jsonMessage.equals(ServerMessage.USER_EXIST.getMessage()));
 
 		do {
 			System.out.println("Enter password (at least four digits): ");
@@ -65,9 +66,10 @@ public class ClientController {
 		} while (!(password1.equals(password2)));
 
 		cryptPassword = PasswordUtils.encodePassword(password1);
-		socketController.write(ServerMessage.ADD_USER, newLogin, cryptPassword);
+		AddUserRequest addUserRequest = new AddUserRequest(newLogin, cryptPassword);
+		socketController.write(addUserRequest.json());
 	}
-	
+
 	public User login() {
 		String result;
 		do {
@@ -80,7 +82,6 @@ public class ClientController {
 			socketController.write(request.json());
 			result = socketController.readUtf();
 		} while (result.equals(ServerMessage.USER_NOT_EXIST.getMessage()));
-		
 		User user = socketController.read();
 		return user;
 	}

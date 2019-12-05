@@ -59,7 +59,8 @@ public class ServerController {
 				checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
 				break;
 			case LOGIN_CHECK:
-				checkLogin();
+				LoginCheckRequest loginCheckRequest = gson.fromJson(jsonMessage, LoginCheckRequest.class);
+				checkLogin(loginCheckRequest.getNewLogin());
 				break;
 			case ADD_USER:
 				addUser();
@@ -163,18 +164,15 @@ public class ServerController {
 	}
 
 	private void checkUser(String login, String password) {
-		User foundUser = userRepo.checkUser(login, password);
-		if (foundUser.equals(null)) {
-			socketController.writeMessage(ServerMessage.USER_NOT_EXIST);
-		} else {
-			socketController.writeObject(ServerMessage.USER_EXIST, foundUser);
-		}
-
+		Boolean flag = userRepo.checkUser(login, password);
+			if(flag) {
+				socketController.write(ServerMessage.USER_EXIST);
+				}
+			System.out.println("User Not Exist!");		
 	}
 
-	private void checkLogin() {
-		String login = socketController.readUtf();
-		boolean result = userRepo.checkLogin(login);
+	private void checkLogin(String newLogin) {
+		Boolean result = userRepo.checkLogin(newLogin);
 		socketController.write(result ? ServerMessage.USER_NOT_EXIST : ServerMessage.USER_EXIST);
 	}
 
