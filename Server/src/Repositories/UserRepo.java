@@ -43,7 +43,7 @@ public class UserRepo {
 		return null;
 	}
 	
-	public boolean checkLogin(String login) {
+	public boolean isLoginExist(String login) {
 		PreparedStatement statement;
 		String sql = "SELECT * FROM users WHERE login = ?";
 		try {
@@ -51,12 +51,12 @@ public class UserRepo {
 			statement.setString(1, login);
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()) {
-				return false; 
+				return true; 
 			}	
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
 	public void addUser(User user) {

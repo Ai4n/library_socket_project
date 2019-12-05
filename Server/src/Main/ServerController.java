@@ -165,17 +165,15 @@ public class ServerController {
 
 	private void checkUser(String login, String password) {
 		User user = userRepo.checkUser(login, password);
-			if(user.equals(null)) {
-				UserNotExist userNotExist = new UserNotExist(user);
-				socketController.write(userNotExist.json());
-				}
-			UserCheckResponse userCheckResponse = new UserCheckResponse(user);
-			socketController.write(userCheckResponse.json());		
+		boolean isCredentialsCorrect = (user != null) ? true : false;
+		UserCheckResponse userCheckResponse = new UserCheckResponse(isCredentialsCorrect, user);
+		socketController.write(userCheckResponse.json());		
 	}
 
 	private void checkLogin(String newLogin) {
-		Boolean result = userRepo.checkLogin(newLogin);
-		socketController.write(result ? ServerMessage.USER_NOT_EXIST : ServerMessage.USER_EXIST);
+		Boolean isLoginExist = userRepo.isLoginExist(newLogin);
+		IsLoginExistResponse isLoginExistResponse = new IsLoginExistResponse(isLoginExist);
+		socketController.write(isLoginExistResponse.json());
 	}
 
 	private void addUser() {

@@ -50,15 +50,15 @@ public class ClientController {
 		String password1;
 		String password2;
 		String cryptPassword;
-		UserNotExist userNotExist = new UserNotExist(null);
+		IsLoginExistResponse isLoginExistResponse;
 		do {
 			System.out.println("Enter new login: \n");
 			newLogin = scan.next();
 			LoginCheckRequest loginCheckRequest = new LoginCheckRequest(newLogin);
 			socketController.write(loginCheckRequest.json());
 			jsonMessage = socketController.readUtf();
-			
-		} while (jsonMessage.equals(userNotExist.getMessage()));
+			isLoginExistResponse = gson.fromJson(jsonMessage, IsLoginExistResponse.class);
+		} while (isLoginExistResponse.message == (ServerMessage.USER_EXIST));
 
 		do {
 			System.out.println("Enter password (at least four digits): ");
@@ -74,6 +74,7 @@ public class ClientController {
 
 	public User login() {
 		String result;
+		UserCheckResponse userCheckResponse;
 		do {
 			System.out.println("Enter your login:");
 			String login = scan.next();
@@ -82,9 +83,10 @@ public class ClientController {
 			String password = PasswordUtils.encodePassword(password1);
 			UserCheckRequest request = new UserCheckRequest(login, password);
 			socketController.write(request.json());
-			result = socketController.readUtf();
-		} while (result.equals(ServerMessage.USER_NOT_EXIST.getMessage()));
-		User user = socketController.read();
-		return user;
+			jsonMessage = socketController.readUtf();
+			userCheckResponse = gson.fromJson(jsonMessage, UserCheckResponse.class);
+		} while (userCheckResponse.message == ServerMessage.USER_NOT_EXIST);
+
+		return userCheckResponse.getUser();
 	}
 }
