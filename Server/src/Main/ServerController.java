@@ -164,11 +164,13 @@ public class ServerController {
 	}
 
 	private void checkUser(String login, String password) {
-		Boolean flag = userRepo.checkUser(login, password);
-			if(flag) {
-				socketController.write(ServerMessage.USER_EXIST);
+		User user = userRepo.checkUser(login, password);
+			if(user.equals(null)) {
+				UserNotExist userNotExist = new UserNotExist(user);
+				socketController.write(userNotExist.json());
 				}
-			System.out.println("User Not Exist!");		
+			UserCheckResponse userCheckResponse = new UserCheckResponse(user);
+			socketController.write(userCheckResponse.json());		
 	}
 
 	private void checkLogin(String newLogin) {

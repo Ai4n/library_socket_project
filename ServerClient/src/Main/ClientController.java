@@ -50,13 +50,15 @@ public class ClientController {
 		String password1;
 		String password2;
 		String cryptPassword;
+		UserNotExist userNotExist = new UserNotExist(null);
 		do {
 			System.out.println("Enter new login: \n");
 			newLogin = scan.next();
 			LoginCheckRequest loginCheckRequest = new LoginCheckRequest(newLogin);
 			socketController.write(loginCheckRequest.json());
 			jsonMessage = socketController.readUtf();
-		} while (jsonMessage.equals(ServerMessage.USER_EXIST.getMessage()));
+			
+		} while (jsonMessage.equals(userNotExist.getMessage()));
 
 		do {
 			System.out.println("Enter password (at least four digits): ");
