@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 
 import Main.ServerMessage;
 
-public class SearchBooksRequest extends SocketExchange {
+public class GetBooksRequest extends SocketExchange {
 
 	String textForSearch;
 
-	public SearchBooksRequest(String textForSearch) {
+	public GetBooksRequest(String textForSearch) {
 		super(ServerMessage.SEARCH_BOOK);
 		this.textForSearch = textForSearch;
 	}

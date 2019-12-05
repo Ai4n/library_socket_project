@@ -102,11 +102,11 @@ public class AdminController {
 	public ArrayList<Book> searchBooksInLibrary() {
 		System.out.println("Please enter search text: ");
 		String textForSearch = scan.next();
-		SearchBooksRequest searchBooksRequest = new SearchBooksRequest(textForSearch);
-		socketController.write(searchBooksRequest.json());
+		GetBooksRequest getBooksRequest = new GetBooksRequest(textForSearch);
+		socketController.write(getBooksRequest.json());
 		String jsonMessage = socketController.readUtf();
-		SearchBooksResponse searchBooksResponse = gson.fromJson(jsonMessage, SearchBooksResponse.class);
-		return searchBooksResponse.getFoundedBooksList();
+		GetBooksResponse getBooksResponse = gson.fromJson(jsonMessage, GetBooksResponse.class);
+		return getBooksResponse.getFoundedBooksList();
 	}
 
 	private void deleteBook() {

@@ -67,7 +67,7 @@ public class BookRepo {
 		return allAuthorsList;
 	}
 
-	public ArrayList<Book> showAllAuthorBooks(int authorId) {
+	public ArrayList<Book> getAllAuthorBooks(int authorId) {
 		ArrayList<Book> allAuthorBooks = new ArrayList<>();
 		String sql = "SELECT  a.name, a.surname, a.language, b.title, b.year, b.genre FROM authors a JOIN books b\n"
 				+ "ON b.authorid = a.authorid where b.authorid = ?";
@@ -95,7 +95,7 @@ public class BookRepo {
 		return null;
 	}
 
-	public ArrayList<Book> getAllBooksListUsingJoin() {
+	public ArrayList<Book> getAllBooksList() {
 		ArrayList<Book> allBooks = new ArrayList<>();
 		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
 				+ "JOIN authors a ON b.authorid = a.authorid";
@@ -212,7 +212,7 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public ArrayList<Book> showAllUsersBooks(int userId) {
+	public ArrayList<Book> getAllUsersBooks(int userId) {
 		ArrayList<Book> booksList = new ArrayList<>();
 		PreparedStatement statement;
 		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub " + "JOIN books b "

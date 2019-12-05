@@ -3,12 +3,12 @@ package SocketExchange;
 import com.google.gson.Gson;
 import Main.ServerMessage;
 
-public class SearchUsersBookRequest extends SocketExchange {
+public class GetUsersBookRequest extends SocketExchange {
 
 	private int userId;
 	private String text;
 
-	public SearchUsersBookRequest(int userId, String text) {
+	public GetUsersBookRequest(int userId, String text) {
 		super(ServerMessage.SEARCH_BOOKS);
 		this.userId = userId;
 		this.text = text;
