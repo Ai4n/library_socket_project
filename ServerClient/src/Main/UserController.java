@@ -18,7 +18,7 @@ public class UserController {
 	}
 
 	public void userMenu() {
-		loop: while (true) {
+		while (true) {
 			System.out.println("\nEnter options:\n" + "1.Add book\n" + "2.Show all books\n" + "3.Search book\n"
 					+ "4.Delete book\n" + "5.Quit\n");
 			int number = scan.nextInt();
@@ -38,8 +38,7 @@ public class UserController {
 			case 5:
 				return;
 			default:
-				System.out.println("enter 1-5");
-				break loop;
+				break;
 			}
 		}
 	}
@@ -56,8 +55,11 @@ public class UserController {
 			printList(listBooks);
 			System.out.println("Choose number of book: \n");
 			int number = scan.nextInt();
+			if (0 == number || number > listBooks.size()) {
+				return;
+			}
 			int bookId = listBooks.get(number - 1).getBookId();
-			int userId = user.getIduser();
+			int userId = user.getIdUser();
 			AddBookToUsersListRequest addBookToUsersListRequest = new AddBookToUsersListRequest(bookId, userId);
 			socketController.write(addBookToUsersListRequest.json());
 		} else
@@ -73,7 +75,7 @@ public class UserController {
 	}
 
 	private ArrayList<Book> getAllUsersBooks() {
-		int userId = user.getIduser();
+		int userId = user.getIdUser();
 		GetAllUsersBooksRequest getAllUsersBooksRequest = new GetAllUsersBooksRequest(userId);
 		socketController.write(getAllUsersBooksRequest.json());
 		String jsonMessage = socketController.readUtf();
@@ -82,7 +84,7 @@ public class UserController {
 	}
 
 	private void searchBookInUsersList() {
-		int userId = user.getIduser();
+		int userId = user.getIdUser();
 		System.out.println("Please enter search text: \n");
 		String text = scan.next();
 		GetUsersBookRequest getUsersBookRequest = new GetUsersBookRequest(userId, text);
@@ -97,12 +99,14 @@ public class UserController {
 		printList(listBooks);
 		System.out.println("Choose number of book: \n");
 		int number = scan.nextInt();
+		if (number == 0 || number > listBooks.size()) {
+			return;
+		}
 		int bookId = listBooks.get(number - 1).getBookId();
-		int userId = user.getIduser();
+		int userId = user.getIdUser();
 		DeleteBookFromUsersList deleteBookFromUsersList = new DeleteBookFromUsersList(bookId, userId);
 		socketController.write(deleteBookFromUsersList.json());
 	}
-	
 
 	private <T> void printList(ArrayList<T> anyList) {
 		if (anyList != null) {

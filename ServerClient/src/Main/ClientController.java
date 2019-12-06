@@ -20,7 +20,7 @@ public class ClientController {
 
 	public void startMenu() throws ClassNotFoundException, IOException {
 
-		loop: while (true) {
+		while (true) {
 			int number;
 			System.out.println("Choose options:\n" + "1. Singup\n" + "2. Login\n");
 			number = scan.nextInt();
@@ -40,7 +40,7 @@ public class ClientController {
 				}
 				break;
 			default:
-				break loop;
+				break;
 			}
 		}
 	}
@@ -52,7 +52,7 @@ public class ClientController {
 		String cryptPassword;
 		IsLoginExistResponse isLoginExistResponse;
 		do {
-			System.out.println("Enter new login: \n");
+			System.out.println("Enter new login:\n");
 			newLogin = scan.next();
 			LoginCheckRequest loginCheckRequest = new LoginCheckRequest(newLogin);
 			socketController.write(loginCheckRequest.json());
@@ -61,9 +61,9 @@ public class ClientController {
 		} while (isLoginExistResponse.message == (ServerMessage.USER_EXIST));
 
 		do {
-			System.out.println("Enter password (at least four digits): ");
+			System.out.println("Enter password (at least four simbols): ");
 			password1 = scan.next();
-			System.out.println("Repeat password (at least four digits): ");
+			System.out.println("Repeat password (at least four simbols): ");
 			password2 = scan.next();
 		} while (!(password1.equals(password2)));
 
@@ -73,7 +73,6 @@ public class ClientController {
 	}
 
 	public User login() {
-		String result;
 		UserCheckResponse userCheckResponse;
 		do {
 			System.out.println("Enter your login:");

@@ -50,6 +50,9 @@ public class ServerController {
 			case GET_ALL_AUTHORS:
 				getAllAuthorsList();
 				break;
+			case GET_ALL_USERS:
+				getAllUsersList();
+				break;
 			case SEARCH_BOOK:
 				GetBooksRequest getBookRequest = gson.fromJson(jsonMessage, GetBooksRequest.class);
 				searchBookInLibrary(getBookRequest.getTextForSearch());
@@ -63,7 +66,8 @@ public class ServerController {
 				checkLogin(loginCheckRequest.getNewLogin());
 				break;
 			case ADD_USER:
-				addUser();
+				AddUserRequest addUserRequest = gson.fromJson(jsonMessage, AddUserRequest.class);
+				addUser(addUserRequest.getNewLogin(), addUserRequest.getCryptPassword());
 				break;
 			case ADD_USER_BOOK:
 				AddBookToUsersListRequest addBookToUsersListRequest = gson.fromJson(jsonMessage,
@@ -71,7 +75,8 @@ public class ServerController {
 				addBookToUsersList(addBookToUsersListRequest.getBookId(), addBookToUsersListRequest.getUserId());
 				break;
 			case SHOW_BOOKS:
-				GetAllUsersBooksRequest getAllUsersBooksRequest = gson.fromJson(jsonMessage, GetAllUsersBooksRequest.class);
+				GetAllUsersBooksRequest getAllUsersBooksRequest = gson.fromJson(jsonMessage,
+						GetAllUsersBooksRequest.class);
 				showAllUsersBooks(getAllUsersBooksRequest.getUserId());
 				break;
 			case SHOW_AUTHORS_BOOKS:
@@ -80,8 +85,7 @@ public class ServerController {
 				showAllAuthorsBooks(getAuthorsBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
-				GetUsersBookRequest getUsersBookRequest = gson.fromJson(jsonMessage,
-						GetUsersBookRequest.class);
+				GetUsersBookRequest getUsersBookRequest = gson.fromJson(jsonMessage, GetUsersBookRequest.class);
 				searchInUsersBookList(getUsersBookRequest.getUserId(), getUsersBookRequest.getText());
 				break;
 			case DELETE_USER_BOOK:
@@ -96,6 +100,10 @@ public class ServerController {
 			case DELETE_AUTHOR:
 				DeleteAuthorRequest deleteAuthorRequest = gson.fromJson(jsonMessage, DeleteAuthorRequest.class);
 				deleteAuthor(deleteAuthorRequest.getAuthorId());
+				break;
+			case DELETE_USER:
+				DeleteUserRequest deleteUserRequest = gson.fromJson(jsonMessage, DeleteUserRequest.class);
+				deleteUser(deleteUserRequest.getUserId());
 				break;
 			case UPDATE_BOOK:
 				UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
@@ -125,6 +133,11 @@ public class ServerController {
 	private void getAllAuthorsList() {
 		GetAllAuthorsResponse getAllAuthorsResponse = new GetAllAuthorsResponse(bookRepo.getAllAuthorsList());
 		socketController.write(getAllAuthorsResponse.json());
+	}
+
+	private void getAllUsersList() {
+		GetAllUsersListResponse getAllUsersListResponse = new GetAllUsersListResponse(userRepo.getAllUsersList());
+		socketController.write(getAllUsersListResponse.json());
 	}
 
 	private void searchBookInLibrary(String string) {
@@ -167,7 +180,7 @@ public class ServerController {
 		User user = userRepo.checkUser(login, password);
 		boolean isCredentialsCorrect = (user != null) ? true : false;
 		UserCheckResponse userCheckResponse = new UserCheckResponse(isCredentialsCorrect, user);
-		socketController.write(userCheckResponse.json());		
+		socketController.write(userCheckResponse.json());
 	}
 
 	private void checkLogin(String newLogin) {
@@ -176,12 +189,13 @@ public class ServerController {
 		socketController.write(isLoginExistResponse.json());
 	}
 
-	private void addUser() {
-		String login, password;
-		login = socketController.readUtf();
-		password = socketController.readUtf();
-		User user = new User(login, password, UserRole.USER);
+	private void addUser(String login, String passWord) {
+		User user = new User(login, passWord, UserRole.USER);
 		userRepo.addUser(user);
+	}
+
+	private void deleteUser(int userId) {
+		userRepo.deleteUser(userId);
 	}
 
 	private void deleteAuthor(int authorId) {

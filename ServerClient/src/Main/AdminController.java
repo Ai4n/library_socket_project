@@ -10,6 +10,7 @@ import SocketExchange.*;
 public class AdminController {
 	private Scanner scan = new Scanner(System.in);
 	SocketController socketController;
+	String jsonMessage;
 	Gson gson = new Gson();
 
 	public AdminController(SocketController socketController) {
@@ -17,16 +18,15 @@ public class AdminController {
 	}
 
 	public void adminMenu() {
-		loop: while (true) {
-			System.out.println(
-					"\nEnter options:\n" + "1.Add book to Library\n" + "2.Show books in Library\n" + "3.Search book\n"
-							+ "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n" + "7.Delete some Author\n"
-							+ "8.Show list of Authors\n" + "9.Show list of Author's books\n" + "10.Quit\n");
+		while (true) {
+			System.out.println("\nEnter options:\n" + "1.Add book to Library\n" + "2.Show books in Library\n"
+					+ "3.Search book\n" + "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n"
+					+ "7.Delete some Author\n" + "8.Show list of Authors\n" + "9.Show list of Author's books\n"
+					+ "10.Delete User\n" + "11.Quit\n");
 			int number = scan.nextInt();
 			switch (number) {
 			case 1:
 				addBookToLibrary();
-				printList(getAllBooksList());
 				break;
 			case 2:
 				printList(getAllBooksList());
@@ -50,26 +50,59 @@ public class AdminController {
 				printList(getAllAuthorsList());
 				break;
 			case 9:
-				getAuthorBooksList();
+				printList(getAuthorBooksList());
 				break;
 			case 10:
+				deleteUser();
+				break;
+			case 11:
 				return;
 			default:
-				System.out.println("enter key from 1 to 10");
-				break loop;
+				System.out.println("enter key from 1 to 11");
+				break;
 			}
 		}
 	}
 
+	private void deleteUser() {
+		ArrayList<User> usersList = getAllUsersList();
+		if(usersList.equals(null)) {
+			return;
+		}
+		printList(usersList);
+		System.out.println("Select number of user:");
+		int number = scan.nextInt();
+		if(number == 0 || number > usersList.size()) {
+			return;
+		}
+		User user = usersList.get(number - 1);
+		DeleteUserRequest deleteUserRequest = new DeleteUserRequest(user.getIdUser());
+		socketController.write(deleteUserRequest.json());
+	}
+
+	private ArrayList<User> getAllUsersList() {
+		GetAllUsersListRequest getAllUsersListRequest = new GetAllUsersListRequest();
+		socketController.write(getAllUsersListRequest.json());
+		jsonMessage = socketController.readUtf();
+		GetAllUsersListResponse getAllUsersListResponse = gson.fromJson(jsonMessage, GetAllUsersListResponse.class);
+		return getAllUsersListResponse.getAllUsersList();
+
+	}
+
 	private void addBookToLibrary() {
 		ArrayList<Author> authorsList = getAllAuthorsList();
+		if(authorsList.equals(null)) {
+			return;
+		}
 		printList(authorsList);
 		System.out.println("Please select Author:");
-		scan.nextLine();
-		int authorInt = (scan.nextInt() - 1); // -1 Create array index from number
-		scan.nextLine();
-		Author author = authorsList.get(authorInt);
-		System.out.println("Please enter Title:");
+		scan.next();
+		int number = scan.nextInt();
+		if(number == 0 || number > authorsList.size()) {
+			return;
+		}
+		Author author = authorsList.get(number - 1);
+		System.out.println("Please enter Tite");
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
 		int year = scan.nextInt();
@@ -86,7 +119,7 @@ public class AdminController {
 	private ArrayList<Author> getAllAuthorsList() {
 		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
 		socketController.write(getAllAuthorsRequest.json());
-		String jsonMessage = socketController.readUtf();
+		jsonMessage = socketController.readUtf();
 		GetAllAuthorsResponse getAuthorsResponse = gson.fromJson(jsonMessage, GetAllAuthorsResponse.class);
 		return getAuthorsResponse.getAuthorsList();
 	}
@@ -94,7 +127,7 @@ public class AdminController {
 	public ArrayList<Book> getAllBooksList() {
 		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
 		socketController.write(getAllBooksRequest.json());
-		String jsonMessage = socketController.readUtf();
+		jsonMessage = socketController.readUtf();
 		GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
 		return getAllBooksResponse.getAllBooksList();
 	}
@@ -104,11 +137,11 @@ public class AdminController {
 		String textForSearch = scan.next();
 		GetBooksRequest getBooksRequest = new GetBooksRequest(textForSearch);
 		socketController.write(getBooksRequest.json());
-		String jsonMessage = socketController.readUtf();
+		jsonMessage = socketController.readUtf();
 		GetBooksResponse getBooksResponse = gson.fromJson(jsonMessage, GetBooksResponse.class);
 		return getBooksResponse.getFoundedBooksList();
 	}
-
+	
 	private void deleteBook() {
 		ArrayList<Book> listBooks = getAllBooksList();
 		if (listBooks.equals(null)) {
@@ -117,6 +150,9 @@ public class AdminController {
 		printList(listBooks);
 		System.out.println("Choose number of book: \n");
 		int number = scan.nextInt();
+		if(number == 0 || number > listBooks.size()) {
+			return;
+		}
 		Integer bookId = listBooks.get(number - 1).getBookId();
 		DeleteBookRequest deleteBookRequest = new DeleteBookRequest(bookId);
 		socketController.write(deleteBookRequest.json());
@@ -130,10 +166,16 @@ public class AdminController {
 		printList(listBooks);
 		System.out.println("Please enter number of book: ");
 		int number = scan.nextInt();
+		if(number == 0 || number > listBooks.size()) {
+			return;
+		}
 		Book book = listBooks.get(number - 1);
 		Book updatedBook = null;
 		System.out.println("Choose field to update: \n" + "1. Author\n" + "2. Title\n" + "3. Year\n" + "4. Genre\n");
 		int digit = scan.nextInt();
+		if(digit == 0 || digit > 4) {
+			return;
+		}
 		switch (digit) {
 		case 1:
 			updatedBook = enterAuthor(book);
@@ -151,7 +193,7 @@ public class AdminController {
 			System.out.println("enter 1-4");
 			break;
 		}
-		if(updatedBook.equals(null)) {
+		if (updatedBook.equals(null)) {
 			return;
 		}
 		UpdateBookRequest updateBookRequest = new UpdateBookRequest(updatedBook);
@@ -176,20 +218,28 @@ public class AdminController {
 		printList(allAuthorsList);
 		System.out.println("Select Author number: ");
 		int number = scan.nextInt();
+		if(number == 0 || number > allAuthorsList.size()) {
+			return;
+		}
 		int authorId = allAuthorsList.get(number - 1).getAuthorId();
 		DeleteAuthorRequest deleteAuthorRequest = new DeleteAuthorRequest(authorId);
 		socketController.write(deleteAuthorRequest.json());
 	}
 
-	private void getAuthorBooksList() {
-		printList(getAllAuthorsList());
+	private ArrayList<Book> getAuthorBooksList() {
+		ArrayList<Author> allAuthorsList = getAllAuthorsList();
+		printList(allAuthorsList);
 		System.out.println("Select Author number: ");
 		int authorId = scan.nextInt();
+		if(authorId == 0 || authorId > allAuthorsList.size()) {
+			return null;
+		}
 		GetAuthorsBooksListRequest getAuthorsBooksListRequest = new GetAuthorsBooksListRequest(authorId);
 		socketController.write(getAuthorsBooksListRequest.json());
-		String jsonMessage = socketController.readUtf();
-		GetAuthorsBooksListResponse getAuthorsBooksListResponse = gson.fromJson(jsonMessage, GetAuthorsBooksListResponse.class);
-		printList(getAuthorsBooksListResponse.getAuthorsBooksList());
+		jsonMessage = socketController.readUtf();
+		GetAuthorsBooksListResponse getAuthorsBooksListResponse = gson.fromJson(jsonMessage,
+				GetAuthorsBooksListResponse.class);
+		return getAuthorsBooksListResponse.getAuthorsBooksList();
 	}
 
 	private Book enterAuthor(Book book) {
@@ -201,9 +251,8 @@ public class AdminController {
 		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
 		Language lang = Language.create(scan.next());
 		Author author = new Author(name, surname, lang);
-	    book.setAuthor(author);
-	    Book updatedBook = book;
-		return updatedBook;
+		book.setAuthor(author);
+		return book;
 	}
 
 	private Book enterTitle(Book book) {
@@ -213,8 +262,7 @@ public class AdminController {
 		System.out.println("Enter title of the book: ");
 		String title = scan.next();
 		book.setTitle(title);
-		Book updatedBook = book;
-		return updatedBook;
+		return book;
 	}
 
 	private Book enterYear(Book book) {
@@ -223,9 +271,11 @@ public class AdminController {
 		}
 		System.out.println("Enter 4 digits of year: ");
 		int year = scan.nextInt();
+		if( year < 1000 || year > 3000) {
+			return null;
+		}
 		book.setYear(year);
-		Book updatedBook = book;
-		return updatedBook;
+		return book;
 	}
 
 	private Book enterGenre(Book book) {
@@ -235,8 +285,7 @@ public class AdminController {
 		System.out.println("Enter genre: ");
 		String genre = scan.next();
 		book.setGenre(genre);
-		Book updatedBook = book;
-		return updatedBook;
+		return book;
 	}
 
 	private <T> void printList(ArrayList<T> anyList) {

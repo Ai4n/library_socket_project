@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import Main.Author;
 import Main.Book;
 import Main.Language;
+import Main.User;
 
 public class BookRepo {
 	Connection connection;
@@ -83,7 +84,7 @@ public class BookRepo {
 				String title = rs.getString(4);
 				int year = rs.getInt(5);
 				String genre = rs.getString(6);
-				Author author = new Author(authorId,authorName, authorSurname, authorLanguage);
+				Author author = new Author(authorId, authorName, authorSurname, authorLanguage);
 				Book book = new Book(author, title, year, genre);
 				allAuthorBooks.add(book);
 
@@ -158,7 +159,7 @@ public class BookRepo {
 		String query = "UPDATE  books SET authorid = ?, title = ?, year = ?, genre = ? WHERE id = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setInt(5, book.getBookId());	
+			ps.setInt(5, book.getBookId());
 			ps.setInt(1, book.getAuthor().getAuthorId());
 			ps.setString(2, book.getTitle());
 			ps.setInt(3, book.getYear());
@@ -170,7 +171,6 @@ public class BookRepo {
 
 	}
 
-	
 	public void addBook(Book book) {
 		String query = "INSERT into books values(null, ?, ?, ?, ?)";
 		try {

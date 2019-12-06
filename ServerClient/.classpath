@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/admin/eclipse/json_google/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="/Users/java/json_2.8.6/gson-2.8.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

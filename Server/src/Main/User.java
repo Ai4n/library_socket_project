@@ -28,7 +28,7 @@ public class User implements Serializable {
 		this.role = role;
 	}
 	
-	public int getIduser() {
+	public int getIdUser() {
 		return idUser;
 	}
 	
@@ -50,5 +50,9 @@ public class User implements Serializable {
 
 	public UserRole getRole() {
 		return role;
+	}
+
+	public String toString() {
+		return login + " " + role;
 	}
 }
