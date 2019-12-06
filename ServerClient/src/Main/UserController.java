@@ -87,11 +87,11 @@ public class UserController {
 		int userId = user.getIdUser();
 		System.out.println("Please enter search text: \n");
 		String text = scan.next();
-		GetUserBooksRequest getUserBooksRequest = new GetUserBooksRequest(userId, text);
-		socketController.write(getUserBooksRequest.json());
+		SearchInUserBooksRequest searchInUserBooksRequest = new SearchInUserBooksRequest(userId, text);
+		socketController.write(searchInUserBooksRequest.json());
 		String jsonMessage = socketController.readUtf();
-		GetUserBooksResponse getUserBooksResponse = gson.fromJson(jsonMessage, GetUserBooksResponse.class);
-		printList(getUserBooksResponse.getBooksList());
+		SearchInUserBooksResponse searchInUserBooksResponse = gson.fromJson(jsonMessage, SearchInUserBooksResponse.class);
+		printList(searchInUserBooksResponse.getBooksList());
 	}
 
 	private void deleteBookFromUsersList() {

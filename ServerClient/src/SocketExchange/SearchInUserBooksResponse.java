@@ -7,12 +7,12 @@ import com.google.gson.Gson;
 import Main.Book;
 import Main.ServerMessage;
 
-public class GetUserBooksResponse extends SocketExchange {
+public class SearchInUserBooksResponse extends SocketExchange {
 
 	private ArrayList<Book> booksList;
 
-	public GetUserBooksResponse(ArrayList<Book> booksList) {
-		super(ServerMessage.SHOW_BOOKS);
+	public SearchInUserBooksResponse(ArrayList<Book> booksList) {
+		super(ServerMessage.SEARCH_BOOKS);
 		this.booksList = booksList;
 	}
 

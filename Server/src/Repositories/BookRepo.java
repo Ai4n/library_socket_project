@@ -140,7 +140,7 @@ public class BookRepo {
 		return true;
 	}
 
-	public void addBookToUsersList(int bookId, int userId) {
+	public void addBookInUserList(int bookId, int userId) {
 		Boolean userHasBook = userHasBook(userId, bookId);
 		if (userHasBook) {
 			String sql = "INSERT into users_books values(null, ?, ?)";
@@ -171,7 +171,7 @@ public class BookRepo {
 
 	}
 
-	public void addBook(Book book) {
+	public void addBookToLibrary(Book book) {
 		String query = "INSERT into books values(null, ?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
@@ -186,7 +186,7 @@ public class BookRepo {
 
 	}
 
-	public ArrayList<Book> searchBook(String text) {
+	public ArrayList<Book> searchBookInLibrary(String text) {
 		ArrayList<Book> foundBooks = new ArrayList<>();
 		PreparedStatement statement;
 		String sql = "SELECT * from books where title LIKE ? or genre LIKE ?";
@@ -212,7 +212,7 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public ArrayList<Book> getAllUsersBooks(int userId) {
+	public ArrayList<Book> getAllUserBooks(int userId) {
 		ArrayList<Book> booksList = new ArrayList<>();
 		PreparedStatement statement;
 		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub " + "JOIN books b "
@@ -238,7 +238,7 @@ public class BookRepo {
 		return booksList;
 	}
 
-	public ArrayList<Book> searchBookInUsersList(int userId, String text) {
+	public ArrayList<Book> searchBookInUserBooksList(int userId, String text) {
 		ArrayList<Book> foundBooks = new ArrayList<>();
 		PreparedStatement statement;
 		String query = "SELECT b.id, b.authorId, b.title, b.year, b.genre from users_books ub JOIN books b\n"
@@ -266,7 +266,7 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public void deleteUsersBook(int userId, int bookId) {
+	public void deleteUserBook(int userId, int bookId) {
 		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -278,7 +278,7 @@ public class BookRepo {
 		}
 	}
 
-	public void deleteBook(int bookId) {
+	public void deleteBookInLibrary(int bookId) {
 		String query = "DELETE FROM books where id = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
@@ -289,7 +289,7 @@ public class BookRepo {
 		}
 	}
 
-	public void deleteBooksData(int bookId) {
+	public void deleteBookData(int bookId) {
 		String sql = "DELETE FROM users_books WHERE idbook = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
