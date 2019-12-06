@@ -76,22 +76,22 @@ public class UserController {
 
 	private ArrayList<Book> getAllUsersBooks() {
 		int userId = user.getIdUser();
-		GetAllUsersBooksRequest getAllUsersBooksRequest = new GetAllUsersBooksRequest(userId);
-		socketController.write(getAllUsersBooksRequest.json());
+		GetAllUserBooksRequest getAllUserBooksRequest = new GetAllUserBooksRequest(userId);
+		socketController.write(getAllUserBooksRequest.json());
 		String jsonMessage = socketController.readUtf();
-		GetAllUsersBooksResponse getAllUsersBooksResponse = gson.fromJson(jsonMessage, GetAllUsersBooksResponse.class);
-		return getAllUsersBooksResponse.getAllBooksList();
+		GetAllUserBooksResponse getAllUserBooksResponse = gson.fromJson(jsonMessage, GetAllUserBooksResponse.class);
+		return getAllUserBooksResponse.getAllBooksList();
 	}
 
 	private void searchBookInUsersList() {
 		int userId = user.getIdUser();
 		System.out.println("Please enter search text: \n");
 		String text = scan.next();
-		GetUsersBookRequest getUsersBookRequest = new GetUsersBookRequest(userId, text);
-		socketController.write(getUsersBookRequest.json());
+		GetUserBooksRequest getUserBooksRequest = new GetUserBooksRequest(userId, text);
+		socketController.write(getUserBooksRequest.json());
 		String jsonMessage = socketController.readUtf();
-		GetUsersBookResponse getUsersBookResponse = gson.fromJson(jsonMessage, GetUsersBookResponse.class);
-		printList(getUsersBookResponse.getBooksList());
+		GetUserBooksResponse getUserBooksResponse = gson.fromJson(jsonMessage, GetUserBooksResponse.class);
+		printList(getUserBooksResponse.getBooksList());
 	}
 
 	private void deleteBookFromUsersList() {

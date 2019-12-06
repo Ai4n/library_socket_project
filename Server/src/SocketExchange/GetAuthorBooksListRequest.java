@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 
 import Main.ServerMessage;
 
-public class GetAuthorsBooksListRequest extends SocketExchange {
+public class GetAuthorBooksListRequest extends SocketExchange {
 
 	private int authorId;
-	public GetAuthorsBooksListRequest(int authorId) {
+	public GetAuthorBooksListRequest(int authorId) {
 		super(ServerMessage.SHOW_AUTHORS_BOOKS);
 		this.authorId = authorId;
 	}

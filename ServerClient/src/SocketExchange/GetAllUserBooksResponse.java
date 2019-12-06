@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import Main.Book;
 import Main.ServerMessage;
 
-public class GetAllUsersBooksResponse extends SocketExchange {
+public class GetAllUserBooksResponse extends SocketExchange {
 	
 		private ArrayList<Book> allBooksList;
 		
-		public GetAllUsersBooksResponse (ArrayList<Book> allBooksList) {
+		public GetAllUserBooksResponse (ArrayList<Book> allBooksList) {
 			super(ServerMessage.SHOW_BOOKS);
 			this.allBooksList = allBooksList;
 		}

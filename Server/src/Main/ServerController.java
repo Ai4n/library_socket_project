@@ -75,18 +75,18 @@ public class ServerController {
 				addBookToUsersList(addBookToUsersListRequest.getBookId(), addBookToUsersListRequest.getUserId());
 				break;
 			case SHOW_BOOKS:
-				GetAllUsersBooksRequest getAllUsersBooksRequest = gson.fromJson(jsonMessage,
-						GetAllUsersBooksRequest.class);
-				showAllUsersBooks(getAllUsersBooksRequest.getUserId());
+				GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
+						GetAllUserBooksRequest.class);
+				getAllUsersBooks(getAllUserBooksRequest.getUserId());
 				break;
 			case SHOW_AUTHORS_BOOKS:
-				GetAuthorsBooksListRequest getAuthorsBooksListRequest = gson.fromJson(jsonMessage,
-						GetAuthorsBooksListRequest.class);
-				showAllAuthorsBooks(getAuthorsBooksListRequest.getAuthorId());
+				GetAuthorBooksListRequest getAuthorBooksListRequest = gson.fromJson(jsonMessage,
+						GetAuthorBooksListRequest.class);
+				getAllAuthorsBooks(getAuthorBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
-				GetUsersBookRequest getUsersBookRequest = gson.fromJson(jsonMessage, GetUsersBookRequest.class);
-				searchInUsersBookList(getUsersBookRequest.getUserId(), getUsersBookRequest.getText());
+				GetUserBooksRequest getUserBooksRequest = gson.fromJson(jsonMessage, GetUserBooksRequest.class);
+				searchInUsersBookList(getUserBooksRequest.getUserId(), getUserBooksRequest.getText());
 				break;
 			case DELETE_USER_BOOK:
 				DeleteBookFromUsersList deleteBookFromUsersList = gson.fromJson(jsonMessage,
@@ -160,10 +160,10 @@ public class ServerController {
 		bookRepo.deleteUsersBook(userId, bookId);
 	}
 
-	private void showAllUsersBooks(int userId) {
+	private void getAllUsersBooks(int userId) {
 		ArrayList<Book> foundBooksList = bookRepo.getAllUsersBooks(userId);
-		GetAllUsersBooksResponse getAllUsersBooksResponse = new GetAllUsersBooksResponse(foundBooksList);
-		socketController.write(getAllUsersBooksResponse.json());
+		GetAllUserBooksResponse getAllUserBooksResponse = new GetAllUserBooksResponse(foundBooksList);
+		socketController.write(getAllUserBooksResponse.json());
 	}
 
 	private void addBookToUsersList(int bookId, int userId) {
@@ -172,8 +172,8 @@ public class ServerController {
 
 	private void searchInUsersBookList(int userId, String text) {
 		ArrayList<Book> booksList = bookRepo.searchBookInUsersList(userId, text);
-		GetUsersBookResponse getUsersBookResponse = new GetUsersBookResponse(booksList);
-		socketController.write(getUsersBookResponse.json());
+		GetUserBooksResponse getUserBooksResponse = new GetUserBooksResponse(booksList);
+		socketController.write(getUserBooksResponse.json());
 	}
 
 	private void checkUser(String login, String password) {
@@ -202,10 +202,10 @@ public class ServerController {
 		bookRepo.deleteAuthor(authorId);
 	}
 
-	private void showAllAuthorsBooks(int authorId) {
+	private void getAllAuthorsBooks(int authorId) {
 		ArrayList<Book> authorsBooksList;
 		authorsBooksList = bookRepo.getAllAuthorBooks(authorId);
-		GetAuthorsBooksListResponse getAuthorsBooksListResponse = new GetAuthorsBooksListResponse(authorsBooksList);
-		socketController.write(getAuthorsBooksListResponse.json());
+		GetAuthorBooksListResponse getAuthorBooksListResponse = new GetAuthorBooksListResponse(authorsBooksList);
+		socketController.write(getAuthorBooksListResponse.json());
 	}
 }

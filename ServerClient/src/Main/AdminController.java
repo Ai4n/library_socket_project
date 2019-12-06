@@ -47,7 +47,7 @@ public class AdminController {
 				deleteAuthor();
 				break;
 			case 8:
-				printList(getAllAuthorsList());
+				printList(getAllAuthorList());
 				break;
 			case 9:
 				printList(getAuthorBooksList());
@@ -65,7 +65,7 @@ public class AdminController {
 	}
 
 	private void deleteUser() {
-		ArrayList<User> usersList = getAllUsersList();
+		ArrayList<User> usersList = getAllUserList();
 		if(usersList.equals(null)) {
 			return;
 		}
@@ -80,7 +80,7 @@ public class AdminController {
 		socketController.write(deleteUserRequest.json());
 	}
 
-	private ArrayList<User> getAllUsersList() {
+	private ArrayList<User> getAllUserList() {
 		GetAllUsersListRequest getAllUsersListRequest = new GetAllUsersListRequest();
 		socketController.write(getAllUsersListRequest.json());
 		jsonMessage = socketController.readUtf();
@@ -90,13 +90,12 @@ public class AdminController {
 	}
 
 	private void addBookToLibrary() {
-		ArrayList<Author> authorsList = getAllAuthorsList();
+		ArrayList<Author> authorsList = getAllAuthorList();
 		if(authorsList.equals(null)) {
 			return;
 		}
 		printList(authorsList);
 		System.out.println("Please select Author:");
-		scan.next();
 		int number = scan.nextInt();
 		if(number == 0 || number > authorsList.size()) {
 			return;
@@ -116,7 +115,7 @@ public class AdminController {
 		socketController.write(addBookRequest.json());
 	}
 
-	private ArrayList<Author> getAllAuthorsList() {
+	private ArrayList<Author> getAllAuthorList() {
 		GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
 		socketController.write(getAllAuthorsRequest.json());
 		jsonMessage = socketController.readUtf();
@@ -214,7 +213,7 @@ public class AdminController {
 	}
 
 	private void deleteAuthor() {
-		ArrayList<Author> allAuthorsList = getAllAuthorsList();
+		ArrayList<Author> allAuthorsList = getAllAuthorList();
 		printList(allAuthorsList);
 		System.out.println("Select Author number: ");
 		int number = scan.nextInt();
@@ -227,19 +226,19 @@ public class AdminController {
 	}
 
 	private ArrayList<Book> getAuthorBooksList() {
-		ArrayList<Author> allAuthorsList = getAllAuthorsList();
+		ArrayList<Author> allAuthorsList = getAllAuthorList();
 		printList(allAuthorsList);
 		System.out.println("Select Author number: ");
 		int authorId = scan.nextInt();
 		if(authorId == 0 || authorId > allAuthorsList.size()) {
 			return null;
 		}
-		GetAuthorsBooksListRequest getAuthorsBooksListRequest = new GetAuthorsBooksListRequest(authorId);
-		socketController.write(getAuthorsBooksListRequest.json());
+		GetAuthorBooksListRequest getAuthorBooksListRequest = new GetAuthorBooksListRequest(authorId);
+		socketController.write(getAuthorBooksListRequest.json());
 		jsonMessage = socketController.readUtf();
-		GetAuthorsBooksListResponse getAuthorsBooksListResponse = gson.fromJson(jsonMessage,
-				GetAuthorsBooksListResponse.class);
-		return getAuthorsBooksListResponse.getAuthorsBooksList();
+		GetAuthorBooksListResponse getAuthorBooksListResponse = gson.fromJson(jsonMessage,
+				GetAuthorBooksListResponse.class);
+		return getAuthorBooksListResponse.getAuthorsBooksList();
 	}
 
 	private Book enterAuthor(Book book) {
