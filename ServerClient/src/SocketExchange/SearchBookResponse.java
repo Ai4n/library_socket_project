@@ -11,7 +11,7 @@ public class SearchBookResponse extends SocketExchange {
 	ArrayList<Book> foundedBooksList;
 
 	public SearchBookResponse(ArrayList<Book> foundedBooksList) {
-		super(ServerMessage.SEARCH_BOOKS);
+		super(ServerMessage.SEARCH_BOOK);
 		this.foundedBooksList = foundedBooksList;
 	}
 
