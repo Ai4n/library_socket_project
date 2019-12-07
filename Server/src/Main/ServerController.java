@@ -45,13 +45,13 @@ public class ServerController {
 				addBook(addBookRequest.getBook());
 				break;
 			case GET_ALL_BOOKS:
-				getAllBooksList();
+				sendAllBooksList();
 				break;
 			case GET_ALL_AUTHORS:
-				getAllAuthorsList();
+				sendAllAuthorsList();
 				break;
 			case GET_ALL_USERS:
-				getAllUsersList();
+				sendAllUsersList();
 				break;
 			case SEARCH_BOOK:
 				SearchBookRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBookRequest.class);
@@ -70,14 +70,14 @@ public class ServerController {
 				addUser(addUserRequest.getNewLogin(), addUserRequest.getCryptPassword());
 				break;
 			case ADD_USER_BOOK:
-				AddBookToUsersListRequest addBookToUsersListRequest = gson.fromJson(jsonMessage,
-						AddBookToUsersListRequest.class);
-				addBookToUsersList(addBookToUsersListRequest.getBookId(), addBookToUsersListRequest.getUserId());
+				AddBookToUserListRequest addBookToUserListRequest = gson.fromJson(jsonMessage,
+						AddBookToUserListRequest.class);
+				addBookToUsersList(addBookToUserListRequest.getBookId(), addBookToUserListRequest.getUserId());
 				break;
 			case SHOW_BOOKS:
 				GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
 						GetAllUserBooksRequest.class);
-				getAllUserBooks(getAllUserBooksRequest.getUserId());
+				sendAllUserBooks(getAllUserBooksRequest.getUserId());
 				break;
 			case SHOW_AUTHORS_BOOKS:
 				GetAuthorBooksListRequest getAuthorBooksListRequest = gson.fromJson(jsonMessage,
@@ -124,18 +124,17 @@ public class ServerController {
 		bookRepo.addBookToLibrary(book);
 	}
 
-	private void getAllBooksList() {
+	private void sendAllBooksList() {
 		GetAllBooksResponse getAllBooksResponse = new GetAllBooksResponse(bookRepo.getAllBooksList());
 		socketController.write(getAllBooksResponse.json());
-		;
 	}
 
-	private void getAllAuthorsList() {
+	private void sendAllAuthorsList() {
 		GetAllAuthorsResponse getAllAuthorsResponse = new GetAllAuthorsResponse(bookRepo.getAllAuthorsList());
 		socketController.write(getAllAuthorsResponse.json());
 	}
 
-	private void getAllUsersList() {
+	private void sendAllUsersList() {
 		GetAllUsersListResponse getAllUsersListResponse = new GetAllUsersListResponse(userRepo.getAllUsersList());
 		socketController.write(getAllUsersListResponse.json());
 	}
@@ -160,7 +159,7 @@ public class ServerController {
 		bookRepo.deleteUserBook(userId, bookId);
 	}
 
-	private void getAllUserBooks(int userId) {
+	private void sendAllUserBooks(int userId) {
 		ArrayList<Book> foundBooksList = bookRepo.getAllUserBooks(userId);
 		GetAllUserBooksResponse getAllUserBooksResponse = new GetAllUserBooksResponse(foundBooksList);
 		socketController.write(getAllUserBooksResponse.json());
