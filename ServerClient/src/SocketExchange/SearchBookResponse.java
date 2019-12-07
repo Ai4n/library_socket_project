@@ -8,7 +8,7 @@ import Main.ServerMessage;
 
 public class SearchBookResponse extends SocketExchange {
 
-	ArrayList<Book> foundedBooksList;
+	private ArrayList<Book> foundedBooksList;
 
 	public SearchBookResponse(ArrayList<Book> foundedBooksList) {
 		super(ServerMessage.SEARCH_BOOK);

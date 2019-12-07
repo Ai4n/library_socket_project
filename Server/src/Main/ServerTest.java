@@ -10,21 +10,17 @@ import SocketExchange.AddAuthorRequest;
 import SocketExchange.SocketExchange;
 
 public class ServerTest {
-	private static ServerController serverController;
-
+	
 	public static void main(String args[]) {
 		ServerSocket serverSocket;
 		Socket socket;
 		try {
 			serverSocket = new ServerSocket(5555);
 			socket = serverSocket.accept();
-			setServerController(new ServerController(socket));
+			ServerController serverController = new ServerController(socket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void setServerController(ServerController serverController) {
-		ServerTest.serverController = serverController;
-	}
 }

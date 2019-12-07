@@ -57,8 +57,8 @@ public class BookRepo {
 				int authorId = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
-				String lang = rs.getString(4);
-				Language language = Language.valueOf(lang);
+				String languageString = rs.getString(4);
+				Language language = Language.valueOf(languageString);
 				Author author = new Author(authorId, name, surname, language);
 				allAuthorsList.add(author);
 			}
@@ -79,8 +79,8 @@ public class BookRepo {
 			while (rs.next()) {
 				String authorName = rs.getString(1);
 				String authorSurname = rs.getString(2);
-				String language = rs.getString(3);
-				Language authorLanguage = Language.create(language);
+				String languageString = rs.getString(3);
+				Language authorLanguage = Language.create(languageString);
 				String title = rs.getString(4);
 				int year = rs.getInt(5);
 				String genre = rs.getString(6);

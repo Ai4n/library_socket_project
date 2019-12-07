@@ -54,8 +54,8 @@ public class ClientController {
 		do {
 			System.out.println("Enter new login:\n");
 			newLogin = scan.next();
-			LoginCheckRequest loginCheckRequest = new LoginCheckRequest(newLogin);
-			socketController.write(loginCheckRequest.json());
+			IsLoginExistRequest isLoginExistRequest = new IsLoginExistRequest(newLogin);
+			socketController.write(isLoginExistRequest.json());
 			jsonMessage = socketController.readUtf();
 			isLoginExistResponse = gson.fromJson(jsonMessage, IsLoginExistResponse.class);
 		} while (isLoginExistResponse.message == (ServerMessage.USER_EXIST));

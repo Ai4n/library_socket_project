@@ -104,8 +104,8 @@ public class UserController {
 		}
 		int bookId = listBooks.get(number - 1).getBookId();
 		int userId = user.getIdUser();
-		DeleteBookFromUsersList deleteBookFromUsersList = new DeleteBookFromUsersList(bookId, userId);
-		socketController.write(deleteBookFromUsersList.json());
+		DeleteBookFromUsersBookList deleteBookFromUsersBookList = new DeleteBookFromUsersBookList(bookId, userId);
+		socketController.write(deleteBookFromUsersBookList.json());
 	}
 
 	private <T> void printList(ArrayList<T> anyList) {

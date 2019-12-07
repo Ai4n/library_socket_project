@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 
 import Main.ServerMessage;
 
-public class LoginCheckRequest extends SocketExchange {
+public class IsLoginExistRequest extends SocketExchange {
 
 	private String newLogin;
 
-	public LoginCheckRequest(String newLogin) {
+	public IsLoginExistRequest(String newLogin) {
 		super(ServerMessage.LOGIN_CHECK);
 		this.newLogin = newLogin;
 	}

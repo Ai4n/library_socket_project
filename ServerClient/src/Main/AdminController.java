@@ -66,7 +66,7 @@ public class AdminController {
 
 	private void deleteUser() {
 		ArrayList<User> usersList = getAllUserList();
-		if(usersList.equals(null)) {
+		if(usersList == null) {
 			return;
 		}
 		printList(usersList);
@@ -91,7 +91,7 @@ public class AdminController {
 
 	private void addBookToLibrary() {
 		ArrayList<Author> authorsList = getAllAuthorList();
-		if(authorsList.equals(null)) {
+		if(authorsList == null) {
 			return;
 		}
 		printList(authorsList);
@@ -108,9 +108,6 @@ public class AdminController {
 		System.out.println("Please enter Genre:");
 		String genre = scan.next();
 		Book book = new Book(author, title, year, genre);
-		if (book.equals(null)) {
-			return;
-		}
 		AddBookRequest addBookRequest = new AddBookRequest(book);
 		socketController.write(addBookRequest.json());
 	}
@@ -143,7 +140,7 @@ public class AdminController {
 	
 	private void deleteBook() {
 		ArrayList<Book> listBooks = getAllBooksList();
-		if (listBooks.equals(null)) {
+		if (listBooks == null) {
 			return;
 		}
 		printList(listBooks);
@@ -159,7 +156,7 @@ public class AdminController {
 
 	private void updateBook() {
 		ArrayList<Book> listBooks = getAllBooksList();
-		if (listBooks.equals(null)) {
+		if (listBooks == null) {
 			return;
 		}
 		printList(listBooks);
@@ -192,7 +189,7 @@ public class AdminController {
 			System.out.println("enter 1-4");
 			break;
 		}
-		if (updatedBook.equals(null)) {
+		if (updatedBook == null) {
 			return;
 		}
 		UpdateBookRequest updateBookRequest = new UpdateBookRequest(updatedBook);
@@ -241,7 +238,7 @@ public class AdminController {
 		return getAuthorBooksListResponse.getAuthorsBooksList();
 	}
 
-	private Book enterAuthor(Book book) {
+	private Book enterAuthor(Book mutableBook) {
 		System.out.println("Enter Author's name: ");
 		scan.nextLine();
 		String name = scan.next();
@@ -250,22 +247,22 @@ public class AdminController {
 		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
 		Language lang = Language.create(scan.next());
 		Author author = new Author(name, surname, lang);
-		book.setAuthor(author);
-		return book;
+		mutableBook.setAuthor(author);
+		return mutableBook;
 	}
 
-	private Book enterTitle(Book book) {
-		if (book.equals(null)) {
+	private Book enterTitle(Book mutableBook) {
+		if (mutableBook == null) {
 			return null;
 		}
 		System.out.println("Enter title of the book: ");
 		String title = scan.next();
-		book.setTitle(title);
-		return book;
+		mutableBook.setTitle(title);
+		return mutableBook;
 	}
 
-	private Book enterYear(Book book) {
-		if (book.equals(null)) {
+	private Book enterYear(Book mutableBook) {
+		if (mutableBook == null) {
 			return null;
 		}
 		System.out.println("Enter 4 digits of year: ");
@@ -273,18 +270,18 @@ public class AdminController {
 		if( year < 1000 || year > 3000) {
 			return null;
 		}
-		book.setYear(year);
-		return book;
+		mutableBook.setYear(year);
+		return mutableBook;
 	}
 
-	private Book enterGenre(Book book) {
-		if (book.equals(null)) {
+	private Book enterGenre(Book mutableBook) {
+		if (mutableBook == null) {
 			return null;
 		}
 		System.out.println("Enter genre: ");
 		String genre = scan.next();
-		book.setGenre(genre);
-		return book;
+		mutableBook.setGenre(genre);
+		return mutableBook;
 	}
 
 	private <T> void printList(ArrayList<T> anyList) {

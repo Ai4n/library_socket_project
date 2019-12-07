@@ -62,8 +62,8 @@ public class ServerController {
 				checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
 				break;
 			case LOGIN_CHECK:
-				LoginCheckRequest loginCheckRequest = gson.fromJson(jsonMessage, LoginCheckRequest.class);
-				checkLogin(loginCheckRequest.getNewLogin());
+				IsLoginExistRequest isLoginExistRequest = gson.fromJson(jsonMessage, IsLoginExistRequest.class);
+				checkLogin(isLoginExistRequest.getNewLogin());
 				break;
 			case ADD_USER:
 				AddUserRequest addUserRequest = gson.fromJson(jsonMessage, AddUserRequest.class);
@@ -89,9 +89,9 @@ public class ServerController {
 				searchBookInUserBooksList(searchInUserBooksRequest.getUserId(), searchInUserBooksRequest.getText());
 				break;
 			case DELETE_USER_BOOK:
-				DeleteBookFromUsersList deleteBookFromUsersList = gson.fromJson(jsonMessage,
-						DeleteBookFromUsersList.class);
-				deleteUsersBookInList(deleteBookFromUsersList.getBookId(), deleteBookFromUsersList.getUserId());
+				DeleteBookFromUsersBookList deleteBookFromUsersBookList = gson.fromJson(jsonMessage,
+						DeleteBookFromUsersBookList.class);
+				deleteUsersBookInList(deleteBookFromUsersBookList.getBookId(), deleteBookFromUsersBookList.getUserId());
 				break;
 			case DELETE_BOOK:
 				DeleteBookRequest deleteBookRequest = gson.fromJson(jsonMessage, DeleteBookRequest.class);

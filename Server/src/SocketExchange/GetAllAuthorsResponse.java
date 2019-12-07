@@ -9,7 +9,7 @@ import Main.ServerMessage;
 
 public class GetAllAuthorsResponse extends SocketExchange{
 	
-	ArrayList<Author> authorsList;
+	private ArrayList<Author> authorsList;
 	public GetAllAuthorsResponse(ArrayList<Author> authorsList) {
 		super(ServerMessage.GET_ALL_AUTHORS);
 		this.authorsList = authorsList;
