@@ -70,9 +70,9 @@ public class ServerController {
 				addUser(addUserRequest.getNewLogin(), addUserRequest.getCryptPassword());
 				break;
 			case ADD_USER_BOOK:
-				AddBookToUserListRequest addBookToUserListRequest = gson.fromJson(jsonMessage,
-						AddBookToUserListRequest.class);
-				addBookToUsersList(addBookToUserListRequest.getBookId(), addBookToUserListRequest.getUserId());
+				AddBookToUsersBookListRequest addBookToUsersBookListRequest = gson.fromJson(jsonMessage,
+						AddBookToUsersBookListRequest.class);
+				addBookToUsersList(addBookToUsersBookListRequest.getBookId(), addBookToUsersBookListRequest.getUserId());
 				break;
 			case SHOW_BOOKS:
 				GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
@@ -166,7 +166,7 @@ public class ServerController {
 	}
 
 	private void addBookToUsersList(int bookId, int userId) {
-		bookRepo.addBookInUserList(bookId, userId);
+		bookRepo.addBookInUserBookList(bookId, userId);
 	}
 
 	private void searchBookInUserBooksList(int userId, String text) {

@@ -9,9 +9,9 @@ import SocketExchange.*;
 
 public class AdminController {
 	private Scanner scan = new Scanner(System.in);
-	SocketController socketController;
-	String jsonMessage;
-	Gson gson = new Gson();
+	private SocketController socketController;
+	private String jsonMessage;
+	private Gson gson = new Gson();
 
 	public AdminController(SocketController socketController) {
 		this.socketController = socketController;

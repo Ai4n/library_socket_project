@@ -9,11 +9,11 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 6L;
 	int idUser;
-	String name;
-	String surName;
-	String login;
-	String password;
-	UserRole role;
+	private String name;
+	private String surName;
+	private String login;
+	private String password;
+	private UserRole role;
 
 	public User(int idUser, String login, String password, UserRole role) {
 		this.idUser = idUser;

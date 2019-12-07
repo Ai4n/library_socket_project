@@ -60,8 +60,8 @@ public class UserController {
 			}
 			int bookId = listBooks.get(number - 1).getBookId();
 			int userId = user.getIdUser();
-			AddBookToUserListRequest addBookToUserListRequest = new AddBookToUserListRequest(bookId, userId);
-			socketController.write(addBookToUserListRequest.json());
+			AddBookToUsersBookListRequest addBookToUsersBookListRequest = new AddBookToUsersBookListRequest(bookId, userId);
+			socketController.write(addBookToUsersBookListRequest.json());
 		} else
 			return;
 	}

@@ -140,7 +140,7 @@ public class BookRepo {
 		return true;
 	}
 
-	public void addBookInUserList(int bookId, int userId) {
+	public void addBookInUserBookList(int bookId, int userId) {
 		Boolean userHasBook = userHasBook(userId, bookId);
 		if (userHasBook) {
 			String sql = "INSERT into users_books values(null, ?, ?)";
@@ -159,11 +159,11 @@ public class BookRepo {
 		String query = "UPDATE  books SET authorid = ?, title = ?, year = ?, genre = ? WHERE id = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setInt(5, book.getBookId());
 			ps.setInt(1, book.getAuthor().getAuthorId());
 			ps.setString(2, book.getTitle());
 			ps.setInt(3, book.getYear());
 			ps.setString(4, book.getGenre());
+			ps.setInt(5, book.getBookId());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			System.out.println(ex);
