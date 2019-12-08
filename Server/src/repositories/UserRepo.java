@@ -27,21 +27,22 @@ public class UserRepo {
 		}
 	}
 
-	public User checkUser(String login, String password) {
+	public User userCheck(String login, String password) {
 		PreparedStatement statement;
-		String sql = "SELECT * FROM users WHERE login = ? AND password = ?";
+		
+		String sql = "SELECT * FROM users WHERE login = ? AND password = ? AND role = ?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, login);
 			statement.setString(2, password);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				int idUser = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
-				String role = rs.getString(4);
-				UserRole userRole = UserRole.create(role);
-				User user = new User(idUser, name, surname, login, password, userRole);
+				String roleStr = rs.getString(6);
+				System.out.println(roleStr);
+				UserRole role = UserRole.create(roleStr);
+				User user = new User(name, surname, login, password, role);
 				return user;
 			}
 		} catch (SQLException ex) {
@@ -99,14 +100,13 @@ public class UserRepo {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			while (rs.next()) {
-				int iduser = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				String password = rs.getString(4);
 				String login = rs.getString(5);
 				String userRole = rs.getString(6);
 				UserRole role = UserRole.create(userRole);
-				User user = new User(iduser, name, surname, login, password, role);
+				User user = new User(name, surname, login, password, role);
 				allUsersList.add(user);
 			}
 

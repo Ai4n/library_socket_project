@@ -1,24 +1,25 @@
 package main;
 
 public enum UserRole {
-	USER("USER"),
-	ADMIN("ADMIN");
-	
-	private String role;
-	
-	public static UserRole create(String role) {
-		if(role.equals("ADMIN")) {
-			return ADMIN;
-		} 
-		return USER;
+	USER("user"), 
+	ADMIN("admin");
+
+	private String message;
+
+	UserRole(String message) {
+		this.message = message;
 	}
-	
-	UserRole (String role) {
-		this.role = role;
+
+	public static UserRole create(String message) {
+		for (UserRole userRole : UserRole.values()) {
+			if (userRole.message.equals(message)) {
+				return userRole;
+			}
+		}
+		return null;
 	}
-	
-	public String toString() {
-		return role;
+
+	public String getMessage() {
+		return message;
 	}
 }
-

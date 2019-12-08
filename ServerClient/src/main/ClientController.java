@@ -54,6 +54,7 @@ public class ClientController {
 		String cryptPassword;
 		UserRole role;
 		String roleString;
+		
 		IsLoginExistResponse isLoginExistResponse;
 		do {
 			System.out.println("Enter youre name:\n");
@@ -89,8 +90,8 @@ public class ClientController {
 			System.out.println("Enter your login:");
 			String login = scan.next();
 			System.out.println("Enter your password:");
-			String password1 = scan.next();
-			String password = PasswordUtils.encodePassword(password1);
+			String passwordStr = scan.next();
+			String password = PasswordUtils.encodePassword(passwordStr);
 			UserCheckRequest request = new UserCheckRequest(login, password);
 			socketController.write(request.json());
 			jsonMessage = socketController.readUtf();

@@ -59,11 +59,11 @@ public class ServerController {
 				break;
 			case USER_CHECK:
 				UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
-				checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
+				userCheck(userCheckRequest.getLogin(), userCheckRequest.getPassword());
 				break;
 			case LOGIN_CHECK:
 				IsLoginExistRequest isLoginExistRequest = gson.fromJson(jsonMessage, IsLoginExistRequest.class);
-				checkLogin(isLoginExistRequest.getNewLogin());
+				loginCheck(isLoginExistRequest.getNewLogin());
 				break;
 			case ADD_USER:
 				AddUserRequest addUserRequest = gson.fromJson(jsonMessage, AddUserRequest.class);
@@ -175,14 +175,14 @@ public class ServerController {
 		socketController.write(searchInUserBooksResponse.json());
 	}
 
-	private void checkUser(String login, String password) {
-		User user = userRepo.checkUser(login, password);
+	private void userCheck(String login, String password) {
+		User user = userRepo.userCheck(login, password);
 		boolean isCredentialsCorrect = (user != null) ? true : false;
 		UserCheckResponse userCheckResponse = new UserCheckResponse(isCredentialsCorrect, user);
 		socketController.write(userCheckResponse.json());
 	}
 
-	private void checkLogin(String newLogin) {
+	private void loginCheck(String newLogin) {
 		Boolean isLoginExist = userRepo.isLoginExist(newLogin);
 		IsLoginExistResponse isLoginExistResponse = new IsLoginExistResponse(isLoginExist);
 		socketController.write(isLoginExistResponse.json());
