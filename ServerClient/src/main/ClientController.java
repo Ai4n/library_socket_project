@@ -52,8 +52,6 @@ public class ClientController {
 		String passwordTmp1;
 		String passwordTmp2;
 		String cryptPassword;
-		UserRole role;
-		String roleString;
 		
 		IsLoginExistResponse isLoginExistResponse;
 		do {
@@ -63,9 +61,6 @@ public class ClientController {
 			surname = scan.next();
 			System.out.println("Enter new login:\n");
 			newLogin = scan.next();
-			System.out.println("Enter youre role (user, admin):\n");
-			roleString = scan.next();
-			role = UserRole.create(roleString);
 			IsLoginExistRequest isLoginExistRequest = new IsLoginExistRequest(newLogin);
 			socketController.write(isLoginExistRequest.json());
 			jsonMessage = socketController.readUtf();
@@ -80,7 +75,7 @@ public class ClientController {
 		} while (!(passwordTmp1.equals(passwordTmp2)));
 
 		cryptPassword = PasswordUtils.encodePassword(passwordTmp1);
-		AddUserRequest addUserRequest = new AddUserRequest(0, name, surname, newLogin, cryptPassword, role);
+		AddUserRequest addUserRequest = new AddUserRequest(0, name, surname, newLogin, cryptPassword, UserRole.USER);
 		socketController.write(addUserRequest.json());
 	}
 

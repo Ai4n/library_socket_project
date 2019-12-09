@@ -30,12 +30,13 @@ public class UserRepo {
 	public User userCheck(String login, String password) {
 		PreparedStatement statement;
 		
-		String sql = "SELECT * FROM users WHERE login = ? AND password = ? AND role = ?";
+		String sql = "SELECT * FROM users WHERE login = ? AND password = ?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, login);
 			statement.setString(2, password);
 			ResultSet rs = statement.executeQuery();
+			System.out.println(login);
 			if (rs.next()) {
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
