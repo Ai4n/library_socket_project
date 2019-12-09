@@ -1,7 +1,5 @@
 package socketExchange;
 
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 
 public class GetAuthorBooksListRequest extends SocketExchange {

@@ -1,7 +1,4 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.*;
 
 public class AddAuthorRequest extends SocketExchange {

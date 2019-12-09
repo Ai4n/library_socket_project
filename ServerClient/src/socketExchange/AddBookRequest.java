@@ -1,7 +1,5 @@
 package socketExchange;
 
-import com.google.gson.Gson;
-
 import main.Book;
 import main.ServerMessage;
 

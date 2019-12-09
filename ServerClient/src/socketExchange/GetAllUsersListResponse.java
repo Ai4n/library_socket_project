@@ -2,8 +2,6 @@ package socketExchange;
 
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 import main.User;
 

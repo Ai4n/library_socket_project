@@ -1,9 +1,6 @@
 package socketExchange;
 
-import com.google.gson.Gson;
-
 import main.ServerMessage;
-import main.User;
 
 public class IsLoginExistResponse extends SocketExchange {
 

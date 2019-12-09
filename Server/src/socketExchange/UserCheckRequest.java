@@ -1,9 +1,6 @@
 package socketExchange;
 
-import com.google.gson.Gson;
-
 import main.ServerMessage;
-import main.UserRole;
 
 public class UserCheckRequest extends SocketExchange{
 

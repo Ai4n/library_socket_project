@@ -1,9 +1,5 @@
 package socketExchange;
 
-import java.util.ArrayList;
-
-import com.google.gson.Gson;
-
 import main.Book;
 import main.ServerMessage;
 
