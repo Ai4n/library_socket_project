@@ -16,9 +16,4 @@ public class IsLoginExistRequest extends SocketExchange {
 	public String getNewLogin() {
 		return newLogin;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
-
 }

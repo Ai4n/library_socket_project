@@ -15,8 +15,4 @@ public class GetAuthorBooksListRequest extends SocketExchange {
 	public int getAuthorId() {
 		return authorId;
 	}
-	
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

@@ -17,8 +17,4 @@ public class AddBookRequest extends SocketExchange{
 	public Book getBook() {
 		return book;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

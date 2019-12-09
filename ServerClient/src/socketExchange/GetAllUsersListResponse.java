@@ -19,8 +19,4 @@ public class GetAllUsersListResponse extends SocketExchange {
 	public ArrayList<User> getAllUsersList() {
 		return usersList;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

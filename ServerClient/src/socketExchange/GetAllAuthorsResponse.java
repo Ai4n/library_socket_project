@@ -19,9 +19,4 @@ public class GetAllAuthorsResponse extends SocketExchange {
 	public ArrayList<Author> getAuthorsList() {
 		return authorsList;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
-
 }

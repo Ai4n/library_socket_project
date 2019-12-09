@@ -19,8 +19,4 @@ public class SearchInUserBooksResponse extends SocketExchange {
 	public ArrayList<Book> getBooksList() {
 		return booksList;
 	}
-	
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

@@ -17,8 +17,4 @@ public class UserCheckResponse extends SocketExchange {
 	public User getUser() {
 		return user;
 	}
-	
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

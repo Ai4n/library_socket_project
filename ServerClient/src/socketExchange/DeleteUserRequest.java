@@ -16,8 +16,4 @@ public class DeleteUserRequest extends SocketExchange {
 	public int getUserId() {
 		return userId;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

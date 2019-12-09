@@ -16,7 +16,7 @@ public class SearchBookResponse extends SocketExchange {
 		this.foundedBooksList = foundedBooksList;
 	}
 
-	public String json() {
-		return new Gson().toJson(this);
+	public ArrayList<Book> getFoundedBooksList() {
+		return foundedBooksList;
 	}
 }

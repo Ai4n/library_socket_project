@@ -16,8 +16,4 @@ public class DeleteBookRequest extends SocketExchange {
 	public int getBookId() {
 		return bookId;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

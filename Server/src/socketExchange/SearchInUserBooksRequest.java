@@ -22,8 +22,4 @@ public class SearchInUserBooksRequest extends SocketExchange {
 	public String getText() {
 		return text;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

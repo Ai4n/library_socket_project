@@ -16,8 +16,4 @@ public class AddAuthorRequest extends SocketExchange {
 	public Author getAuthor() {
 		return author;
 	}
-	
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }

@@ -16,10 +16,6 @@ public class UserCheckRequest extends SocketExchange{
 		this.password = password;
 	}
 	
-	public String json() {
-		return new Gson().toJson(this);
-	}
-
 	public String getLogin() {
 		return login;
 	}

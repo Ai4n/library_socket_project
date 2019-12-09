@@ -15,9 +15,4 @@ public class DeleteAuthorRequest extends SocketExchange {
 	public int getAuthorId() {
 		return authorId;
 	}
-	
-	public String json() {
-		return new Gson().toJson(this);
-	}
-
 }

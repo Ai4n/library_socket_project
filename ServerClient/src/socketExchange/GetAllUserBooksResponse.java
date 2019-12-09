@@ -15,7 +15,5 @@ public class GetAllUserBooksResponse extends SocketExchange {
 		
 		public ArrayList<Book> getAllBooksList() {
 			return allBooksList;
-		}
-
-		
+		}	
 }

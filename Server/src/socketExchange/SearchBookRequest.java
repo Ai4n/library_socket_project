@@ -16,8 +16,4 @@ public class SearchBookRequest extends SocketExchange {
 	public String getTextForSearch() {
 		return textForSearch;
 	}
-
-	public String json() {
-		return new Gson().toJson(this);
-	}
 }
