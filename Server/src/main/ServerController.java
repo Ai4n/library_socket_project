@@ -15,12 +15,9 @@ import socketExchange.*;
 public class ServerController {
 
 	private SocketController socketController;
-
-	public static Scanner scan = new Scanner(System.in);
-
-	BookRepo bookRepo = new BookRepo();
-	UserRepo userRepo = new UserRepo();
-	Gson gson = new Gson();
+	private BookRepo bookRepo = new BookRepo();
+	private UserRepo userRepo = new UserRepo();
+	private Gson gson = new Gson();
 
 	public ServerController(Socket socket) throws IOException {
 		socketController = new SocketController(socket);
@@ -33,8 +30,6 @@ public class ServerController {
 			String jsonMessage = socketController.readUtf();
 			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
 			System.out.println("message: " + request.message);
-			if (request == null)
-				continue;
 			switch (request.message) {
 			case ADD_AUTHOR:
 				AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
@@ -115,7 +110,7 @@ public class ServerController {
 
 		}
 	}
-
+	
 	private void addAuthor(Author author) {
 		bookRepo.addAuthor(author);
 	}

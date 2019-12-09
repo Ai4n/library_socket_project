@@ -2,7 +2,6 @@ package socketExchange;
 
 import main.ServerMessage;
 import main.User;
-import main.UserRole;
 
 public class AddUserRequest extends SocketExchange {
 
