@@ -59,15 +59,15 @@ public class ServerController {
 				break;
 			case USER_CHECK:
 				UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
-				userCheck(userCheckRequest.getLogin(), userCheckRequest.getPassword());
+				checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
 				break;
 			case LOGIN_CHECK:
 				IsLoginExistRequest isLoginExistRequest = gson.fromJson(jsonMessage, IsLoginExistRequest.class);
-				loginCheck(isLoginExistRequest.getNewLogin());
+				checkLogin(isLoginExistRequest.getNewLogin());
 				break;
 			case ADD_USER:
 				AddUserRequest addUserRequest = gson.fromJson(jsonMessage, AddUserRequest.class);
-				addUser(addUserRequest.getIdUser(), addUserRequest.getName(), addUserRequest.getSurname(), addUserRequest.getLogin(), addUserRequest.getPassword(), addUserRequest.getRole());
+				addUser(addUserRequest.getUser());
 				break;
 			case ADD_USER_BOOK:
 				AddBookToUsersBookListRequest addBookToUsersBookListRequest = gson.fromJson(jsonMessage,
@@ -175,21 +175,20 @@ public class ServerController {
 		socketController.write(searchInUserBooksResponse.json());
 	}
 
-	private void userCheck(String login, String password) {
-		User user = userRepo.userCheck(login, password);
+	private void checkUser(String login, String password) {
+		User user = userRepo.checkUser(login, password);
 		boolean isCredentialsCorrect = (user != null) ? true : false;
 		UserCheckResponse userCheckResponse = new UserCheckResponse(isCredentialsCorrect, user);
 		socketController.write(userCheckResponse.json());
 	}
 
-	private void loginCheck(String newLogin) {
+	private void checkLogin(String newLogin) {
 		Boolean isLoginExist = userRepo.isLoginExist(newLogin);
 		IsLoginExistResponse isLoginExistResponse = new IsLoginExistResponse(isLoginExist);
 		socketController.write(isLoginExistResponse.json());
 	}
 
-	private void addUser(int iDuser, String name, String surname, String login, String passWord, UserRole role) {
-		User user = new User(iDuser, name, surname, login, passWord, role);
+	private void addUser(User user) {
 		userRepo.addUser(user);
 	}
 

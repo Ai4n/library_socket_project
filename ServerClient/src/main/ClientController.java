@@ -73,9 +73,9 @@ public class ClientController {
 			System.out.println("Repeat password (at least four simbols): ");
 			passwordTmp2 = scan.next();
 		} while (!(passwordTmp1.equals(passwordTmp2)));
-
 		cryptPassword = PasswordUtils.encodePassword(passwordTmp1);
-		AddUserRequest addUserRequest = new AddUserRequest(0, name, surname, newLogin, cryptPassword, UserRole.USER);
+		User user = new User(name, surname, newLogin, cryptPassword, UserRole.USER);
+		AddUserRequest addUserRequest = new AddUserRequest(user);
 		socketController.write(addUserRequest.json());
 	}
 
@@ -85,9 +85,9 @@ public class ClientController {
 			System.out.println("Enter your login:");
 			String login = scan.next();
 			System.out.println("Enter your password:");
-			String passwordStr = scan.next();
-			String password = PasswordUtils.encodePassword(passwordStr);
-			UserCheckRequest request = new UserCheckRequest(login, password);
+			String password = scan.next();
+			String hashedPassword = PasswordUtils.encodePassword(password);
+			UserCheckRequest request = new UserCheckRequest(login, hashedPassword);
 			socketController.write(request.json());
 			jsonMessage = socketController.readUtf();
 			userCheckResponse = gson.fromJson(jsonMessage, UserCheckResponse.class);
