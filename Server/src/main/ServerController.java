@@ -98,7 +98,7 @@ public class ServerController {
 				break;
 			case DELETE_USER:
 				DeleteUserRequest deleteUserRequest = gson.fromJson(jsonMessage, DeleteUserRequest.class);
-				deleteUser(deleteUserRequest.getUserId());
+				deleteUser(deleteUserRequest.getIdUser());
 				break;
 			case UPDATE_BOOK:
 				UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
@@ -187,8 +187,8 @@ public class ServerController {
 		userRepo.addUser(user);
 	}
 
-	private void deleteUser(int userId) {
-		userRepo.deleteUser(userId);
+	private void deleteUser(int idUser) {
+		userRepo.deleteUser(idUser);
 	}
 
 	private void deleteAuthor(int authorId) {

@@ -4,14 +4,14 @@ import main.ServerMessage;
 
 public class DeleteUserRequest extends SocketExchange {
 
-	private int userId;
+	private int idUser;
 
-	public DeleteUserRequest(int userId) {
+	public DeleteUserRequest(int idUser) {
 		super(ServerMessage.DELETE_USER);
-		this.userId = userId;
+		this.idUser = idUser;
 	}
 
-	public int getUserId() {
-		return userId;
+	public int getIdUser() {
+		return idUser;
 	}
 }

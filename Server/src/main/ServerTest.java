@@ -14,10 +14,11 @@ public class ServerTest {
 	public static void main(String args[]) {
 		ServerSocket serverSocket;
 		Socket socket;
+		ServerController serverController;
 		try {
 			serverSocket = new ServerSocket(5555);
 			socket = serverSocket.accept();
-			ServerController serverController = new ServerController(socket);
+			serverController = new ServerController(socket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -81,11 +81,11 @@ public class UserRepo {
 		}
 	}
 
-	public void deleteUser(int userId) {
+	public void deleteUser(int idUser) {
 		String query = "DELETE FROM users WHERE idusers = ?";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setInt(1, userId);
+			ps.setInt(1, idUser);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			System.out.println(ex);
@@ -99,13 +99,14 @@ public class UserRepo {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			while (rs.next()) {
+				int idUser = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
-				String password = rs.getString(4);
-				String login = rs.getString(5);
+				String login = rs.getString(4);
+				String password = rs.getString(5);
 				String userRole = rs.getString(6);
 				UserRole role = UserRole.create(userRole);
-				User user = new User(name, surname, login, password, role);
+				User user = new User(idUser, name, surname, login, password, role);
 				allUsersList.add(user);
 			}
 
