@@ -14,4 +14,6 @@ public class SocketExchange {
 	public String json() {
 		return new Gson().toJson(this);
 	}
+	
 }
+

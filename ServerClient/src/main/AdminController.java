@@ -102,6 +102,7 @@ public class AdminController {
 		}
 		Author author = authorsList.get(number - 1);
 		System.out.println("Please enter Tite");
+		scan.nextLine();
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
 		int year = scan.nextInt();
@@ -239,14 +240,11 @@ public class AdminController {
 	}
 
 	private Book enterAuthor(Book mutableBook) {
-		System.out.println("Enter Author's name: ");
-		scan.nextLine();
-		String name = scan.next();
-		System.out.println("Enter Author's surname: ");
-		String surname = scan.next();
-		System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
-		Language lang = Language.create(scan.next());
-		Author author = new Author(name, surname, lang);
+		ArrayList<Author> allAuthorList = getAllAuthorList();
+		printList(allAuthorList);
+		System.out.println("Choose number of Author: ");
+		int number = scan.nextInt();
+		Author author = allAuthorList.get(number - 1);
 		mutableBook.setAuthor(author);
 		return mutableBook;
 	}
@@ -256,7 +254,11 @@ public class AdminController {
 			return null;
 		}
 		System.out.println("Enter title of the book: ");
-		String title = scan.next();
+		scan.nextLine();
+		String title = scan.nextLine();
+		if (title == null) {
+			return null;
+		}
 		mutableBook.setTitle(title);
 		return mutableBook;
 	}

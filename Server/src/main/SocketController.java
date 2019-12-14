@@ -25,7 +25,9 @@ public class SocketController {
 
 	public String readUtf() {
 		try {
-			return dataIn.readUTF();
+			String stringObject = dataIn.readUTF();
+			System.out.println(stringObject);
+			return stringObject;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

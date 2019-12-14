@@ -67,9 +67,9 @@ public class Book implements Serializable {
 	}
 	
 	
-	@Override
+@Override
 	public String toString() {
-		return author.getName() + ", " + author.getSurname() + ", " + 
-	author.getLanguage() + ", " + title + ", " + year + ", " + genre;
+		return author.getName() + ", " + author.getSurname() + ", " + title + ", "
+				+ genre +  ", " + year + ", " + author.getLanguage();
 	}
 }
