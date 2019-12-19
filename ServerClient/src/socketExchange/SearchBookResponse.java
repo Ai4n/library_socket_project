@@ -1,9 +1,5 @@
 package socketExchange;
-
 import java.util.ArrayList;
-
-import com.google.gson.Gson;
-
 import main.Book;
 import main.ServerMessage;
 
@@ -18,9 +14,5 @@ public class SearchBookResponse extends SocketExchange {
 
 	public ArrayList<Book> getFoundedBooksList() {
 		return foundedBooksList;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

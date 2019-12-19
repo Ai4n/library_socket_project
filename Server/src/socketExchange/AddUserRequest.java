@@ -1,10 +1,6 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 import main.User;
-import main.UserRole;
 
 public class AddUserRequest extends SocketExchange {
 
@@ -17,9 +13,5 @@ public class AddUserRequest extends SocketExchange {
 
 	public User getUser() {
 		return user;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

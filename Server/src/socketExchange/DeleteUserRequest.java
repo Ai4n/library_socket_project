@@ -1,7 +1,4 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 
 public class DeleteUserRequest extends SocketExchange {
@@ -15,9 +12,5 @@ public class DeleteUserRequest extends SocketExchange {
 
 	public int getUserId() {
 		return userId;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

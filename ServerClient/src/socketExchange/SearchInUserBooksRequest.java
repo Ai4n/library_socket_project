@@ -1,7 +1,4 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 
 public class SearchInUserBooksRequest extends SocketExchange {
@@ -21,9 +18,5 @@ public class SearchInUserBooksRequest extends SocketExchange {
 
 	public String getText() {
 		return text;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

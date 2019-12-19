@@ -1,9 +1,5 @@
 package socketExchange;
-
 import java.util.ArrayList;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 import main.User;
 
@@ -18,9 +14,5 @@ public class GetAllUsersListResponse extends SocketExchange {
 
 	public ArrayList<User> getAllUsersList() {
 		return usersList;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

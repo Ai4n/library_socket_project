@@ -1,9 +1,4 @@
 package socketExchange;
-
-import java.util.ArrayList;
-
-import com.google.gson.Gson;
-
 import main.Book;
 import main.ServerMessage;
 
@@ -17,9 +12,5 @@ public class UpdateBookRequest extends SocketExchange {
 
 	public Book getBook() {
 		return book;
-	}
-
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

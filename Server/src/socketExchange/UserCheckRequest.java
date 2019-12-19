@@ -1,9 +1,5 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
-import main.UserRole;
 
 public class UserCheckRequest extends SocketExchange{
 
@@ -16,10 +12,6 @@ public class UserCheckRequest extends SocketExchange{
 		this.password = password;
 	}
 	
-	public String json() {
-		return new Gson().toJson(this);
-	}
-
 	public String getLogin() {
 		return login;
 	}

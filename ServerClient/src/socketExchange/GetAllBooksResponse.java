@@ -1,7 +1,5 @@
 package socketExchange;
-
 import java.util.ArrayList;
-
 import main.Book;
 import main.ServerMessage;
 
@@ -17,6 +15,4 @@ public class GetAllBooksResponse extends SocketExchange {
 	public ArrayList<Book> getAllBooksList() {
 		return allBooksList;
 	}
-
-	
 }

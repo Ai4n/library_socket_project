@@ -1,7 +1,4 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 
 public class GetAuthorBooksListRequest extends SocketExchange {
@@ -14,9 +11,5 @@ public class GetAuthorBooksListRequest extends SocketExchange {
 
 	public int getAuthorId() {
 		return authorId;
-	}
-	
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

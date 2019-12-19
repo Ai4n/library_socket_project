@@ -1,7 +1,4 @@
 package socketExchange;
-
-import com.google.gson.Gson;
-
 import main.ServerMessage;
 import main.User;
 
@@ -16,9 +13,5 @@ public class UserCheckResponse extends SocketExchange {
 
 	public User getUser() {
 		return user;
-	}
-	
-	public String json() {
-		return new Gson().toJson(this);
 	}
 }

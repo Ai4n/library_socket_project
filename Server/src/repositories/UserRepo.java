@@ -88,7 +88,7 @@ public class UserRepo {
 			ps.setInt(1, userId);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 	}
 
@@ -99,13 +99,14 @@ public class UserRepo {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			while (rs.next()) {
+				int userId = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				String password = rs.getString(4);
 				String login = rs.getString(5);
 				String userRole = rs.getString(6);
 				UserRole role = UserRole.create(userRole);
-				User user = new User(name, surname, login, password, role);
+				User user = new User(userId, name, surname, login, password, role);
 				allUsersList.add(user);
 			}
 

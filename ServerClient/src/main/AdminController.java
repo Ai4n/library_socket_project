@@ -75,8 +75,9 @@ public class AdminController {
 		if(number == 0 || number > usersList.size()) {
 			return;
 		}
-		User user = usersList.get(number - 1);
-		DeleteUserRequest deleteUserRequest = new DeleteUserRequest(user.getIdUser());
+		int userId = usersList.get(number - 1).getIdUser();
+		System.out.println(userId);
+		DeleteUserRequest deleteUserRequest = new DeleteUserRequest(userId);
 		socketController.write(deleteUserRequest.json());
 	}
 
@@ -102,6 +103,7 @@ public class AdminController {
 		}
 		Author author = authorsList.get(number - 1);
 		System.out.println("Please enter Tite");
+		scan.next();
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
 		int year = scan.nextInt();

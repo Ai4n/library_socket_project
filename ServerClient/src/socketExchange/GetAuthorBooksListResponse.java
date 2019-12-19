@@ -1,7 +1,5 @@
 package socketExchange;
-
 import java.util.ArrayList;
-
 import main.Book;
 import main.ServerMessage;
 
