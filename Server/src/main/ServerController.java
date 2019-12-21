@@ -156,7 +156,7 @@ public class ServerController {
 	}
 
 	private void deleteUsersBookInList(int bookId, int userId) {
-		bookRepo.deleteUserBook(userId, bookId);
+		userRepo.deleteUserBook(userId, bookId);
 	}
 
 	private void sendAllUserBooks(int userId) {
@@ -194,6 +194,7 @@ public class ServerController {
 
 	private void deleteUser(int userId) {
 		userRepo.deleteUser(userId);
+		userRepo.deleteDataInUserBooks(userId);
 	}
 
 	private void deleteAuthor(int authorId) {

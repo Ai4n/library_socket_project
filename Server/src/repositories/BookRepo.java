@@ -267,18 +267,6 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public void deleteUserBook(int userId, int bookId) {
-		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
-		try {
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setInt(1, userId);
-			ps.setInt(2, bookId);
-			ps.executeUpdate();
-		} catch (SQLException ex) {
-			System.out.println(ex);
-		}
-	}
-
 	public void deleteBookInLibrary(int bookId) {
 		String query = "DELETE FROM books where id = ?";
 		try {

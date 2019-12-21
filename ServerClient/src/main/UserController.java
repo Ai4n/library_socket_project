@@ -50,9 +50,9 @@ public class UserController {
 
 	private void addBookToUsersList() {
 		ArrayList<Book> listBooks = getAllLibraryBooks();
-		if (listBooks.equals(null)) {
+		if (listBooks == null) {
 			return;
-		} else if (!(user.equals(null))) {
+		} else if (!(user == null)) {
 			printList(listBooks);
 			System.out.println("Choose number of book: \n");
 			int number = scan.nextInt();
@@ -61,6 +61,7 @@ public class UserController {
 			}
 			int bookId = listBooks.get(number - 1).getBookId();
 			int userId = user.getIdUser();
+			System.out.println(userId);
 			AddBookToUsersBookListRequest addBookToUsersBookListRequest = new AddBookToUsersBookListRequest(bookId, userId);
 			socketController.write(addBookToUsersBookListRequest.json());
 		} else

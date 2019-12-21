@@ -1,5 +1,6 @@
 package socketExchange;
 import main.ServerMessage;
+import main.User;
 
 public class IsLoginExistResponse extends SocketExchange {
 
@@ -7,3 +8,4 @@ public class IsLoginExistResponse extends SocketExchange {
 		super(isLoginExist ? ServerMessage.USER_EXIST : ServerMessage.USER_NOT_EXIST);
 	}
 }
+ 

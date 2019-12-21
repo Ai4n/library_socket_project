@@ -37,11 +37,12 @@ public class UserRepo {
 			statement.setString(2, password);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
+				int userId = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				String roleStr = rs.getString(6);
 				UserRole role = UserRole.create(roleStr);
-				User user = new User(name, surname, login, password, role);
+				User user = new User(userId, name, surname, login, password, role);
 				return user;
 			}
 		} catch (SQLException ex) {
@@ -114,5 +115,28 @@ public class UserRepo {
 			System.out.println(ex);
 		}
 		return allUsersList;
+	}
+	
+	public void deleteUserBook(int userId, int bookId) {
+		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, bookId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public void deleteDataInUserBooks(int userId) {
+		String sql = "DELETE FROM users_books WHERE iduser = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}		
 	}
 }
