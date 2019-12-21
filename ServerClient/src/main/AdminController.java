@@ -103,7 +103,7 @@ public class AdminController {
 		}
 		Author author = authorsList.get(number - 1);
 		System.out.println("Please enter Tite");
-		scan.next();
+		scan.nextLine();
 		String title = scan.nextLine();
 		System.out.println("Please enter Year:");
 		int year = scan.nextInt();
@@ -111,6 +111,7 @@ public class AdminController {
 		String genre = scan.next();
 		Book book = new Book(author, title, year, genre);
 		AddBookRequest addBookRequest = new AddBookRequest(book);
+		
 		socketController.write(addBookRequest.json());
 	}
 
@@ -151,7 +152,7 @@ public class AdminController {
 		if(number == 0 || number > listBooks.size()) {
 			return;
 		}
-		Integer bookId = listBooks.get(number - 1).getBookId();
+		int bookId = listBooks.get(number - 1).getBookId();
 		DeleteBookRequest deleteBookRequest = new DeleteBookRequest(bookId);
 		socketController.write(deleteBookRequest.json());
 	}

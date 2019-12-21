@@ -17,12 +17,12 @@ public class Author implements Serializable {
 		this.language = language;
 	}
 	
-	public Author (String name, String surname, Language language) {
-		this.name = name;
-		this.surname = surname;
-		this.language = language;
-	}
-	
+//	public Author (String name, String surname, Language language) {
+//		this.name = name;
+//		this.surname = surname;
+//		this.language = language;
+//	}
+//	
 	public int getAuthorId() {
 		return authorId;
 	}

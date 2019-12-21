@@ -98,7 +98,7 @@ public class BookRepo {
 
 	public ArrayList<Book> getAllBooksList() {
 		ArrayList<Book> allBooks = new ArrayList<>();
-		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
+		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre, b.authorid FROM books b\n"
 				+ "JOIN authors a ON b.authorid = a.authorid";
 		try {
 			Statement statement = connection.createStatement();
@@ -112,7 +112,8 @@ public class BookRepo {
 				String title = rs.getString(5);
 				int year = rs.getInt(6);
 				String genre = rs.getString(7);
-				Author author = new Author(authorName, authorSurname, authorLanguage);
+				int authorId = rs.getInt(8);
+				Author author = new Author(authorId, authorName, authorSurname, authorLanguage);
 				Book book = new Book(bookId, author, title, year, genre);
 				allBooks.add(book);
 			}
