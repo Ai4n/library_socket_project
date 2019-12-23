@@ -2,12 +2,8 @@ package main;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import com.google.gson.*;
-
 import repositories.BookRepo;
 import repositories.UserRepo;
 import socketExchange.*;
@@ -15,8 +11,6 @@ import socketExchange.*;
 public class ServerController {
 
 	private SocketController socketController;
-
-	public static Scanner scan = new Scanner(System.in);
 
 	BookRepo bookRepo = new BookRepo();
 	UserRepo userRepo = new UserRepo();
@@ -33,8 +27,6 @@ public class ServerController {
 			String jsonMessage = socketController.readUtf();
 			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
 			System.out.println("message: " + request.message);
-			if (request == null)
-				continue;
 			switch (request.message) {
 			case ADD_AUTHOR:
 				AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
@@ -72,7 +64,8 @@ public class ServerController {
 			case ADD_USER_BOOK:
 				AddBookToUsersBookListRequest addBookToUsersBookListRequest = gson.fromJson(jsonMessage,
 						AddBookToUsersBookListRequest.class);
-				addBookToUsersList(addBookToUsersBookListRequest.getBookId(), addBookToUsersBookListRequest.getUserId());
+				addBookToUsersList(addBookToUsersBookListRequest.getBookId(),
+						addBookToUsersBookListRequest.getUserId());
 				break;
 			case SHOW_BOOKS:
 				GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
@@ -85,7 +78,8 @@ public class ServerController {
 				getAllAuthorsBooks(getAuthorBooksListRequest.getAuthorId());
 				break;
 			case SEARCH_BOOKS:
-				SearchInUserBooksRequest searchInUserBooksRequest = gson.fromJson(jsonMessage, SearchInUserBooksRequest.class);
+				SearchInUserBooksRequest searchInUserBooksRequest = gson.fromJson(jsonMessage,
+						SearchInUserBooksRequest.class);
 				searchBookInUserBooksList(searchInUserBooksRequest.getUserId(), searchInUserBooksRequest.getText());
 				break;
 			case DELETE_USER_BOOK:

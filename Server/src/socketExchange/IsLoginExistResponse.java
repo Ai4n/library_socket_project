@@ -1,6 +1,5 @@
 package socketExchange;
 import main.ServerMessage;
-import main.User;
 
 public class IsLoginExistResponse extends SocketExchange {
 

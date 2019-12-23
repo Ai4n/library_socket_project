@@ -1,5 +1,4 @@
 package repositories;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,11 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import main.Author;
 import main.Book;
 import main.Language;
-import main.User;
+
 
 public class BookRepo {
 	Connection connection;

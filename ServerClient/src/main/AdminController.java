@@ -259,7 +259,8 @@ public class AdminController {
 			return null;
 		}
 		System.out.println("Enter title of the book: ");
-		String title = scan.next();
+		scan.nextLine();
+		String title = scan.nextLine();
 		mutableBook.setTitle(title);
 		return mutableBook;
 	}
