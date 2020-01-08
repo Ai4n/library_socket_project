@@ -27,6 +27,7 @@ public class ServerController {
 			String jsonMessage = socketController.readUtf();
 			SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
 			System.out.println("message: " + request.message);
+			if (request == null) continue;
 			switch (request.message) {
 			case ADD_AUTHOR:
 				AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
@@ -64,8 +65,7 @@ public class ServerController {
 			case ADD_USER_BOOK:
 				AddBookToUsersBookListRequest addBookToUsersBookListRequest = gson.fromJson(jsonMessage,
 						AddBookToUsersBookListRequest.class);
-				addBookToUsersList(addBookToUsersBookListRequest.getBookId(),
-						addBookToUsersBookListRequest.getUserId());
+				addBookToUsersBookListRequest(addBookToUsersBookListRequest);
 				break;
 			case SHOW_BOOKS:
 				GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
@@ -109,7 +109,7 @@ public class ServerController {
 
 		}
 	}
-
+	
 	private void addAuthor(Author author) {
 		bookRepo.addAuthor(author);
 	}
@@ -150,7 +150,7 @@ public class ServerController {
 	}
 
 	private void deleteUsersBookInList(int bookId, int userId) {
-		userRepo.deleteUserBook(userId, bookId);
+		bookRepo.deleteUserBook(userId, bookId);
 	}
 
 	private void sendAllUserBooks(int userId) {
@@ -159,8 +159,8 @@ public class ServerController {
 		socketController.write(getAllUserBooksResponse.json());
 	}
 
-	private void addBookToUsersList(int bookId, int userId) {
-		bookRepo.addBookInUserBookList(bookId, userId);
+	private void addBookToUsersBookListRequest(AddBookToUsersBookListRequest request) {
+		bookRepo.addBookInUserBookList(request.getBookId(), request.getUserId());
 	}
 
 	private void searchBookInUserBooksList(int userId, String text) {

@@ -76,7 +76,6 @@ public class AdminController {
 			return;
 		}
 		int userId = usersList.get(number - 1).getIdUser();
-		System.out.println(userId);
 		DeleteUserRequest deleteUserRequest = new DeleteUserRequest(userId);
 		socketController.write(deleteUserRequest.json());
 	}

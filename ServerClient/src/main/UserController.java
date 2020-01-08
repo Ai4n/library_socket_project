@@ -61,7 +61,6 @@ public class UserController {
 			}
 			int bookId = listBooks.get(number - 1).getBookId();
 			int userId = user.getIdUser();
-			System.out.println(userId);
 			AddBookToUsersBookListRequest addBookToUsersBookListRequest = new AddBookToUsersBookListRequest(bookId, userId);
 			socketController.write(addBookToUsersBookListRequest.json());
 		} else
