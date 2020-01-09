@@ -1,6 +1,6 @@
-package socket.model.socketExchange;
+package model.socketExchange;
 import entities.book.Book;
-import socket.model.serverMessage.ServerMessage;
+import model.serverMessage.ServerMessage;
 
 public class AddBookRequest extends SocketExchange{
 	

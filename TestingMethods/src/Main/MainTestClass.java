@@ -6,11 +6,13 @@ import com.google.gson.*;
 public class MainTestClass {
 	
 	public static void main(String[] args) {
-		TestClass testObject = new TestClass(1, "test", new TestNestedClass(5));
+//		SocketExchange testObject = new SocketExchange(1, "test");
 		Gson gson = new Gson();
-		String json = gson.toJson(testObject);
+		Request request = new Request("test", 1, 4);
+		String json = gson.toJson(request);
 		
-		System.out.println(json);
+		Request parsedJson = SocketExchange
+		
 	}
 
 

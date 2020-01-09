@@ -1,6 +1,6 @@
-package socket.model.socketExchange;
+package model.socketExchange;
 import com.google.gson.Gson;
-import socket.model.serverMessage.ServerMessage;
+import model.serverMessage.ServerMessage;
 
 public class SocketExchange {
 

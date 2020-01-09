@@ -1,6 +1,6 @@
-package socket.model.socketExchange;
+package model.socketExchange;
 import entities.user.User;
-import socket.model.serverMessage.ServerMessage;
+import model.serverMessage.ServerMessage;
 
 public class UserCheckResponse extends SocketExchange {
 	

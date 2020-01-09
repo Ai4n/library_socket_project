@@ -1,13 +1,17 @@
-package main;
+package main.controller;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-
 import com.google.gson.*;
+import socket.controller.controller.socketExchange.*;
+import entities.book.Author;
+import entities.book.Book;
+import socket.controller.SocketController;
+import entities.user.User;
 import repositories.BookRepo;
 import repositories.UserRepo;
-import socketExchange.*;
+import socket.controller.socketExchange.*;
 
 public class ServerController {
 

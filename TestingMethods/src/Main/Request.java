@@ -1,9 +1,11 @@
 package Main;
 
-public class TestNestedClass {
-	int id;
+public class Request extends SocketExchange {
+	String field;
 	
-	public TestNestedClass(int id) {
+	public Request(String str, int integer, int id) {
+		super(integer, str);
 		this.id = id;
 	}
+	
 }

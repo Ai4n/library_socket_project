@@ -1,9 +1,11 @@
 package main;
+
+import main.controller.ServerController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerTest {
+public class ServerMain {
 
 	public static void main(String args[]) {
 		ServerSocket serverSocket;

@@ -1,7 +1,7 @@
-package socket.model.socketExchange;
+package model.socketExchange;
 import java.util.ArrayList;
 import entities.book.Book;
-import socket.model.serverMessage.ServerMessage;
+import model.serverMessage.ServerMessage;
 
 public class SearchInUserBooksResponse extends SocketExchange {
 

@@ -1,12 +1,9 @@
-package main;
+package entities.user;
 
 import java.io.Serializable;
 
 public class User implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6L;
 	private int idUser;
 	private String name;

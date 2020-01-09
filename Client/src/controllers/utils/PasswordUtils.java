@@ -1,4 +1,4 @@
-package controllers.util;
+package controllers.utils;
 
 import java.security.MessageDigest;
 

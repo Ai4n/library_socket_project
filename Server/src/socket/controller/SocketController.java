@@ -1,11 +1,11 @@
-package main;
+package socket.controller;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import socketExchange.SocketExchange;
+import socket.controller.socketExchange.SocketExchange;
 
 public class SocketController {
 	private ObjectOutputStream dataOut;

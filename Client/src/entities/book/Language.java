@@ -1,4 +1,4 @@
-package main.entities.book;
+package entities.book;
 
 public enum Language {
 

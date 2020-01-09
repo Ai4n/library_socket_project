@@ -1,13 +1,12 @@
-package main.controllers;
+package controllers;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.gson.Gson;
-
 import entities.book.Book;
-import main.socket.controller.SocketController;
+import socket.controller.SocketController;
 import entities.user.User;
-import main.socket.exchangeController.*;
+import model.socketExchange.*;
 
 public class UserController {
 

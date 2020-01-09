@@ -1,8 +1,8 @@
-package socket.model.socketExchange;
+package model.socketExchange;
 import java.util.ArrayList;
 
 import entities.user.User;
-import socket.model.serverMessage.ServerMessage;
+import model.serverMessage.ServerMessage;
 
 public class GetAllUsersListResponse extends SocketExchange {
 

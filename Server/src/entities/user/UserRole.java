@@ -1,4 +1,4 @@
-package main;
+package entities.user;
 
 public enum UserRole {
 	USER("USER"), 

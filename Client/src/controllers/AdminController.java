@@ -1,16 +1,14 @@
-package main.controllers;
+package controllers;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import com.google.gson.Gson;
-
 import entities.book.Author;
 import entities.book.Book;
 import entities.book.Language;
 import entities.user.User;
-import main.socket.controller.SocketController;
-import main.socket.exchangeController.*;
+import socket.controller.SocketController;
+import model.socketExchange.*;
 
 public class AdminController {
     private Scanner scan = new Scanner(System.in);

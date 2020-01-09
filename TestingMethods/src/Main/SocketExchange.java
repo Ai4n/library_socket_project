@@ -1,15 +1,19 @@
 package Main;
 
-public class TestClass {
+import com.google.gson.Gson;
+
+public class SocketExchange {
 	
 	int id;
 	String title;
-	TestNestedClass nestedObject;
 	
-	public TestClass(int id, String title, TestNestedClass nestedObject) {
+	public SocketExchange(int id, String title) {
 		this.id = id;
 		this.title = title;
-		this.nestedObject = nestedObject;
+	}
+	
+	public <T> T create(String jsonString) {
+		return (T)new Gson().fromJson(jsonString, this.getClass());
 	}
 	
 }

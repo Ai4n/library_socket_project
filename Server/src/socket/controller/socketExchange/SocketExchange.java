@@ -1,6 +1,6 @@
-package socket.controller.controller.socketExchange;
-import com.google.gson.Gson;
+package socket.controller.socketExchange;
 
+import com.google.gson.Gson;
 import model.ServerMessage;
 
 public class SocketExchange {

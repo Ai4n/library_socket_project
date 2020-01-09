@@ -1,8 +1,9 @@
 package main;
 
+import controllers.ClientController;
 import java.net.Socket;
 
-public class ClientTest {
+public class ClientMain {
 
     public static void main(String args[]) {
 

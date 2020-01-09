@@ -1,4 +1,4 @@
-package socket.model.serverMessage;
+package model.serverMessage;
 
 public enum ServerMessage {
 	

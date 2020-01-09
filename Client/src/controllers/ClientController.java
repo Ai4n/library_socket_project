@@ -1,17 +1,15 @@
-package main.controllers;
+package controllers;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
-
 import com.google.gson.Gson;
-
-import main.controllers.util.PasswordUtils;
+import controllers.utils.PasswordUtils;
 import entities.user.User;
 import entities.user.UserRole;
-import controller.ServerMessage;
-import main.socket.controller.SocketController;
-import main.socket.exchangeController.*;
+import model.serverMessage.ServerMessage;
+import socket.controller.SocketController;
+import model.socketExchange.*;
 
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);
