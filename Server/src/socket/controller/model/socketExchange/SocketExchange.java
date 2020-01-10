@@ -1,7 +1,7 @@
 package socket.controller.socketExchange;
 
 import com.google.gson.Gson;
-import model.ServerMessage;
+import socket.controller.model.ServerMessage;
 
 public class SocketExchange {
 

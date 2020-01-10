@@ -2,7 +2,7 @@ package socket.controller.socketExchange;
 
 import java.util.ArrayList;
 import entities.book.Book;
-import model.ServerMessage;
+import socket.controller.model.ServerMessage;
 
 public class GetAllBooksResponse extends SocketExchange {
 

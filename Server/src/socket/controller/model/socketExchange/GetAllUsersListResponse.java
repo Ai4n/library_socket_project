@@ -1,7 +1,7 @@
 package socket.controller.socketExchange;
 
 import java.util.ArrayList;
-import model.ServerMessage;
+import socket.controller.model.ServerMessage;
 import entities.user.User;
 
 public class GetAllUsersListResponse extends SocketExchange {

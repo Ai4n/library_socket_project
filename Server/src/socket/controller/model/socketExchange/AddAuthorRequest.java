@@ -1,7 +1,7 @@
 package socket.controller.socketExchange;
 
 import entities.book.Author;
-import model.ServerMessage;
+import socket.controller.model.ServerMessage;
 
 public class AddAuthorRequest extends SocketExchange {
 
