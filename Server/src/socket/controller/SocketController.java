@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import socket.controller.socketExchange.SocketExchange;
+import socket.controller.model.SocketExchange;
 
 public class SocketController {
 	private ObjectOutputStream dataOut;

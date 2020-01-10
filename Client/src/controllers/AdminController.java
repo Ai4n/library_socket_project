@@ -8,7 +8,7 @@ import entities.book.Book;
 import entities.book.Language;
 import entities.user.User;
 import socket.controller.SocketController;
-import model.socketExchange.*;
+import socket.controller.model.socketExchange.*;
 
 public class AdminController {
     private Scanner scan = new Scanner(System.in);

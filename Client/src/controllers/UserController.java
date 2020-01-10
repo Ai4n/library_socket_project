@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import entities.book.Book;
 import socket.controller.SocketController;
 import entities.user.User;
-import model.socketExchange.*;
+import socket.controller.model.socketExchange.*;
 
 public class UserController {
 

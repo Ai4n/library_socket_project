@@ -1,10 +1,11 @@
-package socket.controller.socketExchange;
+package socket.controller.model.socketExchange;
 
 import java.util.ArrayList;
 import entities.book.Author;
 import socket.controller.model.ServerMessage;
+import socket.controller.model.SocketExchange;
 
-public class GetAllAuthorsResponse extends SocketExchange{
+public class GetAllAuthorsResponse extends SocketExchange {
 	
 	private ArrayList<Author> authorsList;
 	

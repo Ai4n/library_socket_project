@@ -1,6 +1,7 @@
-package model.socketExchange;
+package socket.controller.model;
+
 import com.google.gson.Gson;
-import model.serverMessage.ServerMessage;
+import socket.controller.model.ServerMessage;
 
 public class SocketExchange {
 
@@ -9,7 +10,7 @@ public class SocketExchange {
 	public SocketExchange(ServerMessage message) {
 		this.message = message;
 	}
-
+	
 	public String json() {
 		return new Gson().toJson(this);
 	}

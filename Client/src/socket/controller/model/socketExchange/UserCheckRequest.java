@@ -1,8 +1,9 @@
-package model.socketExchange;
+package socket.controller.model.socketExchange;
 
-import model.serverMessage.ServerMessage;
+import socket.controller.model.ServerMessage;
+import socket.controller.model.SocketExchange;
 
-public class UserCheckRequest extends SocketExchange{
+public class UserCheckRequest extends SocketExchange {
 
 	private String login;
 	private String password;

@@ -1,8 +1,9 @@
-package socket.controller.socketExchange;
+package socket.controller.model.socketExchange;
 
 import java.util.ArrayList;
 import entities.book.Book;
 import socket.controller.model.ServerMessage;
+import socket.controller.model.SocketExchange;
 
 public class GetAuthorBooksListResponse extends SocketExchange {
 

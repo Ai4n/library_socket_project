@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import com.google.gson.*;
-import socket.controller.controller.socketExchange.*;
+import socket.controller.model.SocketExchange;
+import socket.controller.model.socketExchange.*;
 import entities.book.Author;
 import entities.book.Book;
 import socket.controller.SocketController;
 import entities.user.User;
 import repositories.BookRepo;
 import repositories.UserRepo;
-import socket.controller.socketExchange.*;
 
 public class ServerController {
 

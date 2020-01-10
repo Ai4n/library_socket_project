@@ -1,6 +1,7 @@
-package socket.controller.socketExchange;
+package socket.controller.model.socketExchange;
 
 import socket.controller.model.ServerMessage;
+import socket.controller.model.SocketExchange;
 
 public class DeleteBookRequest extends SocketExchange {
 
