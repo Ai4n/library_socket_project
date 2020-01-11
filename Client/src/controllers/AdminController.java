@@ -59,6 +59,7 @@ public class AdminController {
                     deleteUser();
                     break;
                 case 11:
+                    quitAndCloseSession();
                     return;
                 default:
                     System.out.println("enter key from 1 to 11");
@@ -297,6 +298,11 @@ public class AdminController {
                 System.out.println((i + 1) + ". " + element);
             }
         }
+    }
+
+    private void quitAndCloseSession() {
+        QuitAndCloseSessionRequest quitAndCloseSessionRequest = new QuitAndCloseSessionRequest();
+        socketController.write(quitAndCloseSessionRequest);
     }
 
 }

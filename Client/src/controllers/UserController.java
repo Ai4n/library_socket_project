@@ -39,6 +39,7 @@ public class UserController {
 				deleteBookFromUsersList();
 				break;
 			case 5:
+				quitAndCloseSession();
 				return;
 			default:
 				break;
@@ -120,4 +121,8 @@ public class UserController {
 		}
 	}
 
+	private void quitAndCloseSession() {
+		QuitAndCloseSessionRequest quitAndCloseSessionRequest = new QuitAndCloseSessionRequest();
+		socketController.write(quitAndCloseSessionRequest);
+	}
 }

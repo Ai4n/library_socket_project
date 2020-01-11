@@ -112,7 +112,10 @@ public class ServerController extends Thread {
                     UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
                     updateBook(updateBookRequest.getBook());
                     break;
-                default:
+                case CLOSE_SESSION:
+                    socketController.closeSession();
+                    return;
+                    default:
                     return;
             }
 
