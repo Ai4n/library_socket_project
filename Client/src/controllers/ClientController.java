@@ -7,9 +7,9 @@ import com.google.gson.Gson;
 import controllers.utils.PasswordUtils;
 import entities.user.User;
 import entities.user.UserRole;
-import socket.controller.model.ServerMessage;
+import socket.model.ServerMessage;
 import socket.controller.SocketController;
-import socket.controller.model.socketExchange.*;
+import socket.model.socketExchange.*;
 
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);
