@@ -5,11 +5,11 @@ import java.net.Socket;
 import java.util.Scanner;
 import com.google.gson.Gson;
 import controllers.utils.PasswordUtils;
-import entities.user.User;
-import entities.user.UserRole;
-import socket.model.ServerMessage;
-import socket.controller.SocketController;
-import socket.model.socketExchange.*;
+import com.ai4n.entities.user.User;
+import com.ai4n.entities.user.UserRole;
+import com.ai4n.socketExchange.model.ServerMessage;
+import com.ai4n.socketExchange.controller.SocketController;
+import com.ai4n.socketExchange.model.socketExchange.*;
 
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);

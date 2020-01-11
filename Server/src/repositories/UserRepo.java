@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import entities.user.User;
-import entities.user.UserRole;
+import com.ai4n.entities.user.User;
+import com.ai4n.entities.user.UserRole;
 
 public class UserRepo {
 	Connection connection;

@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import entities.book.Author;
-import entities.book.Book;
-import entities.book.Language;
+import com.ai4n.entities.book.Author;
+import com.ai4n.entities.book.Book;
+import com.ai4n.entities.book.Language;
 
 public class BookRepo {
 	Connection connection;

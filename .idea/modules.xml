@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../LibraryEntities/LibraryEntities.iml" filepath="$PROJECT_DIR$/../LibraryEntities/LibraryEntities.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/Client/ServerClient.iml" filepath="$PROJECT_DIR$/Client/ServerClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SocketExchange/SocketExchange.iml" filepath="$PROJECT_DIR$/../SocketExchange/SocketExchange.iml" />
       <module fileurl="file://$PROJECT_DIR$/TestingMethods/TestingMethods.iml" filepath="$PROJECT_DIR$/TestingMethods/TestingMethods.iml" />
     </modules>
   </component>
