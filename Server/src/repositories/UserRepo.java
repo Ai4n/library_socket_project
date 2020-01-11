@@ -7,12 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import main.Author;
-import main.Book;
-import main.Language;
-import main.User;
-import main.UserRole;
+import entities.user.User;
+import entities.user.UserRole;
 
 public class UserRepo {
 	Connection connection;
@@ -37,11 +33,12 @@ public class UserRepo {
 			statement.setString(2, password);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
+				int userId = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				String roleStr = rs.getString(6);
 				UserRole role = UserRole.create(roleStr);
-				User user = new User(name, surname, login, password, role);
+				User user = new User(userId, name, surname, login, password, role);
 				return user;
 			}
 		} catch (SQLException ex) {
@@ -88,7 +85,7 @@ public class UserRepo {
 			ps.setInt(1, userId);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 	}
 
@@ -99,13 +96,14 @@ public class UserRepo {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			while (rs.next()) {
+				int userId = rs.getInt(1);
 				String name = rs.getString(2);
 				String surname = rs.getString(3);
 				String password = rs.getString(4);
 				String login = rs.getString(5);
 				String userRole = rs.getString(6);
 				UserRole role = UserRole.create(userRole);
-				User user = new User(name, surname, login, password, role);
+				User user = new User(userId, name, surname, login, password, role);
 				allUsersList.add(user);
 			}
 
@@ -113,5 +111,16 @@ public class UserRepo {
 			System.out.println(ex);
 		}
 		return allUsersList;
+	}
+	
+	public void deleteDataInUserBooks(int userId) {
+		String sql = "DELETE FROM users_books WHERE iduser = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}		
 	}
 }

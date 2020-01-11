@@ -7,11 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import main.Author;
-import main.Book;
-import main.Language;
-import main.User;
+import entities.book.Author;
+import entities.book.Book;
+import entities.book.Language;
 
 public class BookRepo {
 	Connection connection;
@@ -98,7 +96,7 @@ public class BookRepo {
 
 	public ArrayList<Book> getAllBooksList() {
 		ArrayList<Book> allBooks = new ArrayList<>();
-		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre FROM books b\n"
+		String query = "SELECT b.id,  a.name, a.surname, a.language, b.title, b.year, b.genre, b.authorid FROM books b\n"
 				+ "JOIN authors a ON b.authorid = a.authorid";
 		try {
 			Statement statement = connection.createStatement();
@@ -112,7 +110,8 @@ public class BookRepo {
 				String title = rs.getString(5);
 				int year = rs.getInt(6);
 				String genre = rs.getString(7);
-				Author author = new Author(authorName, authorSurname, authorLanguage);
+				int authorId = rs.getInt(8);
+				Author author = new Author(authorId, authorName, authorSurname, authorLanguage);
 				Book book = new Book(bookId, author, title, year, genre);
 				allBooks.add(book);
 			}
@@ -266,18 +265,6 @@ public class BookRepo {
 		return foundBooks;
 	}
 
-	public void deleteUserBook(int userId, int bookId) {
-		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
-		try {
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setInt(1, userId);
-			ps.setInt(2, bookId);
-			ps.executeUpdate();
-		} catch (SQLException ex) {
-			System.out.println(ex);
-		}
-	}
-
 	public void deleteBookInLibrary(int bookId) {
 		String query = "DELETE FROM books where id = ?";
 		try {
@@ -324,4 +311,17 @@ public class BookRepo {
 			System.out.println(ex);
 		}
 	}
+	
+	public void deleteUserBook(int userId, int bookId) {
+		String sql = "DELETE FROM users_books where iduser = ? and idbook = ?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, bookId);
+			ps.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+	}
+
 }
