@@ -3,6 +3,7 @@ package main.controller;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+
 import com.google.gson.*;
 import com.ai4n.socketExchange.model.SocketExchange;
 import com.ai4n.socketExchange.model.socketExchange.*;
@@ -24,7 +25,7 @@ public class ServerController extends Thread {
     public ServerController(Socket socket) throws IOException {
         socketController = new SocketController(socket);
     }
-
+    @Override
     public void run() {
         handleMessages();
     }
@@ -32,7 +33,10 @@ public class ServerController extends Thread {
     public void handleMessages() {
 
         while (true) {
-            System.out.println(Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+            /***
+             * Test threads turned on
+             */
+            //System.out.println(Thread.currentThread().getName() + " #" + Thread.currentThread().getId());
             String jsonMessage = socketController.readUtf();
             SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
             System.out.println("message: " + request.message);
@@ -115,7 +119,7 @@ public class ServerController extends Thread {
                 case CLOSE_SESSION:
                     socketController.closeSession();
                     return;
-                    default:
+                default:
                     return;
             }
 
