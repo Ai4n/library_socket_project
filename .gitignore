@@ -4,11 +4,6 @@
 *.class
 .metadata/
 
-# Intellij Idea's files ignore
-.idea
-out
-*.iml
-
 # Log file
 *.log
 
