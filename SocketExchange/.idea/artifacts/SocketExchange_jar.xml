@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SocketExchange:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SocketExchange_jar</output-path>
+    <root id="archive" name="SocketExchange.jar">
+      <element id="module-output" name="SocketExchange" />
+    </root>
+  </artifact>
+</component>
