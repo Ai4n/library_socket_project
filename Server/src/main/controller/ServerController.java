@@ -3,17 +3,18 @@ package main.controller;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+
 import com.google.gson.*;
-import socket.model.SocketExchange;
-import socket.model.socketExchange.*;
-import entities.book.Author;
-import entities.book.Book;
-import socket.controller.SocketController;
-import entities.user.User;
+import com.ai4n.socketExchange.model.SocketExchange;
+import com.ai4n.socketExchange.model.socketExchange.*;
+import com.ai4n.entities.book.Author;
+import com.ai4n.entities.book.Book;
+import com.ai4n.socketExchange.controller.SocketController;
+import com.ai4n.entities.user.User;
 import repositories.BookRepo;
 import repositories.UserRepo;
 
-public class ServerController {
+public class ServerController extends Thread {
 
     private SocketController socketController;
 
@@ -23,12 +24,19 @@ public class ServerController {
 
     public ServerController(Socket socket) throws IOException {
         socketController = new SocketController(socket);
+    }
+    @Override
+    public void run() {
         handleMessages();
     }
 
     public void handleMessages() {
 
         while (true) {
+            /***
+             * Test threads turned on
+             */
+            //System.out.println(Thread.currentThread().getName() + " #" + Thread.currentThread().getId());
             String jsonMessage = socketController.readUtf();
             SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
             System.out.println("message: " + request.message);
@@ -108,6 +116,9 @@ public class ServerController {
                     UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
                     updateBook(updateBookRequest.getBook());
                     break;
+                case CLOSE_SESSION:
+                    socketController.closeSession();
+                    return;
                 default:
                     return;
             }

@@ -23,5 +23,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="LibraryEntities" />
+    <orderEntry type="module" module-name="SocketExchange" />
   </component>
 </module>

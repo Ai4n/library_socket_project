@@ -3,12 +3,12 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.gson.Gson;
-import entities.book.Author;
-import entities.book.Book;
-import entities.book.Language;
-import entities.user.User;
-import socket.controller.SocketController;
-import socket.model.socketExchange.*;
+import com.ai4n.entities.book.Author;
+import com.ai4n.entities.book.Book;
+import com.ai4n.entities.book.Language;
+import com.ai4n.entities.user.User;
+import com.ai4n.socketExchange.controller.SocketController;
+import com.ai4n.socketExchange.model.socketExchange.*;
 
 public class AdminController {
     private Scanner scan = new Scanner(System.in);
@@ -59,6 +59,7 @@ public class AdminController {
                     deleteUser();
                     break;
                 case 11:
+                    quitAndCloseSession();
                     return;
                 default:
                     System.out.println("enter key from 1 to 11");
@@ -209,7 +210,7 @@ public class AdminController {
         String surname = scan.next();
         System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
         Language lang = Language.create(scan.next());
-        Author author = new Author(name, surname, lang);
+        Author author = new Author(0, name, surname, lang);
         AddAuthorRequest addAuthorRequest = new AddAuthorRequest(author);
         socketController.write(addAuthorRequest);
     }
@@ -251,7 +252,7 @@ public class AdminController {
         String surname = scan.next();
         System.out.println("Enter Author's language (ENG, RUS, DEF etc.): ");
         Language lang = Language.create(scan.next());
-        Author author = new Author(name, surname, lang);
+        Author author = new Author(0,name, surname, lang);
         mutableBook.setAuthor(author);
         return mutableBook;
     }
@@ -297,6 +298,11 @@ public class AdminController {
                 System.out.println((i + 1) + ". " + element);
             }
         }
+    }
+
+    private void quitAndCloseSession() {
+        QuitAndCloseSessionRequest quitAndCloseSessionRequest = new QuitAndCloseSessionRequest();
+        socketController.write(quitAndCloseSessionRequest);
     }
 
 }

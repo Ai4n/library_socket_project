@@ -3,10 +3,10 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.gson.Gson;
-import entities.book.Book;
-import socket.controller.SocketController;
-import entities.user.User;
-import socket.model.socketExchange.*;
+import com.ai4n.entities.book.Book;
+import com.ai4n.socketExchange.controller.SocketController;
+import com.ai4n.entities.user.User;
+import com.ai4n.socketExchange.model.socketExchange.*;
 
 public class UserController {
 
@@ -39,6 +39,7 @@ public class UserController {
 				deleteBookFromUsersList();
 				break;
 			case 5:
+				quitAndCloseSession();
 				return;
 			default:
 				break;
@@ -114,10 +115,14 @@ public class UserController {
 	private <T> void printList(ArrayList<T> anyList) {
 		if (anyList != null) {
 			for (int i = 0; i < anyList.size(); i++) {
-				T element = (T) anyList.get(i);
+				T element = anyList.get(i);
 				System.out.println((i + 1) + ". " + element);
 			}
 		}
 	}
 
+	private void quitAndCloseSession() {
+		QuitAndCloseSessionRequest quitAndCloseSessionRequest = new QuitAndCloseSessionRequest();
+		socketController.write(quitAndCloseSessionRequest);
+	}
 }

@@ -6,13 +6,13 @@ import com.google.gson.*;
 public class MainTestClass {
 	
 	public static void main(String[] args) {
-//		SocketExchange testObject = new SocketExchange(1, "test");
-		Gson gson = new Gson();
-		Request request = new Request("test", 1, 4);
-		String json = gson.toJson(request);
-		
-		Request parsedJson = SocketExchange
-		
+		ThreadTest tt1 = new ThreadTest(10, 1, 987654321);
+		ThreadTest tt2 = new ThreadTest(5, 2, 878787878);
+		ThreadTest tt3 = new ThreadTest(1, 3, 567777777);
+
+		tt1.start();
+		tt2.start();
+		tt3.start();
 	}
 
 
