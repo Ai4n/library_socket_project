@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SocketExchange">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SocketExchange/out/artifacts/SocketExchange_jar/SocketExchange.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
