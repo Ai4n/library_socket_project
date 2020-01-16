@@ -43,17 +43,7 @@ public class SocketController {
 		}
 		return null;
 	}
-
-	public SocketExchange convertMessage() {
-		try {
-			Gson gson = new Gson();
-			return gson.fromJson(dataIn.readUTF(), SocketExchange.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
+	
 	public <T extends SocketExchange> T convertMessage(String jsonString, T object) {
 		try {
 			Class c = object.getClass();
