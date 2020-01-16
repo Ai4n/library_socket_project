@@ -44,7 +44,7 @@ public class SocketController {
 		return null;
 	}
 
-	public SocketExchange readMessage() {
+	public SocketExchange convertMessage() {
 		try {
 			Gson gson = new Gson();
 			return gson.fromJson(dataIn.readUTF(), SocketExchange.class);
@@ -54,7 +54,7 @@ public class SocketController {
 		return null;
 	}
 
-	public <T extends SocketExchange> T readMessage(String jsonString, T object) {
+	public <T extends SocketExchange> T convertMessage(String jsonString, T object) {
 		try {
 			Class c = object.getClass();
 			return (T)new Gson().fromJson(jsonString, c);
@@ -64,7 +64,7 @@ public class SocketController {
 		return null;
 	}
 
-	public SocketExchange readRequest() {
+	public SocketExchange readMessage() {
 		try {
 			String json = dataIn.readUTF();
 			SocketExchange request = new Gson().fromJson(json, SocketExchange.class);

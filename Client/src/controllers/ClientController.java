@@ -64,8 +64,8 @@ public class ClientController {
 			newLogin = scan.next();
 			IsLoginExistRequest isLoginExistRequest = new IsLoginExistRequest(newLogin);
 			socketController.write(isLoginExistRequest);
-			SocketExchange request = socketController.readRequest();
-			isLoginExistResponse = socketController.readMessage(request.json, isLoginExistResponse);
+			SocketExchange request = socketController.readMessage();
+			isLoginExistResponse = socketController.convertMessage(request.json, isLoginExistResponse);
 		} while (isLoginExistResponse.message == (ServerMessage.USER_EXIST));
 
 		do {
@@ -90,7 +90,7 @@ public class ClientController {
 			String hashedPassword = PasswordUtils.encodePassword(password);
 			UserCheckRequest request = new UserCheckRequest(login, hashedPassword);
 			socketController.write(request);
-			userCheckResponse = socketController.readMessage(socketController.readRequest().json, new UserCheckResponse());
+			userCheckResponse = socketController.convertMessage(socketController.readMessage().json, new UserCheckResponse());
 		} while (userCheckResponse.message == ServerMessage.USER_NOT_EXIST);
 
 		return userCheckResponse.getUser();

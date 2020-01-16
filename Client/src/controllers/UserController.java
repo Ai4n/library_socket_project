@@ -13,7 +13,7 @@ public class UserController {
 	private Scanner scan = new Scanner(System.in);
 	private User user;
 	private SocketController socketController;
-	SocketExchange request = socketController.readRequest();
+	SocketExchange request = socketController.readMessage();
 
 	public UserController(User user, SocketController socketController) {
 		this.user = user;
@@ -73,7 +73,7 @@ public class UserController {
 	private ArrayList<Book> getAllLibraryBooks() {
 		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
 		socketController.write(getAllBooksRequest);
-		GetAllBooksResponse getAllBooksResponse = socketController.readMessage(request.json, new GetAllBooksResponse());
+		GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(request.json, new GetAllBooksResponse());
 		return getAllBooksResponse.getAllBooksList();
 	}
 
@@ -81,7 +81,7 @@ public class UserController {
 		int userId = user.getIdUser();
 		GetAllUserBooksRequest getAllUserBooksRequest = new GetAllUserBooksRequest(userId);
 		socketController.write(getAllUserBooksRequest);
-		GetAllUserBooksResponse getAllUserBooksResponse = socketController.readMessage(request.json, new GetAllUserBooksResponse());
+		GetAllUserBooksResponse getAllUserBooksResponse = socketController.convertMessage(request.json, new GetAllUserBooksResponse());
 		return getAllUserBooksResponse.getAllBooksList();
 	}
 
@@ -91,7 +91,7 @@ public class UserController {
 		String text = scan.next();
 		SearchInUserBooksRequest searchInUserBooksRequest = new SearchInUserBooksRequest(userId, text);
 		socketController.write(searchInUserBooksRequest);
-		SearchInUserBooksResponse searchInUserBooksResponse = socketController.readMessage(request.json, new SearchInUserBooksResponse());
+		SearchInUserBooksResponse searchInUserBooksResponse = socketController.convertMessage(request.json, new SearchInUserBooksResponse());
 		printList(searchInUserBooksResponse.getBooksList());
 	}
 

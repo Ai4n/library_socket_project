@@ -86,8 +86,8 @@ public class AdminController {
     private ArrayList<User> getAllUserList() {
         GetAllUsersListRequest getAllUsersListRequest = new GetAllUsersListRequest();
         socketController.write(getAllUsersListRequest);
-        SocketExchange request = socketController.readRequest();
-        GetAllUsersListResponse getAllUsersListResponse = socketController.readMessage(request.json, new GetAllUsersListResponse());
+        SocketExchange request = socketController.readMessage();
+        GetAllUsersListResponse getAllUsersListResponse = socketController.convertMessage(request.json, new GetAllUsersListResponse());
         return getAllUsersListResponse.getAllUsersList();
 
     }
@@ -120,16 +120,16 @@ public class AdminController {
     private ArrayList<Author> getAllAuthorList() {
         GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
         socketController.write(getAllAuthorsRequest);
-        SocketExchange request = socketController.readRequest();
-        GetAllAuthorsResponse getAuthorsResponse = socketController.readMessage(request.json, new GetAllAuthorsResponse());
+        SocketExchange request = socketController.readMessage();
+        GetAllAuthorsResponse getAuthorsResponse = socketController.convertMessage(request.json, new GetAllAuthorsResponse());
         return getAuthorsResponse.getAuthorsList();
     }
 
     public ArrayList<Book> getAllBooksList() {
         GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
         socketController.write(getAllBooksRequest);
-        SocketExchange request = socketController.readRequest();
-        GetAllBooksResponse getAllBooksResponse = socketController.readMessage(request.json, new GetAllBooksResponse());
+        SocketExchange request = socketController.readMessage();
+        GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(request.json, new GetAllBooksResponse());
         return getAllBooksResponse.getAllBooksList();
     }
 
@@ -138,8 +138,8 @@ public class AdminController {
         String textForSearch = scan.next();
         SearchBookRequest searchBookRequest = new SearchBookRequest(textForSearch);
         socketController.write(searchBookRequest);
-        SocketExchange request = socketController.readRequest();
-        SearchBookResponse searchBookResponse = socketController.readMessage(request.json, new SearchBookResponse());
+        SocketExchange request = socketController.readMessage();
+        SearchBookResponse searchBookResponse = socketController.convertMessage(request.json, new SearchBookResponse());
         return searchBookResponse.getFoundedBooksList();
     }
 
@@ -237,8 +237,8 @@ public class AdminController {
         }
         GetAuthorBooksListRequest getAuthorBooksListRequest = new GetAuthorBooksListRequest(authorId);
         socketController.write(getAuthorBooksListRequest);
-        SocketExchange request = socketController.readRequest();
-        GetAuthorBooksListResponse getAuthorBooksListResponse = socketController.readMessage(request.json, new GetAuthorBooksListResponse());
+        SocketExchange request = socketController.readMessage();
+        GetAuthorBooksListResponse getAuthorBooksListResponse = socketController.convertMessage(request.json, new GetAuthorBooksListResponse());
         return getAuthorBooksListResponse.getAuthorsBooksList();
     }
 
