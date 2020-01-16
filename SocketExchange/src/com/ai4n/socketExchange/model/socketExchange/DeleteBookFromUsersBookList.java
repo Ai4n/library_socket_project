@@ -8,6 +8,10 @@ public class DeleteBookFromUsersBookList extends SocketExchange {
 	private int userId;
 	private int bookId;
 
+	public DeleteBookFromUsersBookList() {
+		super(ServerMessage.DELETE_USER_BOOK);
+	}
+
 	public DeleteBookFromUsersBookList(int bookId, int userId) {
 		super(ServerMessage.DELETE_USER_BOOK);
 		this.bookId = bookId;

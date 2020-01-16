@@ -5,6 +5,10 @@ import com.ai4n.socketExchange.model.SocketExchange;
 
 public class IsLoginExistResponse extends SocketExchange {
 
+	public IsLoginExistResponse() {
+		super(ServerMessage.EMPTY);
+	}
+
 	public IsLoginExistResponse(Boolean isLoginExist) {
 		super(isLoginExist ? ServerMessage.USER_EXIST : ServerMessage.USER_NOT_EXIST);
 	}

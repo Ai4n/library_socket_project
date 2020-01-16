@@ -1,6 +1,7 @@
 package com.ai4n.socketExchange.controller;
 
 import com.ai4n.socketExchange.model.SocketExchange;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,6 +39,28 @@ public class SocketController {
 		try {
 			return dataIn.readUTF();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public <T extends SocketExchange> T convertMessage(String jsonString, T object) {
+		try {
+			Class c = object.getClass();
+			return (T)new Gson().fromJson(jsonString, c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public SocketExchange readMessage() {
+		try {
+			String json = dataIn.readUTF();
+			SocketExchange request = new Gson().fromJson(json, SocketExchange.class);
+			request.json = json;
+			return request;
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;

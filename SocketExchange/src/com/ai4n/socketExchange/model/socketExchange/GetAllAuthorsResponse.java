@@ -9,7 +9,11 @@ import java.util.ArrayList;
 public class GetAllAuthorsResponse extends SocketExchange {
 	
 	private ArrayList<Author> authorsList;
-	
+
+	public GetAllAuthorsResponse() {
+		super(ServerMessage.GET_ALL_AUTHORS);
+	}
+
 	public GetAllAuthorsResponse(ArrayList<Author> authorsList) {
 		super(ServerMessage.GET_ALL_AUTHORS);
 		this.authorsList = authorsList;

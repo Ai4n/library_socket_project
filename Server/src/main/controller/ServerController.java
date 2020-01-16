@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import com.google.gson.*;
 import com.ai4n.socketExchange.model.SocketExchange;
 import com.ai4n.socketExchange.model.socketExchange.*;
 import com.ai4n.entities.book.Author;
@@ -20,7 +19,6 @@ public class ServerController extends Thread {
 
     BookRepo bookRepo = new BookRepo();
     UserRepo userRepo = new UserRepo();
-    Gson gson = new Gson();
 
     public ServerController(Socket socket) throws IOException {
         socketController = new SocketController(socket);
@@ -33,21 +31,15 @@ public class ServerController extends Thread {
     public void handleMessages() {
 
         while (true) {
-            /***
-             * Test threads turned on
-             */
-            //System.out.println(Thread.currentThread().getName() + " #" + Thread.currentThread().getId());
-            String jsonMessage = socketController.readUtf();
-            SocketExchange request = gson.fromJson(jsonMessage, SocketExchange.class);
+            SocketExchange request = socketController.readMessage();
             System.out.println("message: " + request.message);
-
             switch (request.message) {
                 case ADD_AUTHOR:
-                    AddAuthorRequest addAuthorRequest = gson.fromJson(jsonMessage, AddAuthorRequest.class);
+                    AddAuthorRequest addAuthorRequest = socketController.convertMessage(request.json, new AddAuthorRequest());
                     addAuthor(addAuthorRequest.getAuthor());
                     break;
                 case ADD_BOOK:
-                    AddBookRequest addBookRequest = gson.fromJson(jsonMessage, AddBookRequest.class);
+                    AddBookRequest addBookRequest = socketController.convertMessage(request.json, new AddBookRequest());
                     addBook(addBookRequest.getBook());
                     break;
                 case GET_ALL_BOOKS:
@@ -60,60 +52,55 @@ public class ServerController extends Thread {
                     sendAllUsersList();
                     break;
                 case SEARCH_BOOK:
-                    SearchBookRequest searchBookRequest = gson.fromJson(jsonMessage, SearchBookRequest.class);
+                    SearchBookRequest searchBookRequest = socketController.convertMessage(request.json, new SearchBookRequest());
                     searchBookInLibrary(searchBookRequest.getTextForSearch());
                     break;
                 case USER_CHECK:
-                    UserCheckRequest userCheckRequest = gson.fromJson(jsonMessage, UserCheckRequest.class);
+                    UserCheckRequest userCheckRequest = socketController.convertMessage(request.json, new UserCheckRequest());
                     checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
                     break;
                 case LOGIN_CHECK:
-                    IsLoginExistRequest isLoginExistRequest = gson.fromJson(jsonMessage, IsLoginExistRequest.class);
+                    IsLoginExistRequest isLoginExistRequest = socketController.convertMessage(request.json, new IsLoginExistRequest());
                     checkLogin(isLoginExistRequest.getNewLogin());
                     break;
                 case ADD_USER:
-                    AddUserRequest addUserRequest = gson.fromJson(jsonMessage, AddUserRequest.class);
+                    AddUserRequest addUserRequest = socketController.convertMessage(request.json, new AddUserRequest());
                     addUser(addUserRequest.getUser());
                     break;
                 case ADD_USER_BOOK:
-                    AddBookToUsersBookListRequest addBookToUsersBookListRequest = gson.fromJson(jsonMessage,
-                            AddBookToUsersBookListRequest.class);
+                    AddBookToUsersBookListRequest addBookToUsersBookListRequest = socketController.convertMessage(request.json, new AddBookToUsersBookListRequest());
                     addBookToUsersBookListRequest(addBookToUsersBookListRequest);
                     break;
                 case SHOW_BOOKS:
-                    GetAllUserBooksRequest getAllUserBooksRequest = gson.fromJson(jsonMessage,
-                            GetAllUserBooksRequest.class);
+                    GetAllUserBooksRequest getAllUserBooksRequest = socketController.convertMessage(request.json, new GetAllUserBooksRequest());
                     sendAllUserBooks(getAllUserBooksRequest.getUserId());
                     break;
                 case SHOW_AUTHORS_BOOKS:
-                    GetAuthorBooksListRequest getAuthorBooksListRequest = gson.fromJson(jsonMessage,
-                            GetAuthorBooksListRequest.class);
+                    GetAuthorBooksListRequest getAuthorBooksListRequest = socketController.convertMessage(request.json, new GetAuthorBooksListRequest());
                     getAllAuthorsBooks(getAuthorBooksListRequest.getAuthorId());
                     break;
                 case SEARCH_BOOKS:
-                    SearchInUserBooksRequest searchInUserBooksRequest = gson.fromJson(jsonMessage,
-                            SearchInUserBooksRequest.class);
+                    SearchInUserBooksRequest searchInUserBooksRequest = socketController.convertMessage(request.json, new SearchInUserBooksRequest());
                     searchBookInUserBooksList(searchInUserBooksRequest.getUserId(), searchInUserBooksRequest.getText());
                     break;
                 case DELETE_USER_BOOK:
-                    DeleteBookFromUsersBookList deleteBookFromUsersBookList = gson.fromJson(jsonMessage,
-                            DeleteBookFromUsersBookList.class);
+                    DeleteBookFromUsersBookList deleteBookFromUsersBookList = socketController.convertMessage(request.json, new DeleteBookFromUsersBookList());
                     deleteUsersBookInList(deleteBookFromUsersBookList.getBookId(), deleteBookFromUsersBookList.getUserId());
                     break;
                 case DELETE_BOOK:
-                    DeleteBookRequest deleteBookRequest = gson.fromJson(jsonMessage, DeleteBookRequest.class);
+                    DeleteBookRequest deleteBookRequest = socketController.convertMessage(request.json, new DeleteBookRequest());
                     deleteBook(deleteBookRequest.getBookId());
                     break;
                 case DELETE_AUTHOR:
-                    DeleteAuthorRequest deleteAuthorRequest = gson.fromJson(jsonMessage, DeleteAuthorRequest.class);
+                    DeleteAuthorRequest deleteAuthorRequest = socketController.convertMessage(request.json, new DeleteAuthorRequest());
                     deleteAuthor(deleteAuthorRequest.getAuthorId());
                     break;
                 case DELETE_USER:
-                    DeleteUserRequest deleteUserRequest = gson.fromJson(jsonMessage, DeleteUserRequest.class);
+                    DeleteUserRequest deleteUserRequest = socketController.convertMessage(request.json, new DeleteUserRequest());
                     deleteUser(deleteUserRequest.getUserId());
                     break;
                 case UPDATE_BOOK:
-                    UpdateBookRequest updateBookRequest = gson.fromJson(jsonMessage, UpdateBookRequest.class);
+                    UpdateBookRequest updateBookRequest = socketController.convertMessage(request.json, new UpdateBookRequest());
                     updateBook(updateBookRequest.getBook());
                     break;
                 case CLOSE_SESSION:
@@ -187,7 +174,7 @@ public class ServerController extends Thread {
 
     private void checkUser(String login, String password) {
         User user = userRepo.checkUser(login, password);
-        boolean isCredentialsCorrect = (user != null) ? true : false;
+        boolean isCredentialsCorrect = user != null;
         UserCheckResponse userCheckResponse = new UserCheckResponse(isCredentialsCorrect, user);
         socketController.write(userCheckResponse);
     }

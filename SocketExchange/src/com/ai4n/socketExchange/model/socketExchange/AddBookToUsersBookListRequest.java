@@ -8,6 +8,10 @@ public class AddBookToUsersBookListRequest extends SocketExchange {
 	private int bookId;
 	private int userId;
 
+	public AddBookToUsersBookListRequest() {
+		super(ServerMessage.ADD_USER_BOOK);
+	}
+
 	public AddBookToUsersBookListRequest(int bookId, int userId) {
 		super(ServerMessage.ADD_USER_BOOK);
 		this.bookId = bookId;

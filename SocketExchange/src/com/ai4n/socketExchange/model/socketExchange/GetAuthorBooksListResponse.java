@@ -9,6 +9,11 @@ import java.util.ArrayList;
 public class GetAuthorBooksListResponse extends SocketExchange {
 
 	private ArrayList<Book> authorsBooksList;
+
+	public GetAuthorBooksListResponse() {
+		super(ServerMessage.SHOW_AUTHORS_BOOKS);
+	}
+
 	public GetAuthorBooksListResponse(ArrayList<Book> authorsBooksList) {
 		super(ServerMessage.SHOW_AUTHORS_BOOKS);
 		this.authorsBooksList = authorsBooksList;

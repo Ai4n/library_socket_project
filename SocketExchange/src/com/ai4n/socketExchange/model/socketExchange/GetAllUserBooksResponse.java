@@ -10,6 +10,10 @@ public class GetAllUserBooksResponse extends SocketExchange {
 
 	private ArrayList<Book> allBooksList;
 
+	public GetAllUserBooksResponse() {
+		super(ServerMessage.SHOW_BOOKS);
+	}
+
 	public GetAllUserBooksResponse(ArrayList<Book> allBooksList) {
 		super(ServerMessage.SHOW_BOOKS);
 		this.allBooksList = allBooksList;

@@ -6,6 +6,11 @@ import com.ai4n.socketExchange.model.SocketExchange;
 public class DeleteAuthorRequest extends SocketExchange {
 
 	private int authorId;
+
+	public DeleteAuthorRequest() {
+		super(ServerMessage.DELETE_AUTHOR);
+	}
+
 	public DeleteAuthorRequest(int authorId) {
 		super(ServerMessage.DELETE_AUTHOR);
 		this.authorId = authorId;

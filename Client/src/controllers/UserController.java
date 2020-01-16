@@ -2,10 +2,10 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import com.google.gson.Gson;
 import com.ai4n.entities.book.Book;
 import com.ai4n.socketExchange.controller.SocketController;
 import com.ai4n.entities.user.User;
+import com.ai4n.socketExchange.model.SocketExchange;
 import com.ai4n.socketExchange.model.socketExchange.*;
 
 public class UserController {
@@ -13,7 +13,7 @@ public class UserController {
 	private Scanner scan = new Scanner(System.in);
 	private User user;
 	private SocketController socketController;
-	private Gson gson = new Gson();
+	SocketExchange request = socketController.readMessage();
 
 	public UserController(User user, SocketController socketController) {
 		this.user = user;
@@ -73,8 +73,7 @@ public class UserController {
 	private ArrayList<Book> getAllLibraryBooks() {
 		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
 		socketController.write(getAllBooksRequest);
-		String jsonMessage = socketController.readUtf();
-		GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
+		GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(request.json, new GetAllBooksResponse());
 		return getAllBooksResponse.getAllBooksList();
 	}
 
@@ -82,8 +81,7 @@ public class UserController {
 		int userId = user.getIdUser();
 		GetAllUserBooksRequest getAllUserBooksRequest = new GetAllUserBooksRequest(userId);
 		socketController.write(getAllUserBooksRequest);
-		String jsonMessage = socketController.readUtf();
-		GetAllUserBooksResponse getAllUserBooksResponse = gson.fromJson(jsonMessage, GetAllUserBooksResponse.class);
+		GetAllUserBooksResponse getAllUserBooksResponse = socketController.convertMessage(request.json, new GetAllUserBooksResponse());
 		return getAllUserBooksResponse.getAllBooksList();
 	}
 
@@ -93,8 +91,7 @@ public class UserController {
 		String text = scan.next();
 		SearchInUserBooksRequest searchInUserBooksRequest = new SearchInUserBooksRequest(userId, text);
 		socketController.write(searchInUserBooksRequest);
-		String jsonMessage = socketController.readUtf();
-		SearchInUserBooksResponse searchInUserBooksResponse = gson.fromJson(jsonMessage, SearchInUserBooksResponse.class);
+		SearchInUserBooksResponse searchInUserBooksResponse = socketController.convertMessage(request.json, new SearchInUserBooksResponse());
 		printList(searchInUserBooksResponse.getBooksList());
 	}
 

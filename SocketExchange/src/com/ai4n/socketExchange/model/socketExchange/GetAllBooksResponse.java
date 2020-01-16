@@ -9,7 +9,11 @@ import java.util.ArrayList;
 public class GetAllBooksResponse extends SocketExchange {
 
 	private ArrayList<Book> allBooksList;
-	
+
+	public GetAllBooksResponse() {
+		super(ServerMessage.GET_ALL_BOOKS);
+	}
+
 	public ArrayList<Book> getAllBooksList() {
 		return allBooksList;
 	}

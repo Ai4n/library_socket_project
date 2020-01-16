@@ -8,6 +8,10 @@ public class AddUserRequest extends SocketExchange {
 
 	private User user;
 
+	public AddUserRequest() {
+		super(ServerMessage.ADD_USER);
+	}
+
 	public AddUserRequest(User user) {
 		super(ServerMessage.ADD_USER);
 		this.user = user;

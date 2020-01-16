@@ -7,6 +7,10 @@ public class SearchBookRequest extends SocketExchange {
 
 	String textForSearch;
 
+	public SearchBookRequest() {
+		super(ServerMessage.SEARCH_BOOK);
+	}
+
 	public SearchBookRequest(String textForSearch) {
 		super(ServerMessage.SEARCH_BOOK);
 		this.textForSearch = textForSearch;

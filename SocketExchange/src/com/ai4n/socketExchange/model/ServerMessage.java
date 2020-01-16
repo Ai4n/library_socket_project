@@ -1,7 +1,8 @@
 package com.ai4n.socketExchange.model;
 
 public enum ServerMessage {
-	
+
+	EMPTY(""),
 	ADD_AUTHOR("add_author"),
 	ADD_BOOK("add_book"),
 	ADD_USER("add_user"),

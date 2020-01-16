@@ -7,7 +7,11 @@ import com.ai4n.socketExchange.model.SocketExchange;
 public class AddAuthorRequest extends SocketExchange {
 
 	private Author author;
-	
+
+	public AddAuthorRequest() {
+		super(ServerMessage.ADD_AUTHOR);
+	}
+
 	public AddAuthorRequest(Author author) {
 		super(ServerMessage.ADD_AUTHOR);
 		this.author = author;

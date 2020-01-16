@@ -2,19 +2,17 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import com.google.gson.Gson;
 import com.ai4n.entities.book.Author;
 import com.ai4n.entities.book.Book;
 import com.ai4n.entities.book.Language;
 import com.ai4n.entities.user.User;
 import com.ai4n.socketExchange.controller.SocketController;
+import com.ai4n.socketExchange.model.SocketExchange;
 import com.ai4n.socketExchange.model.socketExchange.*;
 
 public class AdminController {
     private Scanner scan = new Scanner(System.in);
     private SocketController socketController;
-    private String jsonMessage;
-    private Gson gson = new Gson();
 
     public AdminController(SocketController socketController) {
         this.socketController = socketController;
@@ -22,6 +20,7 @@ public class AdminController {
 
     public void adminMenu() {
         while (true) {
+
             System.out.println("\nEnter options:\n" + "1.Add book to Library\n" + "2.Show books in Library\n"
                     + "3.Search book\n" + "4.Delete book\n" + "5.Update book\n" + "6.Add new Author\n"
                     + "7.Delete some Author\n" + "8.Show list of Authors\n" + "9.Show list of Author's books\n"
@@ -87,8 +86,8 @@ public class AdminController {
     private ArrayList<User> getAllUserList() {
         GetAllUsersListRequest getAllUsersListRequest = new GetAllUsersListRequest();
         socketController.write(getAllUsersListRequest);
-        jsonMessage = socketController.readUtf();
-        GetAllUsersListResponse getAllUsersListResponse = gson.fromJson(jsonMessage, GetAllUsersListResponse.class);
+        SocketExchange request = socketController.readMessage();
+        GetAllUsersListResponse getAllUsersListResponse = socketController.convertMessage(request.json, new GetAllUsersListResponse());
         return getAllUsersListResponse.getAllUsersList();
 
     }
@@ -121,16 +120,16 @@ public class AdminController {
     private ArrayList<Author> getAllAuthorList() {
         GetAllAuthorsRequest getAllAuthorsRequest = new GetAllAuthorsRequest();
         socketController.write(getAllAuthorsRequest);
-        jsonMessage = socketController.readUtf();
-        GetAllAuthorsResponse getAuthorsResponse = gson.fromJson(jsonMessage, GetAllAuthorsResponse.class);
+        SocketExchange request = socketController.readMessage();
+        GetAllAuthorsResponse getAuthorsResponse = socketController.convertMessage(request.json, new GetAllAuthorsResponse());
         return getAuthorsResponse.getAuthorsList();
     }
 
     public ArrayList<Book> getAllBooksList() {
         GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
         socketController.write(getAllBooksRequest);
-        jsonMessage = socketController.readUtf();
-        GetAllBooksResponse getAllBooksResponse = gson.fromJson(jsonMessage, GetAllBooksResponse.class);
+        SocketExchange request = socketController.readMessage();
+        GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(request.json, new GetAllBooksResponse());
         return getAllBooksResponse.getAllBooksList();
     }
 
@@ -139,8 +138,8 @@ public class AdminController {
         String textForSearch = scan.next();
         SearchBookRequest searchBookRequest = new SearchBookRequest(textForSearch);
         socketController.write(searchBookRequest);
-        jsonMessage = socketController.readUtf();
-        SearchBookResponse searchBookResponse = gson.fromJson(jsonMessage, SearchBookResponse.class);
+        SocketExchange request = socketController.readMessage();
+        SearchBookResponse searchBookResponse = socketController.convertMessage(request.json, new SearchBookResponse());
         return searchBookResponse.getFoundedBooksList();
     }
 
@@ -238,9 +237,8 @@ public class AdminController {
         }
         GetAuthorBooksListRequest getAuthorBooksListRequest = new GetAuthorBooksListRequest(authorId);
         socketController.write(getAuthorBooksListRequest);
-        jsonMessage = socketController.readUtf();
-        GetAuthorBooksListResponse getAuthorBooksListResponse = gson.fromJson(jsonMessage,
-                GetAuthorBooksListResponse.class);
+        SocketExchange request = socketController.readMessage();
+        GetAuthorBooksListResponse getAuthorBooksListResponse = socketController.convertMessage(request.json, new GetAuthorBooksListResponse());
         return getAuthorBooksListResponse.getAuthorsBooksList();
     }
 

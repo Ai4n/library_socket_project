@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 public class SocketExchange {
 
 	final public ServerMessage message;
+	public String json;
 
 	public SocketExchange(ServerMessage message) {
 		this.message = message;
