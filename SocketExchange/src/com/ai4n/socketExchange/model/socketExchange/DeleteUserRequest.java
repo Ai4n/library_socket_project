@@ -7,6 +7,10 @@ public class DeleteUserRequest extends SocketExchange {
 
 	private int userId;
 
+	public DeleteUserRequest() {
+		super(ServerMessage.DELETE_USER);
+	}
+
 	public DeleteUserRequest(int userId) {
 		super(ServerMessage.DELETE_USER);
 		this.userId = userId;

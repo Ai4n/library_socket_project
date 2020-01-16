@@ -7,6 +7,10 @@ public class DeleteBookRequest extends SocketExchange {
 
 	private int bookId;
 
+	public DeleteBookRequest() {
+		super(ServerMessage.DELETE_BOOK);
+	}
+
 	public DeleteBookRequest(int bookId) {
 		super(ServerMessage.DELETE_BOOK);
 		this.bookId = bookId;

@@ -10,6 +10,10 @@ public class GetAllUsersListResponse extends SocketExchange {
 
 	private ArrayList<User> usersList;
 
+	public GetAllUsersListResponse() {
+		super(ServerMessage.GET_ALL_USERS);
+	}
+
 	public GetAllUsersListResponse(ArrayList<User> usersList) {
 		super(ServerMessage.GET_ALL_USERS);
 		this.usersList = usersList;

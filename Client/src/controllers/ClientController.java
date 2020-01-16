@@ -3,7 +3,8 @@ package controllers;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
-import com.google.gson.Gson;
+
+import com.ai4n.socketExchange.model.SocketExchange;
 import controllers.utils.PasswordUtils;
 import com.ai4n.entities.user.User;
 import com.ai4n.entities.user.UserRole;
@@ -14,13 +15,10 @@ import com.ai4n.socketExchange.model.socketExchange.*;
 public class ClientController {
 	public Scanner scan = new Scanner(System.in);
 	private SocketController socketController;
-	private String jsonMessage;
-	private Gson gson = new Gson();
 
 	public ClientController(Socket socket) throws IOException {
 		socketController = new SocketController(socket);
 	}
-
 	public void startMenu() throws ClassNotFoundException, IOException {
 
 		while (true) {
@@ -56,7 +54,7 @@ public class ClientController {
 		String passwordTmp2;
 		String cryptPassword;
 		
-		IsLoginExistResponse isLoginExistResponse;
+		IsLoginExistResponse isLoginExistResponse = new IsLoginExistResponse();
 		do {
 			System.out.println("Enter youre name:\n");
 			name = scan.next();
@@ -66,8 +64,8 @@ public class ClientController {
 			newLogin = scan.next();
 			IsLoginExistRequest isLoginExistRequest = new IsLoginExistRequest(newLogin);
 			socketController.write(isLoginExistRequest);
-			jsonMessage = socketController.readUtf();
-			isLoginExistResponse = gson.fromJson(jsonMessage, IsLoginExistResponse.class);
+			SocketExchange request = socketController.readRequest();
+			isLoginExistResponse = socketController.readMessage(request.json, isLoginExistResponse);
 		} while (isLoginExistResponse.message == (ServerMessage.USER_EXIST));
 
 		do {
@@ -92,8 +90,7 @@ public class ClientController {
 			String hashedPassword = PasswordUtils.encodePassword(password);
 			UserCheckRequest request = new UserCheckRequest(login, hashedPassword);
 			socketController.write(request);
-			jsonMessage = socketController.readUtf();
-			userCheckResponse = gson.fromJson(jsonMessage, UserCheckResponse.class);
+			userCheckResponse = socketController.readMessage(socketController.readRequest().json, new UserCheckResponse());
 		} while (userCheckResponse.message == ServerMessage.USER_NOT_EXIST);
 
 		return userCheckResponse.getUser();

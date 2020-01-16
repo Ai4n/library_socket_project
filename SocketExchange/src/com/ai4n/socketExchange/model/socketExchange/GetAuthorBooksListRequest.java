@@ -6,6 +6,11 @@ import com.ai4n.socketExchange.model.SocketExchange;
 public class GetAuthorBooksListRequest extends SocketExchange {
 
 	private int authorId;
+
+	public GetAuthorBooksListRequest() {
+		super(ServerMessage.SHOW_AUTHORS_BOOKS);
+	}
+
 	public GetAuthorBooksListRequest(int authorId) {
 		super(ServerMessage.SHOW_AUTHORS_BOOKS);
 		this.authorId = authorId;

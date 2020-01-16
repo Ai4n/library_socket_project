@@ -7,7 +7,11 @@ import com.ai4n.socketExchange.model.SocketExchange;
 public class AddBookRequest extends SocketExchange {
 	
 	private Book book;
-	
+
+	public AddBookRequest() {
+		super(ServerMessage.ADD_BOOK);
+	}
+
 	public AddBookRequest(Book book) {
 		super(ServerMessage.ADD_BOOK);
 		this.book = book;

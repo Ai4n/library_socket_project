@@ -14,8 +14,10 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="module" module-name="LibraryEntities" />
+    <orderEntry type="module" module-name="SocketExchange" />
     <orderEntry type="module-library">
-      <library name="gson-2.8.6.jar">
+      <library>
         <CLASSES>
           <root url="jar:///Users/java/json_2.8.6/gson-2.8.6.jar!/" />
         </CLASSES>
@@ -23,7 +25,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="LibraryEntities" />
-    <orderEntry type="module" module-name="SocketExchange" />
   </component>
 </module>

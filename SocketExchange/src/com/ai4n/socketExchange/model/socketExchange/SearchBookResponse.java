@@ -10,6 +10,10 @@ public class SearchBookResponse extends SocketExchange {
 
 	private ArrayList<Book> foundedBooksList;
 
+	public SearchBookResponse() {
+		super(ServerMessage.SEARCH_BOOK);
+	}
+
 	public SearchBookResponse(ArrayList<Book> foundedBooksList) {
 		super(ServerMessage.SEARCH_BOOK);
 		this.foundedBooksList = foundedBooksList;

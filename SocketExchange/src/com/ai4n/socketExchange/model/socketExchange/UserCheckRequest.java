@@ -7,7 +7,11 @@ public class UserCheckRequest extends SocketExchange {
 
 	private String login;
 	private String password;
-	
+
+	public UserCheckRequest() {
+		super(ServerMessage.USER_CHECK);
+	}
+
 	public UserCheckRequest(String login, String password) {
 		super(ServerMessage.USER_CHECK);
 		this.login = login;

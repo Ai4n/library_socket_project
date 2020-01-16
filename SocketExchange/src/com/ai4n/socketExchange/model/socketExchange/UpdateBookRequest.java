@@ -8,6 +8,10 @@ public class UpdateBookRequest extends SocketExchange {
 
 	private Book book;
 
+	public UpdateBookRequest() {
+		super(ServerMessage.UPDATE_BOOK);
+	}
+
 	public UpdateBookRequest(Book book) {
 		super(ServerMessage.UPDATE_BOOK);
 		this.book = book;

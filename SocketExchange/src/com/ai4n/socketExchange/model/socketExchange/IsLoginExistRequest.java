@@ -7,6 +7,10 @@ public class IsLoginExistRequest extends SocketExchange {
 
 	private String newLogin;
 
+	public IsLoginExistRequest() {
+		super(ServerMessage.LOGIN_CHECK);
+	}
+
 	public IsLoginExistRequest(String newLogin) {
 		super(ServerMessage.LOGIN_CHECK);
 		this.newLogin = newLogin;

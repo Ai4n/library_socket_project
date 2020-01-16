@@ -8,6 +8,10 @@ public class SearchInUserBooksRequest extends SocketExchange {
 	private int userId;
 	private String text;
 
+	public SearchInUserBooksRequest() {
+		super(ServerMessage.SEARCH_BOOKS);
+	}
+
 	public SearchInUserBooksRequest(int userId, String text) {
 		super(ServerMessage.SEARCH_BOOKS);
 		this.userId = userId;
