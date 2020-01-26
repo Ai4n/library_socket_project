@@ -6,21 +6,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.sql.SQLOutput;
 
 public class SocketController {
-	private ObjectOutputStream dataOut;
-	private ObjectInputStream dataIn;
-	private Socket socket;
+	private SocketChannel socketChannel;
 
-	public SocketController(Socket socket) throws IOException {
-		dataOut = new ObjectOutputStream(socket.getOutputStream());
-		dataIn = new ObjectInputStream(socket.getInputStream());
-		this.socket = socket;
+	public SocketController(SocketChannel socketChannel) throws IOException {
+		this.socketChannel = socketChannel;
 	}
 
 	public void closeSession() {
 		try {
-			socket.close();
+			socketChannel.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -28,20 +27,13 @@ public class SocketController {
 
 	public void write(SocketExchange data) {
 		try {
-			dataOut.writeUTF(data.json());
-			dataOut.flush();
+
+			byte[] messageBytes = data.json().getBytes();
+			ByteBuffer buffer = ByteBuffer.wrap(messageBytes);
+			socketChannel.write(buffer);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public String readUtf() {
-		try {
-			return dataIn.readUTF();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public <T extends SocketExchange> T convertMessage(String jsonString, T object) {
@@ -54,9 +46,23 @@ public class SocketController {
 		return null;
 	}
 
+	public SocketExchange getRequestData(String jsonString) {
+		try {
+			SocketExchange request = new Gson().fromJson(jsonString, SocketExchange.class);
+			request.json = jsonString;
+			return request;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public SocketExchange readMessage() {
 		try {
-			String json = dataIn.readUTF();
+			ByteBuffer buffer = ByteBuffer.allocate(256);
+			socketChannel.read(buffer);
+			String json = new String(buffer.array()).trim();
+			System.out.println(json);
 			SocketExchange request = new Gson().fromJson(json, SocketExchange.class);
 			request.json = json;
 			return request;

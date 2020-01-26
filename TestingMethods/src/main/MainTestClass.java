@@ -1,57 +1,50 @@
 package main;
 
-import java.util.ArrayList;
-import com.google.gson.*;
+import nioTest.ClientChannel;
+import nioTest.ServerChannel;
+
+import java.io.IOException;
 
 public class MainTestClass {
 
     public static void main(String[] args) throws Exception {
-        final String resource1 = "Danil Vassyakin";
-        final String resource2 = "Akhan Beisenbayev";
-
-        Thread tt1 = new Thread() {
-            @Override
+        Thread server = new Thread() {
             public void run() {
-                synchronized (resource1) {
-                    System.out.println("Thread 1: locked resource 1");
-
-                    try {
-                        Thread.sleep(50);
-                    } catch (Exception e) {
-                    }
-
-                    synchronized (resource2) {
-                        System.out.println("Thread 1: locked resource 2");
-                    }
-                }
-            }
-        };
-        Thread tt2 = new Thread() {
-            @Override
-            public void run() {
-                synchronized (resource2) {
-                    System.out.println("Thread 2: locked resource 2");
-
-                    try {
-                        Thread.sleep(100);
-                    } catch (Exception e) {
-                    }
-
-                    synchronized (resource1) {
-                        System.out.println("Thread 2: locked resource 1");
-                    }
+                try {
+                    ServerChannel.start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         };
 
-        ThreadTest tt3 = new ThreadTest(1, 3, 567777777);
-        tt1.start();
-        tt2.start();
-        tt3.start();
+        Thread client = new Thread() {
+            public void run() {
+                try {
+                    ClientChannel.start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+
+        server.start();
+        Thread.sleep(2000);
+        client.start();
     }
+
 }
 /**
  * Race conditions Test example
+ * <p>
+ * Starvation Test visible example
+ * <p>
+ * Semaphore test example
+ * <p>
+ * Mutex conditions Test Example
+ * <p>
+ * <p>
+ * Fairness Solve Problems Test
  */
 //
 //        public class MainTestClass{

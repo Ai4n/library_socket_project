@@ -6,7 +6,9 @@ public class SocketExchange {
 
 	final public ServerMessage message;
 	public String json;
-
+	public SocketExchange() {
+		this.message = ServerMessage.EMPTY;
+	}
 	public SocketExchange(ServerMessage message) {
 		this.message = message;
 	}

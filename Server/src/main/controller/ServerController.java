@@ -2,6 +2,7 @@ package main.controller;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
 import com.ai4n.socketExchange.model.SocketExchange;
@@ -13,104 +14,98 @@ import com.ai4n.entities.user.User;
 import repositories.BookRepo;
 import repositories.UserRepo;
 
-public class ServerController extends Thread {
+public class ServerController {
 
     private SocketController socketController;
 
     BookRepo bookRepo = new BookRepo();
     UserRepo userRepo = new UserRepo();
 
-    public ServerController(Socket socket) throws IOException {
-        socketController = new SocketController(socket);
-    }
-    @Override
-    public void run() {
-        handleMessages();
+    public ServerController(SocketChannel socketChannel) throws IOException {
+        socketController = new SocketController(socketChannel);
     }
 
-    public void handleMessages() {
+    public void processMessage(SocketExchange request) {
 
-        while (true) {
-            SocketExchange request = socketController.readMessage();
-            System.out.println("message: " + request.message);
-            switch (request.message) {
-                case ADD_AUTHOR:
-                    AddAuthorRequest addAuthorRequest = socketController.convertMessage(request.json, new AddAuthorRequest());
-                    addAuthor(addAuthorRequest.getAuthor());
-                    break;
-                case ADD_BOOK:
-                    AddBookRequest addBookRequest = socketController.convertMessage(request.json, new AddBookRequest());
-                    addBook(addBookRequest.getBook());
-                    break;
-                case GET_ALL_BOOKS:
-                    sendAllBooksList();
-                    break;
-                case GET_ALL_AUTHORS:
-                    sendAllAuthorsList();
-                    break;
-                case GET_ALL_USERS:
-                    sendAllUsersList();
-                    break;
-                case SEARCH_BOOK:
-                    SearchBookRequest searchBookRequest = socketController.convertMessage(request.json, new SearchBookRequest());
-                    searchBookInLibrary(searchBookRequest.getTextForSearch());
-                    break;
-                case USER_CHECK:
-                    UserCheckRequest userCheckRequest = socketController.convertMessage(request.json, new UserCheckRequest());
-                    checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
-                    break;
-                case LOGIN_CHECK:
-                    IsLoginExistRequest isLoginExistRequest = socketController.convertMessage(request.json, new IsLoginExistRequest());
-                    checkLogin(isLoginExistRequest.getNewLogin());
-                    break;
-                case ADD_USER:
-                    AddUserRequest addUserRequest = socketController.convertMessage(request.json, new AddUserRequest());
-                    addUser(addUserRequest.getUser());
-                    break;
-                case ADD_USER_BOOK:
-                    AddBookToUsersBookListRequest addBookToUsersBookListRequest = socketController.convertMessage(request.json, new AddBookToUsersBookListRequest());
-                    addBookToUsersBookListRequest(addBookToUsersBookListRequest);
-                    break;
-                case SHOW_BOOKS:
-                    GetAllUserBooksRequest getAllUserBooksRequest = socketController.convertMessage(request.json, new GetAllUserBooksRequest());
-                    sendAllUserBooks(getAllUserBooksRequest.getUserId());
-                    break;
-                case SHOW_AUTHORS_BOOKS:
-                    GetAuthorBooksListRequest getAuthorBooksListRequest = socketController.convertMessage(request.json, new GetAuthorBooksListRequest());
-                    getAllAuthorsBooks(getAuthorBooksListRequest.getAuthorId());
-                    break;
-                case SEARCH_BOOKS:
-                    SearchInUserBooksRequest searchInUserBooksRequest = socketController.convertMessage(request.json, new SearchInUserBooksRequest());
-                    searchBookInUserBooksList(searchInUserBooksRequest.getUserId(), searchInUserBooksRequest.getText());
-                    break;
-                case DELETE_USER_BOOK:
-                    DeleteBookFromUsersBookList deleteBookFromUsersBookList = socketController.convertMessage(request.json, new DeleteBookFromUsersBookList());
-                    deleteUsersBookInList(deleteBookFromUsersBookList.getBookId(), deleteBookFromUsersBookList.getUserId());
-                    break;
-                case DELETE_BOOK:
-                    DeleteBookRequest deleteBookRequest = socketController.convertMessage(request.json, new DeleteBookRequest());
-                    deleteBook(deleteBookRequest.getBookId());
-                    break;
-                case DELETE_AUTHOR:
-                    DeleteAuthorRequest deleteAuthorRequest = socketController.convertMessage(request.json, new DeleteAuthorRequest());
-                    deleteAuthor(deleteAuthorRequest.getAuthorId());
-                    break;
-                case DELETE_USER:
-                    DeleteUserRequest deleteUserRequest = socketController.convertMessage(request.json, new DeleteUserRequest());
-                    deleteUser(deleteUserRequest.getUserId());
-                    break;
-                case UPDATE_BOOK:
-                    UpdateBookRequest updateBookRequest = socketController.convertMessage(request.json, new UpdateBookRequest());
-                    updateBook(updateBookRequest.getBook());
-                    break;
-                case CLOSE_SESSION:
-                    socketController.closeSession();
-                    return;
-                default:
-                    return;
-            }
-
+        System.out.println("message: " + request.message);
+        System.out.println(request.json);
+        switch (request.message) {
+            case ADD_AUTHOR:
+                AddAuthorRequest addAuthorRequest = socketController.convertMessage(request.json, new AddAuthorRequest());
+                addAuthor(addAuthorRequest.getAuthor());
+                break;
+            case ADD_BOOK:
+                AddBookRequest addBookRequest = socketController.convertMessage(request.json, new AddBookRequest());
+                addBook(addBookRequest.getBook());
+                break;
+            case GET_ALL_BOOKS:
+                sendAllBooksList();
+                break;
+            case GET_ALL_AUTHORS:
+                sendAllAuthorsList();
+                break;
+            case GET_ALL_USERS:
+                sendAllUsersList();
+                break;
+            case SEARCH_BOOK:
+                SearchBookRequest searchBookRequest = socketController.convertMessage(request.json, new SearchBookRequest());
+                searchBookInLibrary(searchBookRequest.getTextForSearch());
+                break;
+            case USER_CHECK:
+                UserCheckRequest userCheckRequest = socketController.convertMessage(request.json, new UserCheckRequest());
+                checkUser(userCheckRequest.getLogin(), userCheckRequest.getPassword());
+                break;
+            case LOGIN_CHECK:
+                IsLoginExistRequest isLoginExistRequest = socketController.convertMessage(request.json, new IsLoginExistRequest());
+                checkLogin(isLoginExistRequest.getNewLogin());
+                break;
+            case ADD_USER:
+                AddUserRequest addUserRequest = socketController.convertMessage(request.json, new AddUserRequest());
+                addUser(addUserRequest.getUser());
+                break;
+            case ADD_USER_BOOK:
+                AddBookToUsersBookListRequest addBookToUsersBookListRequest = socketController.convertMessage(request.json, new AddBookToUsersBookListRequest());
+                addBookToUsersBookListRequest(addBookToUsersBookListRequest);
+                break;
+            case SHOW_BOOKS:
+                GetAllUserBooksRequest getAllUserBooksRequest = socketController.convertMessage(request.json, new GetAllUserBooksRequest());
+                sendAllUserBooks(getAllUserBooksRequest.getUserId());
+                break;
+            case SHOW_AUTHORS_BOOKS:
+                GetAuthorBooksListRequest getAuthorBooksListRequest = socketController.convertMessage(request.json, new GetAuthorBooksListRequest());
+                getAllAuthorsBooks(getAuthorBooksListRequest.getAuthorId());
+                break;
+            case SEARCH_BOOKS:
+                SearchInUserBooksRequest searchInUserBooksRequest = socketController.convertMessage(request.json, new SearchInUserBooksRequest());
+                searchBookInUserBooksList(searchInUserBooksRequest.getUserId(), searchInUserBooksRequest.getText());
+                break;
+            case DELETE_USER_BOOK:
+                DeleteBookFromUsersBookList deleteBookFromUsersBookList = socketController.convertMessage(request.json, new DeleteBookFromUsersBookList());
+                deleteUsersBookInList(deleteBookFromUsersBookList.getBookId(), deleteBookFromUsersBookList.getUserId());
+                break;
+            case DELETE_BOOK:
+                DeleteBookRequest deleteBookRequest = socketController.convertMessage(request.json, new DeleteBookRequest());
+                deleteBook(deleteBookRequest.getBookId());
+                break;
+            case DELETE_AUTHOR:
+                DeleteAuthorRequest deleteAuthorRequest = socketController.convertMessage(request.json, new DeleteAuthorRequest());
+                deleteAuthor(deleteAuthorRequest.getAuthorId());
+                break;
+            case DELETE_USER:
+                DeleteUserRequest deleteUserRequest = socketController.convertMessage(request.json, new DeleteUserRequest());
+                deleteUser(deleteUserRequest.getUserId());
+                break;
+            case UPDATE_BOOK:
+                UpdateBookRequest updateBookRequest = socketController.convertMessage(request.json, new UpdateBookRequest());
+                updateBook(updateBookRequest.getBook());
+                break;
+            case CLOSE_SESSION:
+                socketController.closeSession();
+                return;
+            default:
+                return;
         }
+
     }
 
     private void addAuthor(Author author) {

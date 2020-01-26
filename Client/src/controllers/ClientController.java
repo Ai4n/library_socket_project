@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
 import com.ai4n.socketExchange.model.SocketExchange;
@@ -16,8 +17,8 @@ public class ClientController {
 	public Scanner scan = new Scanner(System.in);
 	private SocketController socketController;
 
-	public ClientController(Socket socket) throws IOException {
-		socketController = new SocketController(socket);
+	public ClientController(SocketChannel socketChannel) throws IOException {
+		socketController = new SocketController(socketChannel);
 	}
 	public void startMenu() throws ClassNotFoundException, IOException {
 

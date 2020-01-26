@@ -1,14 +1,18 @@
 package main;
 
 import controllers.ClientController;
+
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 public class ClientMain {
 
     public static void main(String args[]) {
         try {
-            Socket socket = new Socket("127.0.0.1", 5555);
-            ClientController controller = new ClientController(socket);
+            InetSocketAddress address = new InetSocketAddress("localhost", 5454);
+            SocketChannel socketChannel = SocketChannel.open(address);
+            ClientController controller = new ClientController(socketChannel);
             controller.startMenu();
         } catch (Exception e) {
             e.printStackTrace();
