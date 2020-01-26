@@ -13,7 +13,6 @@ public class ServerMain {
 
 			try {
 				serverSocket = new ServerSocket(5555);
-
 				while (true) {
 					socket = serverSocket.accept();
 					ServerController serverController = new ServerController(socket);

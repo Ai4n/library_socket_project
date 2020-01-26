@@ -2,7 +2,6 @@ package com.ai4n.socketExchange.controller;
 
 import com.ai4n.socketExchange.model.SocketExchange;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,13 +18,14 @@ public class SocketController {
 		this.socket = socket;
 	}
 
-	public void closeSession()  {
+	public void closeSession() {
 		try {
 			socket.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void write(SocketExchange data) {
 		try {
 			dataOut.writeUTF(data.json());
@@ -43,7 +43,7 @@ public class SocketController {
 		}
 		return null;
 	}
-	
+
 	public <T extends SocketExchange> T convertMessage(String jsonString, T object) {
 		try {
 			Class c = object.getClass();

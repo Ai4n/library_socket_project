@@ -13,7 +13,6 @@ public class UserController {
 	private Scanner scan = new Scanner(System.in);
 	private User user;
 	private SocketController socketController;
-	SocketExchange request = socketController.readMessage();
 
 	public UserController(User user, SocketController socketController) {
 		this.user = user;
@@ -73,7 +72,8 @@ public class UserController {
 	private ArrayList<Book> getAllLibraryBooks() {
 		GetAllBooksRequest getAllBooksRequest = new GetAllBooksRequest();
 		socketController.write(getAllBooksRequest);
-		GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(request.json, new GetAllBooksResponse());
+		SocketExchange response = socketController.readMessage();
+		GetAllBooksResponse getAllBooksResponse = socketController.convertMessage(response.json, new GetAllBooksResponse());
 		return getAllBooksResponse.getAllBooksList();
 	}
 
@@ -81,7 +81,19 @@ public class UserController {
 		int userId = user.getIdUser();
 		GetAllUserBooksRequest getAllUserBooksRequest = new GetAllUserBooksRequest(userId);
 		socketController.write(getAllUserBooksRequest);
-		GetAllUserBooksResponse getAllUserBooksResponse = socketController.convertMessage(request.json, new GetAllUserBooksResponse());
+		SocketExchange response = socketController.readMessage();
+		GetAllUserBooksResponse getAllUserBooksResponse = socketController.convertMessage(response.json, new GetAllUserBooksResponse());
+		return getAllUserBooksResponse.getAllBooksList();
+	}
+
+//	private void processMessage(SocketExchange response) {
+//		SocketExchange request = requestList.get(response.requestId);
+//
+//	}
+
+	private ArrayList<Book> getAllBooks() {
+		SocketExchange response = socketController.readMessage();
+		GetAllUserBooksResponse getAllUserBooksResponse = socketController.convertMessage(response.json, new GetAllUserBooksResponse());
 		return getAllUserBooksResponse.getAllBooksList();
 	}
 
@@ -91,7 +103,8 @@ public class UserController {
 		String text = scan.next();
 		SearchInUserBooksRequest searchInUserBooksRequest = new SearchInUserBooksRequest(userId, text);
 		socketController.write(searchInUserBooksRequest);
-		SearchInUserBooksResponse searchInUserBooksResponse = socketController.convertMessage(request.json, new SearchInUserBooksResponse());
+		SocketExchange response = socketController.readMessage();
+		SearchInUserBooksResponse searchInUserBooksResponse = socketController.convertMessage(response.json, new SearchInUserBooksResponse());
 		printList(searchInUserBooksResponse.getBooksList());
 	}
 
