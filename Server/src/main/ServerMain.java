@@ -3,6 +3,7 @@ package main;
 import com.ai4n.socketExchange.controller.SocketController;
 import com.ai4n.socketExchange.model.SocketExchange;
 import main.controller.ServerController;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -15,63 +16,58 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class ServerMain {
+    static HashMap<SocketAddress, ServerController> clientPool;
+    static Selector selector;
+    static ServerSocketChannel serverSocketChannel;
+	static InetSocketAddress hostAddress;
 
+    public static void main(String args[]) {
+        try {
+            clientPool = new HashMap<>();
+            selector = Selector.open(); // 1
+            serverSocketChannel = ServerSocketChannel.open(); // 2
+			hostAddress = new InetSocketAddress("localhost", 5454);
+            serverSocketChannel.bind(hostAddress); // 3
+            serverSocketChannel.configureBlocking(false);
 
-	public static void main(String args[]) {
-		try {
-			HashMap<SocketAddress, ServerController> clientPool = new HashMap<>();
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT, null); // 4
 
-			Selector selector = Selector.open(); // 1
+            while (true) {
+                System.out.println("Waiting for select...");
+                int noOfKeys = selector.select(); // 1<<2<<3<<4
 
-			ServerSocketChannel serverSocketChannel = ServerSocketChannel.open(); // 2
-			InetSocketAddress hostAddress = new InetSocketAddress("localhost", 5454);
-			serverSocketChannel.bind(hostAddress); // 3
-			serverSocketChannel.configureBlocking(false);
+                System.out.println("Number of selected keys: " + noOfKeys);
 
-			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT, null); // 4
+                Set<SelectionKey> selectedKeys = selector.selectedKeys(); //[]
+                Iterator<SelectionKey> iter = selectedKeys.iterator();
 
-			while (true) {
-				System.out.println("Waiting for select...");
-				int noOfKeys = selector.select();
+                while (iter.hasNext()) {
 
-				System.out.println("Number of selected keys: " + noOfKeys);
+                    SelectionKey ky = iter.next(); //1) return current value 2) moves iterator
+                    iter.remove();
 
-				Set selectedKeys = selector.selectedKeys(); //[]
-				Iterator iter = selectedKeys.iterator();
+                    if (ky.isAcceptable()) {
+                        // Accept the new client connection
+                        SocketChannel socketChannel = serverSocketChannel.accept();
+                        socketChannel.configureBlocking(false);
+                        // Add the new connection to the selector
+                        socketChannel.register(selector, SelectionKey.OP_READ);
 
-				while (iter.hasNext()) {
+                        ServerController serverController = new ServerController(socketChannel);
+                        clientPool.put(socketChannel.getRemoteAddress(), serverController);
 
-					SelectionKey ky = (SelectionKey) iter.next(); //1) return current value 2) moves iterator
+                        System.out.println("Accepted new connection from client: " + socketChannel);
+                    } else if (ky.isReadable()) {
+                        ServerController serverController = clientPool.get(((SocketChannel) ky.channel()).getRemoteAddress());
+                        serverController.processRequest();
+                    }
 
-					if (ky.isAcceptable()) {
-						// Accept the new client connection
-						SocketChannel socketChannel = serverSocketChannel.accept();
-						socketChannel.configureBlocking(false);
-						// Add the new connection to the selector
-						socketChannel.register(selector, SelectionKey.OP_READ);
-
-						ServerController serverController = new ServerController(socketChannel);
-						clientPool.put(socketChannel.getRemoteAddress(), serverController);
-
-						System.out.println("Accepted new connection from client: " + socketChannel);
-					} else if (ky.isReadable()) {
-						SocketChannel socketChannel = (SocketChannel) ky.channel();
-						ServerController serverController = clientPool.get(socketChannel.getRemoteAddress());
-						ByteBuffer buffer = ByteBuffer.allocate(1024);
-						socketChannel.read(buffer);
-						String output = new String(buffer.array()).trim();
-						System.out.println("Message read from client: " + output);
-						SocketController socketController = new SocketController(socketChannel);
-						SocketExchange socketExchange = socketController.getRequestData(output);
-						serverController.processMessage(socketExchange);
-					}
-					iter.remove();
-				}
-			}
-		} catch (Exception ex){
-			ex.printStackTrace();
-		}
-	}
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 }
 

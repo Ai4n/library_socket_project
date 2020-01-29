@@ -2,6 +2,7 @@ package main.controller;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
@@ -17,16 +18,17 @@ import repositories.UserRepo;
 public class ServerController {
 
     private SocketController socketController;
+    private SocketChannel socketChannel;
 
     BookRepo bookRepo = new BookRepo();
     UserRepo userRepo = new UserRepo();
 
     public ServerController(SocketChannel socketChannel) throws IOException {
         socketController = new SocketController(socketChannel);
+        this.socketChannel = socketChannel;
     }
 
     public void processMessage(SocketExchange request) {
-
         System.out.println("message: " + request.message);
         System.out.println(request.json);
         switch (request.message) {
@@ -107,6 +109,16 @@ public class ServerController {
         }
 
     }
+
+    public void processRequest () throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        socketChannel.read(buffer);
+        String output = new String(buffer.array()).trim();
+        System.out.println("Message read from client: " + output);
+        SocketExchange socketExchange = SocketExchange.create(output);
+        processMessage(socketExchange);
+    }
+
 
     private void addAuthor(Author author) {
         bookRepo.addAuthor(author);

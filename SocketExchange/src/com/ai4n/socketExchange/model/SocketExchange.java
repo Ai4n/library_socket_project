@@ -16,4 +16,15 @@ public class SocketExchange {
 	public String json() {
 		return new Gson().toJson(this);
 	}
+
+	public static SocketExchange create(String jsonString) {
+		try {
+			SocketExchange request = new Gson().fromJson(jsonString, SocketExchange.class);
+			request.json = jsonString;
+			return request;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

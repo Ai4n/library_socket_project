@@ -46,20 +46,9 @@ public class SocketController {
 		return null;
 	}
 
-	public SocketExchange getRequestData(String jsonString) {
-		try {
-			SocketExchange request = new Gson().fromJson(jsonString, SocketExchange.class);
-			request.json = jsonString;
-			return request;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public SocketExchange readMessage() {
 		try {
-			ByteBuffer buffer = ByteBuffer.allocate(256);
+			ByteBuffer buffer = ByteBuffer.allocate(1024);
 			socketChannel.read(buffer);
 			String json = new String(buffer.array()).trim();
 			System.out.println(json);
