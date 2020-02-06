@@ -1,11 +1,9 @@
 package main.controller;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-
 import com.ai4n.socketExchange.model.SocketExchange;
 import com.ai4n.socketExchange.model.socketExchange.*;
 import com.ai4n.socketExchange.controller.SocketController;

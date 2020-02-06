@@ -3,12 +3,8 @@ package com.ai4n.socketExchange.controller;
 import com.ai4n.socketExchange.model.SocketExchange;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.sql.SQLOutput;
 
 public class SocketController {
 	private SocketChannel socketChannel;

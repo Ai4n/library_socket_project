@@ -1,9 +1,7 @@
 package main;
 
 import controllers.ClientController;
-
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 public class ClientMain {

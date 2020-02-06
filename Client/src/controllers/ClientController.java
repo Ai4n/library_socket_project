@@ -1,10 +1,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
-
 import com.ai4n.socketExchange.model.SocketExchange;
 import controllers.utils.PasswordUtils;
 import com.ai4n.entities.user.User;
